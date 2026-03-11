@@ -56,6 +56,7 @@ function Divider() {
 
 export function RichTextEditor({ value, onChange }: Props) {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit.configure({
         heading: { levels: [1, 2, 3] },
