@@ -85,6 +85,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `445cf21` | 2026-03-11 | feat: add Create Course button and dialog to courses page |
 | `c87559b` | 2026-03-11 | feat: course builder — two-panel editor with module/lesson CRUD |
 | `0bb1678` | 2026-03-11 | feat: automated README changelog via GitHub Actions |
 | `1b5dd6d` | 2026-03-11 | feat: automated API documentation system with REST endpoints |
