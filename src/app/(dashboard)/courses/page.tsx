@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "../../../../auth";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -8,20 +9,32 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { CreateCourseDialog } from "@/components/course-builder/CreateCourseDialog";
 import Link from "next/link";
 
 export default async function CoursesPage() {
-  const courses = await prisma.course.findMany({
-    orderBy: { updatedAt: "desc" },
-    include: {
-      instructor: { select: { name: true, email: true } },
-      _count: { select: { enrollments: true } },
-    },
-  });
+  const [session, courses] = await Promise.all([
+    auth(),
+    prisma.course.findMany({
+      orderBy: { updatedAt: "desc" },
+      include: {
+        instructor: { select: { name: true, email: true } },
+        _count: { select: { enrollments: true } },
+      },
+    }),
+  ]);
+
+  const canCreate =
+    session?.user.role === "ADMIN" || session?.user.role === "INSTRUCTOR";
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Courses</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Courses</h1>
+        {canCreate && session?.user.id && (
+          <CreateCourseDialog instructorId={session.user.id} />
+        )}
+      </div>
 
       <Table>
         <TableHeader>
