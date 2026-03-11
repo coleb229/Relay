@@ -5,7 +5,7 @@ import type { LessonData, LessonType } from "./types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "./RichTextEditor";
 import {
   Select,
   SelectContent,
@@ -152,15 +152,8 @@ export function LessonForm({ lesson, onUpdate }: Props) {
         {/* Content — only for TEXT type */}
         {type === "TEXT" && (
           <div className="space-y-1.5">
-            <Label htmlFor="lesson-content">Content</Label>
-            <Textarea
-              id="lesson-content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              rows={8}
-              placeholder="Lesson content (Markdown supported)"
-              className="font-mono text-xs"
-            />
+            <Label>Content</Label>
+            <RichTextEditor value={content} onChange={setContent} />
           </div>
         )}
 

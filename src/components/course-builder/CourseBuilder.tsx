@@ -181,10 +181,10 @@ export function CourseBuilder({ course, initialModules, redirectAfterSave }: Cou
           onSelect={setSelection}
           onAddModule={addModule}
           onDeleteModule={deleteModule}
-          onMoveModule={moveModule}
+          onReorderModules={reorderModules}
           onAddLesson={addLesson}
           onDeleteLesson={deleteLesson}
-          onMoveLesson={moveLesson}
+          onReorderLessons={reorderLessons}
         />
         <EditingPanel
           course={courseData}

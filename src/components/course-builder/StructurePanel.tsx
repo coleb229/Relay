@@ -1,9 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import type { ModuleData, Selection } from "./types";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+  type DragStartEvent,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import type { ModuleData, LessonData, Selection } from "./types";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +32,14 @@ import {
 import {
   ChevronDownIcon,
   ChevronRightIcon,
-  ChevronUpIcon,
+  GripVerticalIcon,
   PlusIcon,
   Trash2Icon,
   SettingsIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface StructurePanelProps {
   modules: ModuleData[];
@@ -29,10 +47,10 @@ interface StructurePanelProps {
   onSelect: (s: Selection) => void;
   onAddModule: () => void;
   onDeleteModule: (moduleId: string) => void;
-  onMoveModule: (moduleId: string, direction: "up" | "down") => void;
+  onReorderModules: (moduleIds: string[]) => void;
   onAddLesson: (moduleId: string) => void;
   onDeleteLesson: (moduleId: string, lessonId: string) => void;
-  onMoveLesson: (moduleId: string, lessonId: string, direction: "up" | "down") => void;
+  onReorderLessons: (moduleId: string, lessonIds: string[]) => void;
 }
 
 const LESSON_TYPE_COLORS: Record<string, string> = {
@@ -40,6 +58,8 @@ const LESSON_TYPE_COLORS: Record<string, string> = {
   VIDEO: "bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-500/20",
   QUIZ: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
 };
+
+// ── Delete dialog ─────────────────────────────────────────────────────────────
 
 interface DeleteDialogProps {
   open: boolean;
@@ -74,16 +94,275 @@ function DeleteDialog({ open, onOpenChange, title, description, onConfirm }: Del
   );
 }
 
+// ── Sortable lesson row ───────────────────────────────────────────────────────
+
+interface SortableLessonRowProps {
+  lesson: LessonData;
+  moduleId: string;
+  isSelected: boolean;
+  onSelect: () => void;
+  onDelete: () => void;
+}
+
+function SortableLessonRow({ lesson, isSelected, onSelect, onDelete }: SortableLessonRowProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: lesson.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "flex items-center gap-1 rounded-lg px-2 py-1 group transition-colors",
+        isSelected ? "bg-primary/8 text-primary" : "hover:bg-muted/50"
+      )}
+    >
+      {/* Drag handle */}
+      <button
+        {...attributes}
+        {...listeners}
+        className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+        aria-label="Drag to reorder"
+        tabIndex={-1}
+      >
+        <GripVerticalIcon className="size-3" />
+      </button>
+
+      {/* Title */}
+      <button
+        onClick={onSelect}
+        className="flex-1 text-left text-xs truncate min-w-0 py-0.5"
+        title={lesson.title}
+      >
+        {lesson.title}
+      </button>
+
+      {/* Type badge */}
+      <span
+        className={cn(
+          "shrink-0 inline-flex items-center rounded border px-1 py-0 text-[10px] font-medium leading-4 opacity-0 group-hover:opacity-100",
+          LESSON_TYPE_COLORS[lesson.type]
+        )}
+      >
+        {lesson.type}
+      </span>
+
+      {/* Delete */}
+      <button
+        onClick={onDelete}
+        className="shrink-0 p-0.5 rounded hover:bg-destructive/10 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Delete lesson"
+      >
+        <Trash2Icon className="size-3" />
+      </button>
+    </div>
+  );
+}
+
+// ── Lesson drag overlay (ghost while dragging) ────────────────────────────────
+
+function LessonDragOverlay({ lesson }: { lesson: LessonData }) {
+  return (
+    <div className="flex items-center gap-1 rounded-lg px-2 py-1 bg-background border border-border shadow-lg opacity-90 text-xs font-medium">
+      <GripVerticalIcon className="size-3 text-muted-foreground" />
+      <span className="truncate">{lesson.title}</span>
+    </div>
+  );
+}
+
+// ── Sortable module row ───────────────────────────────────────────────────────
+
+interface SortableModuleRowProps {
+  mod: ModuleData;
+  isSelected: boolean;
+  isExpanded: boolean;
+  selection: Selection;
+  onSelectModule: () => void;
+  onToggleExpand: () => void;
+  onAddLesson: () => void;
+  onDeleteModule: () => void;
+  onSelectLesson: (lessonId: string) => void;
+  onDeleteLesson: (lessonId: string) => void;
+  onReorderLessons: (lessonIds: string[]) => void;
+}
+
+function SortableModuleRow({
+  mod,
+  isSelected,
+  isExpanded,
+  selection,
+  onSelectModule,
+  onToggleExpand,
+  onAddLesson,
+  onDeleteModule,
+  onSelectLesson,
+  onDeleteLesson,
+  onReorderLessons,
+}: SortableModuleRowProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: mod.id,
+  });
+
+  const [activeLessonId, setActiveLessonId] = useState<string | null>(null);
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const sortedLessons = [...mod.lessons].sort((a, b) => a.order - b.order);
+  const activeLesson = activeLessonId ? sortedLessons.find((l) => l.id === activeLessonId) : null;
+
+  function handleLessonDragStart(event: DragStartEvent) {
+    setActiveLessonId(event.active.id as string);
+  }
+
+  function handleLessonDragEnd(event: DragEndEvent) {
+    setActiveLessonId(null);
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = sortedLessons.findIndex((l) => l.id === active.id);
+    const newIndex = sortedLessons.findIndex((l) => l.id === over.id);
+    const newOrder = arrayMove(sortedLessons, oldIndex, newIndex).map((l) => l.id);
+    onReorderLessons(newOrder);
+  }
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.4 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className="space-y-0.5">
+      {/* Module row */}
+      <div
+        className={cn(
+          "flex items-center gap-1 rounded-lg px-1 py-1 group transition-colors",
+          isSelected ? "bg-primary/8 text-primary" : "hover:bg-muted/50"
+        )}
+      >
+        {/* Drag handle */}
+        <button
+          {...attributes}
+          {...listeners}
+          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+          aria-label="Drag to reorder module"
+          tabIndex={-1}
+        >
+          <GripVerticalIcon className="size-3.5" />
+        </button>
+
+        {/* Expand toggle */}
+        <button
+          onClick={onToggleExpand}
+          className="shrink-0 p-0.5 rounded hover:bg-muted transition-colors"
+          aria-label={isExpanded ? "Collapse" : "Expand"}
+        >
+          {isExpanded ? (
+            <ChevronDownIcon className="size-3.5 text-muted-foreground" />
+          ) : (
+            <ChevronRightIcon className="size-3.5 text-muted-foreground" />
+          )}
+        </button>
+
+        {/* Title */}
+        <button
+          onClick={onSelectModule}
+          className="flex-1 text-left text-xs font-medium truncate min-w-0 py-0.5"
+          title={mod.title}
+        >
+          {mod.title}
+        </button>
+
+        {/* Actions — visible on hover */}
+        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+          <button
+            onClick={onAddLesson}
+            className="p-0.5 rounded hover:bg-muted"
+            aria-label="Add lesson"
+          >
+            <PlusIcon className="size-3" />
+          </button>
+          <button
+            onClick={onDeleteModule}
+            className="p-0.5 rounded hover:bg-destructive/10 text-destructive"
+            aria-label="Delete module"
+          >
+            <Trash2Icon className="size-3" />
+          </button>
+        </div>
+      </div>
+
+      {/* Lessons with their own DnD context */}
+      {isExpanded && (
+        <div className="ml-5 space-y-0.5">
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={handleLessonDragStart}
+            onDragEnd={handleLessonDragEnd}
+          >
+            <SortableContext
+              items={sortedLessons.map((l) => l.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {sortedLessons.map((lesson) => (
+                <SortableLessonRow
+                  key={lesson.id}
+                  lesson={lesson}
+                  moduleId={mod.id}
+                  isSelected={selection.type === "lesson" && selection.lessonId === lesson.id}
+                  onSelect={() => onSelectLesson(lesson.id)}
+                  onDelete={() => onDeleteLesson(lesson.id)}
+                />
+              ))}
+            </SortableContext>
+            <DragOverlay>
+              {activeLesson && <LessonDragOverlay lesson={activeLesson} />}
+            </DragOverlay>
+          </DndContext>
+
+          {/* Add Lesson */}
+          <button
+            onClick={onAddLesson}
+            className="flex items-center gap-1.5 w-full text-left text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg hover:bg-muted/50 transition-colors"
+          >
+            <PlusIcon className="size-3" />
+            Add Lesson
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Module drag overlay ───────────────────────────────────────────────────────
+
+function ModuleDragOverlay({ mod }: { mod: ModuleData }) {
+  return (
+    <div className="flex items-center gap-2 rounded-lg px-2 py-1.5 bg-background border border-border shadow-lg opacity-90 text-xs font-medium">
+      <GripVerticalIcon className="size-3.5 text-muted-foreground" />
+      <span className="truncate">{mod.title}</span>
+      <span className="text-muted-foreground">({mod.lessons.length} lessons)</span>
+    </div>
+  );
+}
+
+// ── Main panel ────────────────────────────────────────────────────────────────
+
 export function StructurePanel({
   modules,
   selection,
   onSelect,
   onAddModule,
   onDeleteModule,
-  onMoveModule,
+  onReorderModules,
   onAddLesson,
   onDeleteLesson,
-  onMoveLesson,
+  onReorderLessons,
 }: StructurePanelProps) {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     () => new Set(modules.map((m) => m.id))
@@ -93,6 +372,11 @@ export function StructurePanel({
     | { kind: "lesson"; moduleId: string; lessonId: string; title: string }
     | null
   >(null);
+  const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const sorted = [...modules].sort((a, b) => a.order - b.order);
+  const activeModule = activeModuleId ? sorted.find((m) => m.id === activeModuleId) : null;
 
   function toggleModule(moduleId: string) {
     setExpandedModules((prev) => {
@@ -102,14 +386,18 @@ export function StructurePanel({
     });
   }
 
-  const sorted = [...modules].sort((a, b) => a.order - b.order);
-
-  function isModuleSelected(moduleId: string) {
-    return selection.type === "module" && selection.moduleId === moduleId;
+  function handleModuleDragStart(event: DragStartEvent) {
+    setActiveModuleId(event.active.id as string);
   }
 
-  function isLessonSelected(lessonId: string) {
-    return selection.type === "lesson" && selection.lessonId === lessonId;
+  function handleModuleDragEnd(event: DragEndEvent) {
+    setActiveModuleId(null);
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    const oldIndex = sorted.findIndex((m) => m.id === active.id);
+    const newIndex = sorted.findIndex((m) => m.id === over.id);
+    const newOrder = arrayMove(sorted, oldIndex, newIndex).map((m) => m.id);
+    onReorderModules(newOrder);
   }
 
   return (
@@ -133,7 +421,7 @@ export function StructurePanel({
         </p>
       </div>
 
-      {/* Module list */}
+      {/* Module list with DnD */}
       <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-1">
         {sorted.length === 0 && (
           <p className="text-xs text-muted-foreground text-center py-6">
@@ -141,177 +429,52 @@ export function StructurePanel({
           </p>
         )}
 
-        {sorted.map((mod, modIndex) => {
-          const expanded = expandedModules.has(mod.id);
-          const sortedLessons = [...mod.lessons].sort((a, b) => a.order - b.order);
-
-          return (
-            <div key={mod.id} className="space-y-0.5">
-              {/* Module row */}
-              <div
-                className={cn(
-                  "flex items-center gap-1 rounded-lg px-1 py-1 group transition-colors",
-                  isModuleSelected(mod.id)
-                    ? "bg-primary/8 text-primary"
-                    : "hover:bg-muted/50"
-                )}
-              >
-                {/* Expand toggle */}
-                <button
-                  onClick={() => toggleModule(mod.id)}
-                  className="shrink-0 p-0.5 rounded hover:bg-muted transition-colors"
-                  aria-label={expanded ? "Collapse" : "Expand"}
-                >
-                  {expanded ? (
-                    <ChevronDownIcon className="size-3.5 text-muted-foreground" />
-                  ) : (
-                    <ChevronRightIcon className="size-3.5 text-muted-foreground" />
-                  )}
-                </button>
-
-                {/* Title — click to select */}
-                <button
-                  onClick={() => onSelect({ type: "module", moduleId: mod.id })}
-                  className="flex-1 text-left text-xs font-medium truncate min-w-0 py-0.5"
-                  title={mod.title}
-                >
-                  {mod.title}
-                </button>
-
-                {/* Actions — visible on hover */}
-                <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                  <button
-                    onClick={() => onMoveModule(mod.id, "up")}
-                    disabled={modIndex === 0}
-                    className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Move module up"
-                  >
-                    <ChevronUpIcon className="size-3" />
-                  </button>
-                  <button
-                    onClick={() => onMoveModule(mod.id, "down")}
-                    disabled={modIndex === sorted.length - 1}
-                    className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                    aria-label="Move module down"
-                  >
-                    <ChevronDownIcon className="size-3" />
-                  </button>
-                  <button
-                    onClick={() => onAddLesson(mod.id)}
-                    className="p-0.5 rounded hover:bg-muted"
-                    aria-label="Add lesson"
-                  >
-                    <PlusIcon className="size-3" />
-                  </button>
-                  <button
-                    onClick={() =>
-                      setDeleteTarget({ kind: "module", moduleId: mod.id, title: mod.title })
-                    }
-                    className="p-0.5 rounded hover:bg-destructive/10 text-destructive"
-                    aria-label="Delete module"
-                  >
-                    <Trash2Icon className="size-3" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Lessons */}
-              {expanded && (
-                <div className="ml-5 space-y-0.5">
-                  {sortedLessons.map((lesson, lessonIndex) => (
-                    <div
-                      key={lesson.id}
-                      className={cn(
-                        "flex items-center gap-1 rounded-lg px-2 py-1 group transition-colors",
-                        isLessonSelected(lesson.id)
-                          ? "bg-primary/8 text-primary"
-                          : "hover:bg-muted/50"
-                      )}
-                    >
-                      {/* Lesson title */}
-                      <button
-                        onClick={() =>
-                          onSelect({
-                            type: "lesson",
-                            moduleId: mod.id,
-                            lessonId: lesson.id,
-                          })
-                        }
-                        className="flex-1 text-left text-xs truncate min-w-0 py-0.5"
-                        title={lesson.title}
-                      >
-                        {lesson.title}
-                      </button>
-
-                      {/* Type badge */}
-                      <span
-                        className={cn(
-                          "shrink-0 inline-flex items-center rounded border px-1 py-0 text-[10px] font-medium leading-4 opacity-0 group-hover:opacity-100",
-                          LESSON_TYPE_COLORS[lesson.type]
-                        )}
-                      >
-                        {lesson.type}
-                      </span>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                        <button
-                          onClick={() => onMoveLesson(mod.id, lesson.id, "up")}
-                          disabled={lessonIndex === 0}
-                          className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                          aria-label="Move lesson up"
-                        >
-                          <ChevronUpIcon className="size-3" />
-                        </button>
-                        <button
-                          onClick={() => onMoveLesson(mod.id, lesson.id, "down")}
-                          disabled={lessonIndex === sortedLessons.length - 1}
-                          className="p-0.5 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
-                          aria-label="Move lesson down"
-                        >
-                          <ChevronDownIcon className="size-3" />
-                        </button>
-                        <button
-                          onClick={() =>
-                            setDeleteTarget({
-                              kind: "lesson",
-                              moduleId: mod.id,
-                              lessonId: lesson.id,
-                              title: lesson.title,
-                            })
-                          }
-                          className="p-0.5 rounded hover:bg-destructive/10 text-destructive"
-                          aria-label="Delete lesson"
-                        >
-                          <Trash2Icon className="size-3" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-
-                  {/* Add Lesson button */}
-                  <button
-                    onClick={() => onAddLesson(mod.id)}
-                    className="flex items-center gap-1.5 w-full text-left text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg hover:bg-muted/50 transition-colors"
-                  >
-                    <PlusIcon className="size-3" />
-                    Add Lesson
-                  </button>
-                </div>
-              )}
-            </div>
-          );
-        })}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleModuleDragStart}
+          onDragEnd={handleModuleDragEnd}
+        >
+          <SortableContext items={sorted.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+            {sorted.map((mod) => (
+              <SortableModuleRow
+                key={mod.id}
+                mod={mod}
+                isSelected={selection.type === "module" && selection.moduleId === mod.id}
+                isExpanded={expandedModules.has(mod.id)}
+                selection={selection}
+                onSelectModule={() => onSelect({ type: "module", moduleId: mod.id })}
+                onToggleExpand={() => toggleModule(mod.id)}
+                onAddLesson={() => onAddLesson(mod.id)}
+                onDeleteModule={() =>
+                  setDeleteTarget({ kind: "module", moduleId: mod.id, title: mod.title })
+                }
+                onSelectLesson={(lessonId) =>
+                  onSelect({ type: "lesson", moduleId: mod.id, lessonId })
+                }
+                onDeleteLesson={(lessonId) => {
+                  const lesson = mod.lessons.find((l) => l.id === lessonId);
+                  if (lesson)
+                    setDeleteTarget({
+                      kind: "lesson",
+                      moduleId: mod.id,
+                      lessonId,
+                      title: lesson.title,
+                    });
+                }}
+                onReorderLessons={(lessonIds) => onReorderLessons(mod.id, lessonIds)}
+              />
+            ))}
+          </SortableContext>
+          <DragOverlay>
+            {activeModule && <ModuleDragOverlay mod={activeModule} />}
+          </DragOverlay>
+        </DndContext>
       </div>
 
       {/* Add Module */}
       <div className="px-3 py-3 border-t border-border">
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full gap-2"
-          onClick={onAddModule}
-        >
+        <Button variant="outline" size="sm" className="w-full gap-2" onClick={onAddModule}>
           <PlusIcon className="size-4" />
           Add Module
         </Button>
@@ -321,11 +484,7 @@ export function StructurePanel({
       <DeleteDialog
         open={deleteTarget !== null}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
-        title={
-          deleteTarget?.kind === "module"
-            ? "Delete Module"
-            : "Delete Lesson"
-        }
+        title={deleteTarget?.kind === "module" ? "Delete Module" : "Delete Lesson"}
         description={
           deleteTarget?.kind === "module"
             ? `Delete "${deleteTarget.title}" and all its lessons? This cannot be undone.`
