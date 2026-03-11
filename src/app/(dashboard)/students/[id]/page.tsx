@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "../../../../../auth";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,13 +12,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { UserEditForm } from "@/components/users/UserEditForm";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function StudentProfilePage({ params }: Props) {
-  const { id } = await params;
+export default async function UserProfilePage({ params }: Props) {
+  const [{ id }, session] = await Promise.all([params, auth()]);
 
   const user = await prisma.user.findUnique({
     where: { id },
@@ -34,6 +36,8 @@ export default async function StudentProfilePage({ params }: Props) {
 
   if (!user) notFound();
 
+  const isAdmin = session?.user.role === "ADMIN";
+
   return (
     <div className="space-y-6">
       <div>
@@ -44,7 +48,22 @@ export default async function StudentProfilePage({ params }: Props) {
         </Badge>
       </div>
 
-      {user.bio && <p className="text-sm text-muted-foreground">{user.bio}</p>}
+      {user.bio && !isAdmin && (
+        <p className="text-sm text-muted-foreground">{user.bio}</p>
+      )}
+
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Edit Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <UserEditForm
+              user={{ id: user.id, name: user.name, bio: user.bio, role: user.role }}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

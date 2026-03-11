@@ -20,7 +20,7 @@ import type { Session } from "next-auth";
 const navItems = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
   { label: "Courses", href: "/courses", icon: BookOpen },
-  { label: "Students", href: "/students", icon: Users },
+  { label: "Users", href: "/students", icon: Users },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "API Docs", href: "/docs", icon: BookMarked },
 ];
