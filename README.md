@@ -85,6 +85,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `8d0d1d1` | 2026-03-11 | feat: quiz system with grading and attempt tracking |
 | `6635463` | 2026-03-11 | fix: suppress dnd-kit aria-describedby hydration mismatch |
 | `cfdcf42` | 2026-03-11 | fix: resolve Tiptap hydration mismatch with mounted guard |
 | `de98994` | 2026-03-11 | fix: suppress Tiptap SSR hydration mismatch warning |
