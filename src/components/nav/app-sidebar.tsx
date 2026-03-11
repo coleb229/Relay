@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/nav/user-menu";
-import { BookOpen, Users, BarChart3, LayoutDashboard } from "lucide-react";
+import { BookOpen, Users, BarChart3, LayoutDashboard, BookMarked } from "lucide-react";
 import type { Session } from "next-auth";
 
 const navItems = [
@@ -22,6 +22,7 @@ const navItems = [
   { label: "Courses", href: "/courses", icon: BookOpen },
   { label: "Students", href: "/students", icon: Users },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
+  { label: "API Docs", href: "/docs", icon: BookMarked },
 ];
 
 interface AppSidebarProps {
