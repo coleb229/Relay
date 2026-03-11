@@ -85,6 +85,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `ef7e981` | 2026-03-11 | feat: phase 2 — drag-and-drop reordering + rich text editor |
 | `bac1f1c` | 2026-03-11 | feat: redirect after saving course settings |
 | `715906b` | 2026-03-11 | fix: resolve Base UI nativeButton warnings and fix Back navigation |
 | `445cf21` | 2026-03-11 | feat: add Create Course button and dialog to courses page |
