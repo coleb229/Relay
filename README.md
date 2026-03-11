@@ -85,8 +85,12 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `c87559b` | 2026-03-11 | feat: course builder — two-panel editor with module/lesson CRUD |
+| `0bb1678` | 2026-03-11 | feat: automated README changelog via GitHub Actions |
 | `1b5dd6d` | 2026-03-11 | feat: automated API documentation system with REST endpoints |
 | `175bb30` | 2026-03-11 | fix: add Vercel Linux binary target for Prisma |
 | `01eb551` | 2026-03-11 | feat: full LMS platform with auth, UI, and theme system |
 | `b20465b` | 2026-03-10 | feat: initial commit |
+| `65f9952` | 2026-03-10 | Initial commit from Create Next App |
+| `aabf6b1` | 2026-03-10 | Initial commit |
 <!-- CHANGELOG_END -->
