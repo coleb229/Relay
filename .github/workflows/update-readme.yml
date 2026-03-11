@@ -1,0 +1,65 @@
+name: Update README Changelog
+
+on:
+  push:
+    branches: [main]
+    # Skip runs triggered by this workflow itself
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  update-changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Use a PAT or the default GITHUB_TOKEN
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build changelog and update README
+        run: |
+          # Build a markdown table of the last 50 commits
+          # Exclude changelog-only commits and merge commits
+          ROWS=""
+          while IFS='|' read -r hash date subject; do
+            # Skip the automated changelog commits
+            if echo "$subject" | grep -q "docs: update changelog \[skip ci\]"; then
+              continue
+            fi
+            # Escape pipe characters in the subject so the table stays valid
+            subject_escaped="${subject//|/\\|}"
+            ROWS="${ROWS}| \`${hash}\` | ${date} | ${subject_escaped} |\n"
+          done < <(git log --no-merges --format="%h|%ad|%s" --date=format:"%Y-%m-%d" | head -50)
+
+          HEADER="| Commit | Date | Description |\n|--------|------|-------------|\n"
+          TABLE="${HEADER}${ROWS}"
+
+          # Replace content between the changelog markers in README.md
+          # Uses awk to replace the block cleanly without needing perl/sed -i
+          awk -v table="$TABLE" '
+            /<!-- CHANGELOG_START -->/ {
+              print
+              printf "%s", table
+              skip = 1
+              next
+            }
+            /<!-- CHANGELOG_END -->/ {
+              skip = 0
+            }
+            !skip { print }
+          ' README.md > README.tmp && mv README.tmp README.md
+
+      - name: Commit updated README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # Only commit if README actually changed
+          git diff --staged --quiet || git commit -m "docs: update changelog [skip ci]"
+          git diff --staged --quiet || git push
+          git push origin main || true
