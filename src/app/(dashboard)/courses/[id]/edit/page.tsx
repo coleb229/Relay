@@ -6,9 +6,10 @@ import type { CourseData, ModuleData } from "@/components/course-builder/types";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ new?: string }>;
 }
 
-export default async function CourseEditPage({ params }: Props) {
+export default async function CourseEditPage({ params, searchParams }: Props) {
   const session = await auth();
   if (!session) redirect("/login");
 
@@ -17,7 +18,7 @@ export default async function CourseEditPage({ params }: Props) {
     redirect("/");
   }
 
-  const { id } = await params;
+  const [{ id }, { new: isNew }] = await Promise.all([params, searchParams]);
 
   const course = await prisma.course.findUnique({
     where: { id },
@@ -67,7 +68,11 @@ export default async function CourseEditPage({ params }: Props) {
 
   return (
     <div className="flex flex-col h-full -m-6">
-      <CourseBuilder course={courseData} initialModules={modulesData} />
+      <CourseBuilder
+        course={courseData}
+        initialModules={modulesData}
+        redirectAfterSave={isNew === "1" ? "/courses" : `/courses/${courseData.id}`}
+      />
     </div>
   );
 }

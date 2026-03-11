@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { CourseData, CourseStatus } from "./types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import { CheckIcon, LoaderCircleIcon } from "lucide-react";
 
 interface Props {
   course: CourseData;
+  redirectAfterSave: string;
   onUpdate: (data: CourseData) => void;
 }
 
@@ -31,7 +33,8 @@ function slugify(text: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-export function CourseSettingsForm({ course, onUpdate }: Props) {
+export function CourseSettingsForm({ course, redirectAfterSave, onUpdate }: Props) {
+  const router = useRouter();
   const [title, setTitle] = useState(course.title);
   const [slug, setSlug] = useState(course.slug);
   const [description, setDescription] = useState(course.description ?? "");
@@ -67,7 +70,7 @@ export function CourseSettingsForm({ course, onUpdate }: Props) {
       const updated = await res.json();
       onUpdate(updated);
       setSaveStatus("saved");
-      setTimeout(() => setSaveStatus("idle"), 2000);
+      router.push(redirectAfterSave);
     } catch {
       setSaveStatus("error");
     }

@@ -10,6 +10,7 @@ interface Props {
   course: CourseData;
   modules: ModuleData[];
   selection: Selection;
+  redirectAfterSave: string;
   onCourseUpdate: (data: CourseData) => void;
   onModuleUpdate: (moduleId: string, data: Partial<ModuleData>) => void;
   onLessonUpdate: (moduleId: string, lessonId: string, data: Partial<LessonData>) => void;
@@ -19,6 +20,7 @@ export function EditingPanel({
   course,
   modules,
   selection,
+  redirectAfterSave,
   onCourseUpdate,
   onModuleUpdate,
   onLessonUpdate,
@@ -26,7 +28,7 @@ export function EditingPanel({
   if (selection.type === "course") {
     return (
       <main className="flex-1 overflow-y-auto p-6">
-        <CourseSettingsForm key={course.id} course={course} onUpdate={onCourseUpdate} />
+        <CourseSettingsForm key={course.id} course={course} redirectAfterSave={redirectAfterSave} onUpdate={onCourseUpdate} />
       </main>
     );
   }

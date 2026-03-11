@@ -12,9 +12,10 @@ import Link from "next/link";
 interface CourseBuilderProps {
   course: CourseData;
   initialModules: ModuleData[];
+  redirectAfterSave: string;
 }
 
-export function CourseBuilder({ course, initialModules }: CourseBuilderProps) {
+export function CourseBuilder({ course, initialModules, redirectAfterSave }: CourseBuilderProps) {
   const [modules, setModules] = useState<ModuleData[]>(initialModules);
   const [selection, setSelection] = useState<Selection>({ type: "course" });
   const [courseData, setCourseData] = useState<CourseData>(course);
@@ -189,6 +190,7 @@ export function CourseBuilder({ course, initialModules }: CourseBuilderProps) {
           course={courseData}
           modules={modules}
           selection={selection}
+          redirectAfterSave={redirectAfterSave}
           onCourseUpdate={setCourseData}
           onModuleUpdate={updateModuleLocally}
           onLessonUpdate={updateLessonLocally}

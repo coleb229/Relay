@@ -62,7 +62,7 @@ export function CreateCourseDialog({ instructorId }: Props) {
       const course = await res.json();
       setOpen(false);
       setTitle("");
-      router.push(`/courses/${course.id}/edit`);
+      router.push(`/courses/${course.id}/edit?new=1`);
     } catch {
       setError("Something went wrong. Please try again.");
       setSaving(false);
