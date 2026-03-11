@@ -1,15 +1,18 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "../../../../../auth";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import { PencilIcon } from "lucide-react";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
 export default async function CourseDetailPage({ params }: Props) {
-  const { id } = await params;
+  const [{ id }, session] = await Promise.all([params, auth()]);
 
   const course = await prisma.course.findUnique({
     where: { id },
@@ -54,11 +57,19 @@ export default async function CourseDetailPage({ params }: Props) {
             </span>
           </p>
         </div>
-        {course.price != null && (
-          <span className="text-xl font-semibold">
-            {course.price === 0 ? "Free" : `$${course.price.toFixed(2)}`}
-          </span>
-        )}
+        <div className="flex items-center gap-3 shrink-0">
+          {course.price != null && (
+            <span className="text-xl font-semibold">
+              {course.price === 0 ? "Free" : `$${course.price.toFixed(2)}`}
+            </span>
+          )}
+          {(session?.user.role === "ADMIN" || session?.user.role === "INSTRUCTOR") && (
+            <Button size="sm" variant="outline" render={<Link href={`/courses/${course.id}/edit`} />}>
+              <PencilIcon className="size-4" />
+              Edit Course
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
