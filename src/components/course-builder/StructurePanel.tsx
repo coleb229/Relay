@@ -128,6 +128,7 @@ function SortableLessonRow({ lesson, isSelected, onSelect, onDelete }: SortableL
       <button
         {...attributes}
         {...listeners}
+        suppressHydrationWarning
         className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
         aria-label="Drag to reorder"
         tabIndex={-1}
@@ -248,6 +249,7 @@ function SortableModuleRow({
         <button
           {...attributes}
           {...listeners}
+          suppressHydrationWarning
           className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
           aria-label="Drag to reorder module"
           tabIndex={-1}
