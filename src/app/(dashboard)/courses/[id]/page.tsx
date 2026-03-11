@@ -64,10 +64,12 @@ export default async function CourseDetailPage({ params }: Props) {
             </span>
           )}
           {(session?.user.role === "ADMIN" || session?.user.role === "INSTRUCTOR") && (
-            <Button size="sm" variant="outline" render={<Link href={`/courses/${course.id}/edit`} />}>
-              <PencilIcon className="size-4" />
-              Edit Course
-            </Button>
+            <Link href={`/courses/${course.id}/edit`}>
+              <Button size="sm" variant="outline">
+                <PencilIcon className="size-4" />
+                Edit Course
+              </Button>
+            </Link>
           )}
         </div>
       </div>

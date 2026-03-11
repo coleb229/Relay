@@ -155,10 +155,12 @@ export function CourseBuilder({ course, initialModules }: CourseBuilderProps) {
     <div className="flex flex-col h-full">
       {/* Top bar */}
       <div className="shrink-0 flex items-center gap-4 px-4 py-3 border-b border-border bg-background/95">
-        <Button variant="ghost" size="sm" render={<Link href={`/courses/${course.id}`} />}>
-          <ChevronLeftIcon className="size-4" />
-          Back
-        </Button>
+        <Link href="/courses">
+          <Button variant="ghost" size="sm">
+            <ChevronLeftIcon className="size-4" />
+            Back to Courses
+          </Button>
+        </Link>
         <div className="flex items-center gap-2 flex-1">
           <span className="font-semibold text-sm truncate">{courseData.title}</span>
           <Badge
