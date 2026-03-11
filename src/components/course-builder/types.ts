@@ -39,3 +39,22 @@ export type Selection =
   | { type: "course" }
   | { type: "module"; moduleId: string }
   | { type: "lesson"; moduleId: string; lessonId: string };
+
+export type QuestionType = "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SHORT_ANSWER";
+
+export interface QuizOptionData {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+  order: number;
+}
+
+export interface QuizQuestionData {
+  id: string;
+  lessonId: string;
+  type: QuestionType;
+  prompt: string;
+  order: number;
+  expectedAnswer: string | null;
+  options: QuizOptionData[];
+}

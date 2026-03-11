@@ -4,6 +4,7 @@ import type { CourseData, ModuleData, LessonData, Selection } from "./types";
 import { CourseSettingsForm } from "./CourseSettingsForm";
 import { ModuleForm } from "./ModuleForm";
 import { LessonForm } from "./LessonForm";
+import { QuizBuilder } from "./QuizBuilder";
 import { MousePointerClickIcon } from "lucide-react";
 
 interface Props {
@@ -48,8 +49,14 @@ export function EditingPanel({
     const lesson = module?.lessons.find((l) => l.id === selection.lessonId);
     if (!lesson) return <EmptyState />;
     return (
-      <main className="flex-1 overflow-y-auto p-6">
+      <main className="flex-1 overflow-y-auto p-6 space-y-6">
         <LessonForm key={lesson.id} lesson={lesson} onUpdate={onLessonUpdate} />
+        {lesson.type === "QUIZ" && (
+          <>
+            <div className="border-t border-border" />
+            <QuizBuilder key={`quiz-${lesson.id}`} lesson={lesson} />
+          </>
+        )}
       </main>
     );
   }

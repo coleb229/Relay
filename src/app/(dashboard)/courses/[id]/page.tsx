@@ -160,6 +160,22 @@ export default async function CourseDetailPage({ params }: Props) {
                             {Math.round(lesson.duration / 60)} min
                           </span>
                         )}
+                        <Link
+                          href={`/courses/${course.id}/lessons/${lesson.id}`}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          View
+                        </Link>
+                        {lesson.type === "QUIZ" &&
+                          (session?.user.role === "ADMIN" ||
+                            session?.user.role === "INSTRUCTOR") && (
+                            <Link
+                              href={`/courses/${course.id}/quiz-results/${lesson.id}`}
+                              className="text-xs text-muted-foreground hover:underline"
+                            >
+                              Results
+                            </Link>
+                          )}
                       </li>
                     ))}
                   </ol>

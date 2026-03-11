@@ -21,10 +21,11 @@ model User {
   role          UserRole  @default(STUDENT)
   bio           String?
 
-  accounts    Account[]
-  sessions    Session[]
-  enrollments Enrollment[]
-  courses     Course[]     @relation("CourseInstructor")
+  accounts      Account[]
+  sessions      Session[]
+  enrollments   Enrollment[]
+  courses       Course[]     @relation("CourseInstructor")
+  quizAttempts  QuizAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -134,8 +135,10 @@ model Lesson {
   type        LessonType @default(TEXT)
   isPublished Boolean    @default(false)
 
-  module   Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress Progress[]
+  module    Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress  Progress[]
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -184,4 +187,64 @@ model Progress {
   createdAt DateTime @default(now())
 
   @@unique([enrollmentId, lessonId])
+}
+
+// ============================================================
+// Quiz Models
+// ============================================================
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+}
+
+model QuizQuestion {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  lessonId       String       @db.ObjectId
+  type           QuestionType
+  prompt         String
+  order          Int          @default(0)
+  expectedAnswer String?
+
+  lesson  Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  options QuizOption[]
+  answers QuizAnswer[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model QuizOption {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  questionId String  @db.ObjectId
+  text       String
+  isCorrect  Boolean @default(false)
+  order      Int     @default(0)
+
+  question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model QuizAttempt {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  lessonId    String   @db.ObjectId
+  userId      String   @db.ObjectId
+  score       Float
+  submittedAt DateTime @default(now())
+
+  lesson  Lesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers QuizAnswer[]
+}
+
+model QuizAnswer {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  attemptId        String  @db.ObjectId
+  questionId       String  @db.ObjectId
+  selectedOptionId String? @db.ObjectId
+  textAnswer       String?
+  isCorrect        Boolean
+
+  attempt  QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
