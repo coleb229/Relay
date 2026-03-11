@@ -18,7 +18,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          UserRole  @default(STUDENT)
+  role          UserRole  @default(ADMIN) // CHANGE DEFAULT TO STUDENT AFTER TESTING PHASE
   bio           String?
 
   accounts      Account[]
@@ -135,10 +135,11 @@ model Lesson {
   type        LessonType @default(TEXT)
   isPublished Boolean    @default(false)
 
-  module    Module        @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress  Progress[]
-  questions QuizQuestion[]
-  attempts  QuizAttempt[]
+  module      Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress    Progress[]
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+  attachments LessonAttachment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -247,4 +248,15 @@ model QuizAnswer {
 
   attempt  QuizAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
   question QuizQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model LessonAttachment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  lessonId  String   @db.ObjectId
+  name      String
+  url       String
+  size      Int
+  createdAt DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 }

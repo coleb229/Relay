@@ -20,6 +20,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import type { ModuleData, LessonData, Selection } from "./types";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -36,6 +37,8 @@ import {
   PlusIcon,
   Trash2Icon,
   SettingsIcon,
+  CheckSquareIcon,
+  CopyIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -47,10 +50,13 @@ interface StructurePanelProps {
   onSelect: (s: Selection) => void;
   onAddModule: () => void;
   onDeleteModule: (moduleId: string) => void;
+  onDuplicateModule: (moduleId: string) => void;
   onReorderModules: (moduleIds: string[]) => void;
   onAddLesson: (moduleId: string) => void;
   onDeleteLesson: (moduleId: string, lessonId: string) => void;
+  onDuplicateLesson: (moduleId: string, lessonId: string) => void;
   onReorderLessons: (moduleId: string, lessonIds: string[]) => void;
+  onBulkPublish: (lessonIds: string[], isPublished: boolean) => void;
 }
 
 const LESSON_TYPE_COLORS: Record<string, string> = {
@@ -100,11 +106,24 @@ interface SortableLessonRowProps {
   lesson: LessonData;
   moduleId: string;
   isSelected: boolean;
+  isSelectMode: boolean;
+  isChecked: boolean;
   onSelect: () => void;
   onDelete: () => void;
+  onToggleSelect: (lessonId: string) => void;
+  onDuplicate: () => void;
 }
 
-function SortableLessonRow({ lesson, isSelected, onSelect, onDelete }: SortableLessonRowProps) {
+function SortableLessonRow({
+  lesson,
+  isSelected,
+  isSelectMode,
+  isChecked,
+  onSelect,
+  onDelete,
+  onToggleSelect,
+  onDuplicate,
+}: SortableLessonRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: lesson.id,
   });
@@ -124,17 +143,25 @@ function SortableLessonRow({ lesson, isSelected, onSelect, onDelete }: SortableL
         isSelected ? "bg-primary/8 text-primary" : "hover:bg-muted/50"
       )}
     >
-      {/* Drag handle */}
-      <button
-        {...attributes}
-        {...listeners}
-        suppressHydrationWarning
-        className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
-        aria-label="Drag to reorder"
-        tabIndex={-1}
-      >
-        <GripVerticalIcon className="size-3" />
-      </button>
+      {/* Select checkbox (select mode) or drag handle */}
+      {isSelectMode ? (
+        <Checkbox
+          checked={isChecked}
+          onCheckedChange={() => onToggleSelect(lesson.id)}
+          className="shrink-0"
+        />
+      ) : (
+        <button
+          {...attributes}
+          {...listeners}
+          suppressHydrationWarning
+          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+          aria-label="Drag to reorder"
+          tabIndex={-1}
+        >
+          <GripVerticalIcon className="size-3" />
+        </button>
+      )}
 
       {/* Title */}
       <button
@@ -154,6 +181,15 @@ function SortableLessonRow({ lesson, isSelected, onSelect, onDelete }: SortableL
       >
         {lesson.type}
       </span>
+
+      {/* Duplicate */}
+      <button
+        onClick={onDuplicate}
+        className="shrink-0 p-0.5 rounded hover:bg-muted text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+        aria-label="Duplicate lesson"
+      >
+        <CopyIcon className="size-3" />
+      </button>
 
       {/* Delete */}
       <button
@@ -185,13 +221,18 @@ interface SortableModuleRowProps {
   isSelected: boolean;
   isExpanded: boolean;
   selection: Selection;
+  isSelectMode: boolean;
+  selectedLessonIds: Set<string>;
   onSelectModule: () => void;
   onToggleExpand: () => void;
   onAddLesson: () => void;
   onDeleteModule: () => void;
+  onDuplicateModule: () => void;
   onSelectLesson: (lessonId: string) => void;
   onDeleteLesson: (lessonId: string) => void;
+  onDuplicateLesson: (lessonId: string) => void;
   onReorderLessons: (lessonIds: string[]) => void;
+  onToggleSelectLesson: (lessonId: string) => void;
 }
 
 function SortableModuleRow({
@@ -199,13 +240,18 @@ function SortableModuleRow({
   isSelected,
   isExpanded,
   selection,
+  isSelectMode,
+  selectedLessonIds,
   onSelectModule,
   onToggleExpand,
   onAddLesson,
   onDeleteModule,
+  onDuplicateModule,
   onSelectLesson,
   onDeleteLesson,
+  onDuplicateLesson,
   onReorderLessons,
+  onToggleSelectLesson,
 }: SortableModuleRowProps) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: mod.id,
@@ -289,6 +335,13 @@ function SortableModuleRow({
             <PlusIcon className="size-3" />
           </button>
           <button
+            onClick={onDuplicateModule}
+            className="p-0.5 rounded hover:bg-muted"
+            aria-label="Duplicate module"
+          >
+            <CopyIcon className="size-3" />
+          </button>
+          <button
             onClick={onDeleteModule}
             className="p-0.5 rounded hover:bg-destructive/10 text-destructive"
             aria-label="Delete module"
@@ -317,8 +370,12 @@ function SortableModuleRow({
                   lesson={lesson}
                   moduleId={mod.id}
                   isSelected={selection.type === "lesson" && selection.lessonId === lesson.id}
+                  isSelectMode={isSelectMode}
+                  isChecked={selectedLessonIds.has(lesson.id)}
                   onSelect={() => onSelectLesson(lesson.id)}
                   onDelete={() => onDeleteLesson(lesson.id)}
+                  onToggleSelect={onToggleSelectLesson}
+                  onDuplicate={() => onDuplicateLesson(lesson.id)}
                 />
               ))}
             </SortableContext>
@@ -361,10 +418,13 @@ export function StructurePanel({
   onSelect,
   onAddModule,
   onDeleteModule,
+  onDuplicateModule,
   onReorderModules,
   onAddLesson,
   onDeleteLesson,
+  onDuplicateLesson,
   onReorderLessons,
+  onBulkPublish,
 }: StructurePanelProps) {
   const [expandedModules, setExpandedModules] = useState<Set<string>>(
     () => new Set(modules.map((m) => m.id))
@@ -375,6 +435,8 @@ export function StructurePanel({
     | null
   >(null);
   const [activeModuleId, setActiveModuleId] = useState<string | null>(null);
+  const [isSelectMode, setIsSelectMode] = useState(false);
+  const [selectedLessonIds, setSelectedLessonIds] = useState<Set<string>>(new Set());
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
   const sorted = [...modules].sort((a, b) => a.order - b.order);
@@ -384,6 +446,19 @@ export function StructurePanel({
     setExpandedModules((prev) => {
       const next = new Set(prev);
       next.has(moduleId) ? next.delete(moduleId) : next.add(moduleId);
+      return next;
+    });
+  }
+
+  function toggleSelectMode() {
+    setIsSelectMode((v) => !v);
+    setSelectedLessonIds(new Set());
+  }
+
+  function toggleLessonSelect(lessonId: string) {
+    setSelectedLessonIds((prev) => {
+      const next = new Set(prev);
+      next.has(lessonId) ? next.delete(lessonId) : next.add(lessonId);
       return next;
     });
   }
@@ -417,10 +492,22 @@ export function StructurePanel({
       </button>
 
       {/* Curriculum label */}
-      <div className="px-4 pt-4 pb-2">
+      <div className="px-4 pt-4 pb-2 flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           Curriculum
         </p>
+        <button
+          onClick={toggleSelectMode}
+          className={cn(
+            "p-1 rounded text-xs transition-colors",
+            isSelectMode
+              ? "bg-primary/10 text-primary"
+              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+          )}
+          title={isSelectMode ? "Exit select mode" : "Select lessons"}
+        >
+          <CheckSquareIcon className="size-3.5" />
+        </button>
       </div>
 
       {/* Module list with DnD */}
@@ -445,12 +532,15 @@ export function StructurePanel({
                 isSelected={selection.type === "module" && selection.moduleId === mod.id}
                 isExpanded={expandedModules.has(mod.id)}
                 selection={selection}
+                isSelectMode={isSelectMode}
+                selectedLessonIds={selectedLessonIds}
                 onSelectModule={() => onSelect({ type: "module", moduleId: mod.id })}
                 onToggleExpand={() => toggleModule(mod.id)}
                 onAddLesson={() => onAddLesson(mod.id)}
                 onDeleteModule={() =>
                   setDeleteTarget({ kind: "module", moduleId: mod.id, title: mod.title })
                 }
+                onDuplicateModule={() => onDuplicateModule(mod.id)}
                 onSelectLesson={(lessonId) =>
                   onSelect({ type: "lesson", moduleId: mod.id, lessonId })
                 }
@@ -464,7 +554,9 @@ export function StructurePanel({
                       title: lesson.title,
                     });
                 }}
+                onDuplicateLesson={(lessonId) => onDuplicateLesson(mod.id, lessonId)}
                 onReorderLessons={(lessonIds) => onReorderLessons(mod.id, lessonIds)}
+                onToggleSelectLesson={toggleLessonSelect}
               />
             ))}
           </SortableContext>
@@ -473,6 +565,39 @@ export function StructurePanel({
           </DragOverlay>
         </DndContext>
       </div>
+
+      {/* Bulk action bar */}
+      {isSelectMode && selectedLessonIds.size > 0 && (
+        <div className="px-3 py-2 border-t border-border bg-muted/50 flex items-center gap-2">
+          <span className="text-xs text-muted-foreground flex-1">
+            {selectedLessonIds.size} selected
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs"
+            onClick={() => {
+              onBulkPublish(Array.from(selectedLessonIds), true);
+              setIsSelectMode(false);
+              setSelectedLessonIds(new Set());
+            }}
+          >
+            Publish
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-7 text-xs"
+            onClick={() => {
+              onBulkPublish(Array.from(selectedLessonIds), false);
+              setIsSelectMode(false);
+              setSelectedLessonIds(new Set());
+            }}
+          >
+            Unpublish
+          </Button>
+        </div>
+      )}
 
       {/* Add Module */}
       <div className="px-3 py-3 border-t border-border">

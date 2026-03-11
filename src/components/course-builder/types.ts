@@ -58,3 +58,11 @@ export interface QuizQuestionData {
   expectedAnswer: string | null;
   options: QuizOptionData[];
 }
+
+export interface AttachmentData {
+  id: string;
+  name: string;
+  url: string;
+  size: number;
+  createdAt: string;
+}

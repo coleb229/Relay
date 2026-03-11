@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CheckIcon, LoaderCircleIcon } from "lucide-react";
+import { LessonAttachments } from "./LessonAttachments";
 
 interface Props {
   lesson: LessonData;
@@ -199,6 +200,10 @@ export function LessonForm({ lesson, onUpdate }: Props) {
         {saveStatus === "error" && (
           <span className="text-xs text-destructive">Failed to save. Try again.</span>
         )}
+      </div>
+
+      <div className="border-t border-border pt-5">
+        <LessonAttachments lesson={lesson} />
       </div>
     </div>
   );

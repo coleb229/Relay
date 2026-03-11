@@ -41,6 +41,14 @@ export function CourseBuilder({ course, initialModules, redirectAfterSave }: Cou
     setSelection({ type: "course" });
   }
 
+  async function duplicateModule(moduleId: string) {
+    const res = await fetch(`/api/modules/${moduleId}/duplicate`, { method: "POST" });
+    if (!res.ok) return;
+    const { module: newMod, lessons } = await res.json();
+    setModules((prev) => [...prev, { ...newMod, lessons: lessons ?? [] }]);
+    setSelection({ type: "module", moduleId: newMod.id });
+  }
+
   function updateModuleLocally(moduleId: string, data: Partial<ModuleData>) {
     setModules((prev) =>
       prev.map((m) => (m.id === moduleId ? { ...m, ...data } : m))
@@ -104,6 +112,18 @@ export function CourseBuilder({ course, initialModules, redirectAfterSave }: Cou
     setSelection({ type: "module", moduleId });
   }
 
+  async function duplicateLesson(moduleId: string, lessonId: string) {
+    const res = await fetch(`/api/lessons/${lessonId}/duplicate`, { method: "POST" });
+    if (!res.ok) return;
+    const newLesson: LessonData = await res.json();
+    setModules((prev) =>
+      prev.map((m) =>
+        m.id === moduleId ? { ...m, lessons: [...m.lessons, newLesson] } : m
+      )
+    );
+    setSelection({ type: "lesson", moduleId, lessonId: newLesson.id });
+  }
+
   function updateLessonLocally(moduleId: string, lessonId: string, data: Partial<LessonData>) {
     setModules((prev) =>
       prev.map((m) =>
@@ -116,6 +136,23 @@ export function CourseBuilder({ course, initialModules, redirectAfterSave }: Cou
             }
           : m
       )
+    );
+  }
+
+  async function bulkPublishLessons(lessonIds: string[], isPublished: boolean) {
+    const res = await fetch("/api/lessons/bulk", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lessonIds, isPublished }),
+    });
+    if (!res.ok) return;
+    setModules((prev) =>
+      prev.map((m) => ({
+        ...m,
+        lessons: m.lessons.map((l) =>
+          lessonIds.includes(l.id) ? { ...l, isPublished } : l
+        ),
+      }))
     );
   }
 
@@ -181,10 +218,13 @@ export function CourseBuilder({ course, initialModules, redirectAfterSave }: Cou
           onSelect={setSelection}
           onAddModule={addModule}
           onDeleteModule={deleteModule}
+          onDuplicateModule={duplicateModule}
           onReorderModules={reorderModules}
           onAddLesson={addLesson}
           onDeleteLesson={deleteLesson}
+          onDuplicateLesson={duplicateLesson}
           onReorderLessons={reorderLessons}
+          onBulkPublish={bulkPublishLessons}
         />
         <EditingPanel
           course={courseData}

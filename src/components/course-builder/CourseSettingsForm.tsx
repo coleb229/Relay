@@ -14,7 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckIcon, LoaderCircleIcon } from "lucide-react";
+import { CheckIcon, LoaderCircleIcon, XIcon } from "lucide-react";
+import { UploadButton } from "@uploadthing/react";
+import type { OurFileRouter } from "@/app/api/uploadthing/core";
 
 interface Props {
   course: CourseData;
@@ -41,6 +43,7 @@ export function CourseSettingsForm({ course, redirectAfterSave, onUpdate }: Prop
   const [status, setStatus] = useState<CourseStatus>(course.status);
   const [price, setPrice] = useState(course.price?.toString() ?? "");
   const [tags, setTags] = useState(course.tags.join(", "));
+  const [imageUrl, setImageUrl] = useState(course.imageUrl ?? "");
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 
   async function handleSave() {
@@ -55,6 +58,7 @@ export function CourseSettingsForm({ course, redirectAfterSave, onUpdate }: Prop
           description: description.trim() || null,
           status,
           price: price !== "" ? parseFloat(price) : null,
+          imageUrl: imageUrl.trim() || null,
           tags: tags
             .split(",")
             .map((t) => t.trim())
@@ -161,6 +165,41 @@ export function CourseSettingsForm({ course, redirectAfterSave, onUpdate }: Prop
               placeholder="0.00"
             />
           </div>
+        </div>
+
+        {/* Cover Image */}
+        <div className="space-y-1.5">
+          <Label>Cover Image</Label>
+          {imageUrl && (
+            <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-border bg-muted">
+              <img src={imageUrl} alt="Course cover" className="w-full h-full object-cover" />
+              <button
+                type="button"
+                onClick={() => setImageUrl("")}
+                className="absolute top-2 right-2 p-1 rounded bg-background/80 hover:bg-background transition-colors"
+                aria-label="Remove image"
+              >
+                <XIcon className="size-3" />
+              </button>
+            </div>
+          )}
+          <UploadButton<OurFileRouter, "courseImage">
+            endpoint="courseImage"
+            onClientUploadComplete={(res) => {
+              if (res?.[0]?.url) setImageUrl(res[0].url);
+            }}
+            onUploadError={(err) => console.error("Upload error:", err)}
+            appearance={{
+              button: "ut-ready:bg-primary ut-ready:text-primary-foreground ut-uploading:opacity-60 text-xs h-8 px-3 rounded-md font-medium",
+              allowedContent: "text-muted-foreground text-xs",
+            }}
+          />
+          <p className="text-xs text-muted-foreground">Or paste an image URL:</p>
+          <Input
+            value={imageUrl}
+            onChange={(e) => setImageUrl(e.target.value)}
+            placeholder="https://example.com/cover.jpg"
+          />
         </div>
 
         {/* Tags */}
