@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -55,6 +56,9 @@ function Divider() {
 }
 
 export function RichTextEditor({ value, onChange }: Props) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const editor = useEditor({
     immediatelyRender: false,
     extensions: [
@@ -75,7 +79,9 @@ export function RichTextEditor({ value, onChange }: Props) {
     },
   });
 
-  if (!editor) return null;
+  if (!mounted || !editor) return (
+    <div className="rounded-lg border border-input min-h-50" />
+  );
 
   return (
     <div className="rounded-lg border border-input overflow-hidden focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 transition-colors dark:bg-input/30">
