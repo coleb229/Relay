@@ -85,6 +85,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `3efacfd` | 2026-03-28 | feat: visual page builder, course catalog, categories, enrollments, and Base UI button fix |
 | `50369db` | 2026-03-11 | feat: course builder phase 3 — duplicate, bulk publish, image upload, attachments |
 | `53cfcbe` | 2026-03-11 | feat: admin user profile editing and role management |
 | `8d0d1d1` | 2026-03-11 | feat: quiz system with grading and attempt tracking |
