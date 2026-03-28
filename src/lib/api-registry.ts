@@ -15,6 +15,8 @@ import { definition as courseByIdDefinition } from "@/app/api/courses/[id]/route
 import { definition as studentsDefinition } from "@/app/api/students/route";
 import { definition as enrollmentsDefinition } from "@/app/api/enrollments/route";
 import { definition as analyticsDefinition } from "@/app/api/analytics/route";
+import { definition as categoriesDefinition } from "@/app/api/categories/route";
+import { definition as categoryByIdDefinition } from "@/app/api/categories/[id]/route";
 
 interface RouteEntry {
   path: string;
@@ -28,6 +30,8 @@ const routes: RouteEntry[] = [
   { path: "/api/students", tag: "Students", definition: studentsDefinition },
   { path: "/api/enrollments", tag: "Enrollments", definition: enrollmentsDefinition },
   { path: "/api/analytics", tag: "Analytics", definition: analyticsDefinition },
+  { path: "/api/categories", tag: "Categories", definition: categoriesDefinition },
+  { path: "/api/categories/{id}", tag: "Categories", definition: categoryByIdDefinition },
 ];
 
 /** Returns all documented endpoints as a flat list, preserving method order. */

@@ -1,101 +1,107 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "../../../../auth";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { CreateCourseDialog } from "@/components/course-builder/CreateCourseDialog";
-import Link from "next/link";
+import { redirect } from "next/navigation";
+import { CourseManager } from "@/components/course-manager/CourseManager";
+import { CatalogBrowser } from "@/components/catalog/CatalogBrowser";
 
 export default async function CoursesPage() {
-  const [session, courses] = await Promise.all([
-    auth(),
+  const session = await auth();
+  if (!session) redirect("/login");
+
+  const categories = await prisma.category.findMany({
+    orderBy: { order: "asc" },
+  });
+
+  // ── Student view: learner catalog ─────────────────────────────────
+  if (session.user.role === "STUDENT") {
+    const [coursesResult, totalCount] = await Promise.all([
+      prisma.course.findMany({
+        where: { status: "PUBLISHED" },
+        take: 20,
+        orderBy: { updatedAt: "desc" },
+        include: {
+          instructor: { select: { id: true, name: true, email: true, image: true } },
+          category: true,
+          _count: { select: { enrollments: true } },
+          enrollments: {
+            where: { userId: session.user.id },
+            select: { id: true, status: true, _count: { select: { progress: true } } },
+            take: 1,
+          },
+          modules: {
+            select: {
+              lessons: {
+                where: { isPublished: true },
+                select: { id: true },
+              },
+            },
+          },
+        },
+      }),
+      prisma.course.count({ where: { status: "PUBLISHED" } }),
+    ]);
+
+    const courses = coursesResult.map((course) => {
+      const enrollment = course.enrollments[0];
+      const publishedLessonCount = course.modules.reduce(
+        (sum, m) => sum + m.lessons.length,
+        0
+      );
+      return {
+        id: course.id,
+        title: course.title,
+        slug: course.slug,
+        description: course.description,
+        imageUrl: course.imageUrl,
+        price: course.price,
+        category: course.category,
+        instructor: { name: course.instructor.name, image: course.instructor.image },
+        _count: course._count,
+        enrollment: enrollment
+          ? { id: enrollment.id, status: enrollment.status, progressCount: enrollment._count.progress, totalLessons: publishedLessonCount }
+          : null,
+        publishedLessonCount,
+      };
+    });
+
+    return (
+      <CatalogBrowser
+        initialCourses={courses}
+        initialTotalCount={totalCount}
+        categories={categories}
+        userId={session.user.id}
+      />
+    );
+  }
+
+  // ── Admin/Instructor view: course manager ─────────────────────────
+  const [coursesResult, totalCount] = await Promise.all([
     prisma.course.findMany({
+      take: 20,
       orderBy: { updatedAt: "desc" },
       include: {
-        instructor: { select: { name: true, email: true } },
+        instructor: { select: { id: true, name: true, email: true } },
+        category: true,
         _count: { select: { enrollments: true } },
       },
     }),
+    prisma.course.count(),
   ]);
-
-  const canCreate =
-    session?.user.role === "ADMIN" || session?.user.role === "INSTRUCTOR";
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div>
         <h1 className="text-3xl font-bold">Courses</h1>
-        {canCreate && session?.user.id && (
-          <CreateCourseDialog instructorId={session.user.id} />
-        )}
+        <p className="text-muted-foreground mt-1">
+          Manage and organize your course catalog
+        </p>
       </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Instructor</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Enrollments</TableHead>
-            <TableHead>Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {courses.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={5}
-                className="text-center text-muted-foreground py-8"
-              >
-                No courses yet.
-              </TableCell>
-            </TableRow>
-          ) : (
-            courses.map((course) => (
-              <TableRow key={course.id}>
-                <TableCell>
-                  <Link
-                    href={`/courses/${course.id}`}
-                    className="font-medium hover:underline"
-                  >
-                    {course.title}
-                  </Link>
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {course.instructor.name ?? course.instructor.email}
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      course.status === "PUBLISHED"
-                        ? "default"
-                        : course.status === "DRAFT"
-                        ? "secondary"
-                        : "outline"
-                    }
-                  >
-                    {course.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>{course._count.enrollments}</TableCell>
-                <TableCell>
-                  {course.price != null
-                    ? course.price === 0
-                      ? "Free"
-                      : `$${course.price.toFixed(2)}`
-                    : "—"}
-                </TableCell>
-              </TableRow>
-            ))
-          )}
-        </TableBody>
-      </Table>
+      <CourseManager
+        initialCourses={coursesResult}
+        initialTotalCount={totalCount}
+        categories={categories}
+        session={session}
+      />
     </div>
   );
 }

@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ============================================================
@@ -13,7 +14,7 @@ datasource db {
 // ============================================================
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
@@ -21,11 +22,11 @@ model User {
   role          UserRole  @default(ADMIN) // CHANGE DEFAULT TO STUDENT AFTER TESTING PHASE
   bio           String?
 
-  accounts      Account[]
-  sessions      Session[]
-  enrollments   Enrollment[]
-  courses       Course[]     @relation("CourseInstructor")
-  quizAttempts  QuizAttempt[]
+  accounts     Account[]
+  sessions     Session[]
+  enrollments  Enrollment[]
+  courses      Course[]      @relation("CourseInstructor")
+  quizAttempts QuizAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,17 +39,17 @@ enum UserRole {
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String  @id @default(cuid())
+  userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String? @db.Text
   session_state     String?
 
   createdAt DateTime @default(now())
@@ -60,9 +61,9 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       String
   expires      DateTime
 
   createdAt DateTime @default(now())
@@ -72,7 +73,7 @@ model Session {
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(cuid())
   identifier String
   token      String
   expires    DateTime
@@ -84,8 +85,21 @@ model VerificationToken {
 // LMS Core Models
 // ============================================================
 
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?
+  order       Int      @default(0)
+  courses     Course[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Course {
-  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  id           String       @id @default(cuid())
   slug         String       @unique
   title        String
   description  String?
@@ -93,9 +107,12 @@ model Course {
   status       CourseStatus @default(DRAFT)
   price        Float?
   tags         String[]
-  instructorId String       @db.ObjectId
+  instructorId        String
+  categoryId          String?
+  landingPageSections Json?
 
   instructor  User         @relation("CourseInstructor", fields: [instructorId], references: [id])
+  category    Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   modules     Module[]
   enrollments Enrollment[]
 
@@ -110,8 +127,8 @@ enum CourseStatus {
 }
 
 model Module {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  courseId    String  @db.ObjectId
+  id          String  @id @default(cuid())
+  courseId    String
   title       String
   description String?
   order       Int     @default(0)
@@ -124,14 +141,14 @@ model Module {
 }
 
 model Lesson {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  moduleId    String     @db.ObjectId
+  id          String     @id @default(cuid())
+  moduleId    String
   title       String
   description String?
-  content     String?    // Rich text / MDX
+  content     String?    @db.Text
   videoUrl    String?
   order       Int        @default(0)
-  duration    Int?       // seconds
+  duration    Int?
   type        LessonType @default(TEXT)
   isPublished Boolean    @default(false)
 
@@ -152,9 +169,9 @@ enum LessonType {
 }
 
 model Enrollment {
-  id          String           @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String           @db.ObjectId
-  courseId    String           @db.ObjectId
+  id          String           @id @default(cuid())
+  userId      String
+  courseId    String
   status      EnrollmentStatus @default(ACTIVE)
   enrolledAt  DateTime         @default(now())
   completedAt DateTime?
@@ -177,9 +194,9 @@ enum EnrollmentStatus {
 }
 
 model Progress {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  enrollmentId String    @db.ObjectId
-  lessonId     String    @db.ObjectId
+  id           String    @id @default(cuid())
+  enrollmentId String
+  lessonId     String
   completedAt  DateTime?
 
   enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
@@ -201,8 +218,8 @@ enum QuestionType {
 }
 
 model QuizQuestion {
-  id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  lessonId       String       @db.ObjectId
+  id             String       @id @default(cuid())
+  lessonId       String
   type           QuestionType
   prompt         String
   order          Int          @default(0)
@@ -217,8 +234,8 @@ model QuizQuestion {
 }
 
 model QuizOption {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  questionId String  @db.ObjectId
+  id         String  @id @default(cuid())
+  questionId String
   text       String
   isCorrect  Boolean @default(false)
   order      Int     @default(0)
@@ -227,9 +244,9 @@ model QuizOption {
 }
 
 model QuizAttempt {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  lessonId    String   @db.ObjectId
-  userId      String   @db.ObjectId
+  id          String   @id @default(cuid())
+  lessonId    String
+  userId      String
   score       Float
   submittedAt DateTime @default(now())
 
@@ -239,10 +256,10 @@ model QuizAttempt {
 }
 
 model QuizAnswer {
-  id               String  @id @default(auto()) @map("_id") @db.ObjectId
-  attemptId        String  @db.ObjectId
-  questionId       String  @db.ObjectId
-  selectedOptionId String? @db.ObjectId
+  id               String  @id @default(cuid())
+  attemptId        String
+  questionId       String
+  selectedOptionId String?
   textAnswer       String?
   isCorrect        Boolean
 
@@ -251,8 +268,8 @@ model QuizAnswer {
 }
 
 model LessonAttachment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  lessonId  String   @db.ObjectId
+  id        String   @id @default(cuid())
+  lessonId  String
   name      String
   url       String
   size      Int

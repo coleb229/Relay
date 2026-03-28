@@ -33,6 +33,15 @@ export interface CourseData {
   price: number | null;
   tags: string[];
   instructorId: string;
+  categoryId: string | null;
+  landingPageSections: unknown[] | null;
+}
+
+export interface CategoryData {
+  id: string;
+  name: string;
+  slug: string;
+  color: string | null;
 }
 
 export type Selection =

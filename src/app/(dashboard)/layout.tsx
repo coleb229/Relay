@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/nav/app-sidebar";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { BugReportButton } from "@/components/bug-report/BugReportButton";
 
 export default async function DashboardLayout({
   children,
@@ -21,7 +22,10 @@ export default async function DashboardLayout({
       <div className="flex flex-col flex-1 overflow-hidden">
         <header className="h-14 shrink-0 border-b bg-background/95 backdrop-blur-sm px-4 flex items-center justify-between">
           <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-          <ThemeToggle />
+          <div className="flex items-center gap-1">
+            <BugReportButton user={session.user} />
+            <ThemeToggle />
+          </div>
         </header>
         <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>

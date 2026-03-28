@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7a1a5a"/>
+      <stop offset="100%" stop-color="#d44a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <!-- Abstract shapes -->
+  <circle cx="400" cy="300" r="120" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+  <rect x="600" y="200" width="200" height="200" rx="8" fill="none" stroke="white" stroke-width="2" opacity="0.3" transform="rotate(15, 700, 300)"/>
+  <polygon points="950,180 1060,380 840,380" fill="none" stroke="white" stroke-width="2" opacity="0.3"/>
+  <!-- Color swatches -->
+  <g transform="translate(300, 480)" opacity="0.4">
+    <rect x="0" y="0" width="80" height="80" rx="12" fill="#ff6b9d"/>
+    <rect x="100" y="0" width="80" height="80" rx="12" fill="#c44dff"/>
+    <rect x="200" y="0" width="80" height="80" rx="12" fill="#ff4d8d"/>
+    <rect x="300" y="0" width="80" height="80" rx="12" fill="#ff8fb1"/>
+    <rect x="400" y="0" width="80" height="80" rx="12" fill="#e066a0"/>
+    <rect x="500" y="0" width="80" height="80" rx="12" fill="#ff99c8"/>
+  </g>
+</svg>

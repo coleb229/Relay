@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7a4a1a"/>
+      <stop offset="100%" stop-color="#d4a04a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <!-- Sound wave -->
+  <g transform="translate(140, 360)" opacity="0.5">
+    <path d="M0,0 Q50,-120 100,0 Q150,120 200,0 Q250,-180 300,0 Q350,180 400,0 Q450,-150 500,0 Q550,100 600,0 Q650,-80 700,0 Q750,60 800,0 Q850,-40 900,0 Q950,30 1000,0" fill="none" stroke="white" stroke-width="3"/>
+  </g>
+  <!-- Audio bars -->
+  <g transform="translate(340, 250)" opacity="0.3">
+    <rect x="0" y="80" width="30" height="160" rx="4" fill="white"/>
+    <rect x="60" y="40" width="30" height="240" rx="4" fill="white"/>
+    <rect x="120" y="0" width="30" height="320" rx="4" fill="white"/>
+    <rect x="180" y="60" width="30" height="200" rx="4" fill="white"/>
+    <rect x="240" y="20" width="30" height="280" rx="4" fill="white"/>
+    <rect x="300" y="100" width="30" height="120" rx="4" fill="white"/>
+    <rect x="360" y="30" width="30" height="260" rx="4" fill="white"/>
+    <rect x="420" y="70" width="30" height="180" rx="4" fill="white"/>
+    <rect x="480" y="50" width="30" height="220" rx="4" fill="white"/>
+    <rect x="540" y="90" width="30" height="140" rx="4" fill="white"/>
+  </g>
+</svg>

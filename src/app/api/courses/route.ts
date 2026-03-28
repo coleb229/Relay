@@ -6,14 +6,32 @@ export const definition: RouteDefinition = {
   GET: {
     summary: "List courses",
     description:
-      "Returns a paginated list of courses. Optionally filter by status. Results include the instructor name and enrollment count.",
+      "Returns a paginated list of courses. Optionally filter by status, search by title, or filter by category/instructor. Results include the instructor name, category, and enrollment count.",
     parameters: [
+      {
+        name: "search",
+        in: "query",
+        description: "Case-insensitive search on course title",
+        type: "string",
+      },
       {
         name: "status",
         in: "query",
         description: "Filter by course status",
         type: "string",
         enum: ["DRAFT", "PUBLISHED", "ARCHIVED"],
+      },
+      {
+        name: "categoryId",
+        in: "query",
+        description: "Filter by category ID",
+        type: "string",
+      },
+      {
+        name: "instructorId",
+        in: "query",
+        description: "Filter by instructor ID",
+        type: "string",
       },
       {
         name: "page",
@@ -31,7 +49,7 @@ export const definition: RouteDefinition = {
       },
     ],
     responses: {
-      200: { description: "Paginated list of courses with meta" },
+      200: { description: "Paginated list of courses with meta and totalCount" },
       401: { description: "Not authenticated" },
     },
   },
@@ -73,27 +91,76 @@ export async function GET(req: Request) {
   if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const { searchParams } = new URL(req.url);
+  const search = searchParams.get("search");
   const status = searchParams.get("status") as "DRAFT" | "PUBLISHED" | "ARCHIVED" | null;
+  const categoryId = searchParams.get("categoryId");
+  const instructorId = searchParams.get("instructorId");
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
   const limit = Math.min(100, Math.max(1, parseInt(searchParams.get("limit") ?? "20")));
 
-  const where = status ? { status } : {};
+  const withEnrollment = searchParams.get("withEnrollment");
 
-  const [data, total] = await Promise.all([
+  const where: Record<string, unknown> = {};
+  if (status) where.status = status;
+  if (categoryId) where.categoryId = categoryId;
+  if (instructorId) where.instructorId = instructorId;
+  if (search) where.title = { contains: search, mode: "insensitive" };
+
+  const include: Record<string, unknown> = {
+    instructor: { select: { id: true, name: true, email: true, image: true } },
+    category: true,
+    _count: { select: { enrollments: true } },
+  };
+
+  if (withEnrollment) {
+    include.enrollments = {
+      where: { userId: withEnrollment },
+      select: { id: true, status: true, _count: { select: { progress: true } } },
+      take: 1,
+    };
+    include.modules = {
+      select: {
+        lessons: {
+          where: { isPublished: true },
+          select: { id: true },
+        },
+      },
+    };
+  }
+
+  const [data, totalCount] = await Promise.all([
     prisma.course.findMany({
       where,
       skip: (page - 1) * limit,
       take: limit,
       orderBy: { updatedAt: "desc" },
-      include: {
-        instructor: { select: { id: true, name: true, email: true } },
-        _count: { select: { enrollments: true } },
-      },
+      include,
     }),
     prisma.course.count({ where }),
   ]);
 
-  return Response.json({ data, meta: { page, limit, total, pages: Math.ceil(total / limit) } });
+  // Enrich response with enrollment + lesson count when requested
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const responseData = withEnrollment
+    ? data.map((course: any) => {
+        const enrollment = course.enrollments?.[0];
+        const publishedLessonCount = course.modules?.reduce(
+          (sum: number, m: any) => sum + (m.lessons?.length ?? 0),
+          0
+        ) ?? 0;
+        const { enrollments: _e, modules: _m, ...rest } = course;
+        return {
+          ...rest,
+          enrollment: enrollment
+            ? { id: enrollment.id, status: enrollment.status, progressCount: enrollment._count?.progress ?? 0 }
+            : null,
+          publishedLessonCount,
+        };
+      })
+    : data;
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  return Response.json({ data: responseData, totalCount, meta: { page, limit, total: totalCount, pages: Math.ceil(totalCount / limit) } });
 }
 
 export async function POST(req: Request) {

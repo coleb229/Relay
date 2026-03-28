@@ -1,0 +1,55 @@
+import { cn } from "@/lib/utils";
+import { Quote } from "lucide-react";
+import type { TestimonialsSection as TestimonialsSectionType } from "../schemas";
+
+interface TestimonialsSectionProps {
+  config: TestimonialsSectionType["config"];
+}
+
+export function TestimonialsSection({ config }: TestimonialsSectionProps) {
+  const { heading, items } = config;
+
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className="mx-auto max-w-5xl px-6">
+      {heading && (
+        <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">
+          {heading}
+        </h2>
+      )}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {items.map((item, i) => (
+          <div
+            key={i}
+            className="relative rounded-xl border border-border/50 bg-card p-6 shadow-sm"
+          >
+            <Quote className="mb-3 size-5 text-primary/30" />
+            <blockquote className="text-sm italic leading-relaxed text-muted-foreground">
+              &ldquo;{item.quote}&rdquo;
+            </blockquote>
+            <div className="mt-4 flex items-center gap-3">
+              {item.authorAvatar ? (
+                <img
+                  src={item.authorAvatar}
+                  alt={item.authorName}
+                  className="size-9 rounded-full object-cover ring-1 ring-border"
+                />
+              ) : (
+                <div className="flex size-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary ring-1 ring-border">
+                  {item.authorName
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </div>
+              )}
+              <span className="text-sm font-medium">{item.authorName}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

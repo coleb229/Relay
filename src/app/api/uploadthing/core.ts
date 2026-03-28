@@ -3,6 +3,12 @@ import { auth } from "../../../../auth";
 
 const f = createUploadthing();
 
+async function requireAuthenticated() {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorized");
+  return { userId: session.user.id };
+}
+
 async function requireInstructor() {
   const session = await auth();
   if (!session) throw new Error("Unauthorized");
@@ -23,6 +29,17 @@ export const ourFileRouter = {
     .middleware(requireInstructor)
     .onUploadComplete(async ({ file }) => {
       return { url: file.url, name: file.name, size: file.size };
+    }),
+  sectionImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    .middleware(requireInstructor)
+    .onUploadComplete(async ({ file }) => {
+      return { url: file.url };
+    }),
+
+  bugReportImage: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
+    .middleware(requireAuthenticated)
+    .onUploadComplete(async ({ file }) => {
+      return { url: file.url };
     }),
 } satisfies FileRouter;
 

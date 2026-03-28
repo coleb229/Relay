@@ -49,6 +49,7 @@ export const definition: RouteDefinition = {
         price: { type: "number", description: "Price in USD" },
         imageUrl: { type: "string", description: "URL to cover image" },
         tags: { type: "string[]", description: "Array of tag strings" },
+        categoryId: { type: "string", description: "Category ID (null to unset)" },
       },
     },
     responses: {
@@ -120,7 +121,7 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await req.json();
-  const { title, slug, description, status, price, imageUrl, tags } = body;
+  const { title, slug, description, status, price, imageUrl, tags, categoryId, landingPageSections } = body;
 
   try {
     const course = await prisma.course.update({
@@ -133,6 +134,8 @@ export async function PATCH(
         ...(price !== undefined && { price }),
         ...(imageUrl !== undefined && { imageUrl }),
         ...(tags !== undefined && { tags }),
+        ...(categoryId !== undefined && { categoryId }),
+        ...(landingPageSections !== undefined && { landingPageSections }),
       },
     });
     return Response.json(course);

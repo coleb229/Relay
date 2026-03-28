@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "../../../../../../auth";
 import { CourseBuilder } from "@/components/course-builder/CourseBuilder";
-import type { CourseData, ModuleData } from "@/components/course-builder/types";
+import type { CourseData, ModuleData, CategoryData } from "@/components/course-builder/types";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -20,17 +20,23 @@ export default async function CourseEditPage({ params, searchParams }: Props) {
 
   const [{ id }, { new: isNew }] = await Promise.all([params, searchParams]);
 
-  const course = await prisma.course.findUnique({
-    where: { id },
-    include: {
-      modules: {
-        orderBy: { order: "asc" },
-        include: {
-          lessons: { orderBy: { order: "asc" } },
+  const [course, categories] = await Promise.all([
+    prisma.course.findUnique({
+      where: { id },
+      include: {
+        modules: {
+          orderBy: { order: "asc" },
+          include: {
+            lessons: { orderBy: { order: "asc" } },
+          },
         },
       },
-    },
-  });
+    }),
+    prisma.category.findMany({
+      orderBy: { order: "asc" },
+      select: { id: true, name: true, slug: true, color: true },
+    }),
+  ]);
 
   if (!course) notFound();
 
@@ -44,6 +50,8 @@ export default async function CourseEditPage({ params, searchParams }: Props) {
     price: course.price,
     tags: course.tags,
     instructorId: course.instructorId,
+    categoryId: course.categoryId,
+    landingPageSections: course.landingPageSections as unknown[] | null,
   };
 
   const modulesData: ModuleData[] = course.modules.map((mod) => ({
@@ -71,6 +79,7 @@ export default async function CourseEditPage({ params, searchParams }: Props) {
       <CourseBuilder
         course={courseData}
         initialModules={modulesData}
+        categories={categories}
         redirectAfterSave={isNew === "1" ? "/courses" : `/courses/${courseData.id}`}
       />
     </div>
