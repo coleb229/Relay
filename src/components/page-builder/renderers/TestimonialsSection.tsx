@@ -22,7 +22,7 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
         {items.map((item, i) => (
           <div
             key={i}
-            className="relative rounded-xl border border-border/50 bg-card p-6 shadow-sm"
+            className="relative rounded-xl border border-border/50 bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <Quote className="mb-3 size-5 text-primary/30" />
             <blockquote className="text-sm italic leading-relaxed text-muted-foreground">

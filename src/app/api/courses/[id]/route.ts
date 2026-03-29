@@ -47,6 +47,8 @@ export const definition: RouteDefinition = {
           description: "Course status",
         },
         price: { type: "number", description: "Price in USD" },
+        compareAtPrice: { type: "number", description: "Compare-at price for showing discounts" },
+        pricingType: { type: "string", enum: ["FREE", "ONE_TIME"], description: "Pricing model" },
         imageUrl: { type: "string", description: "URL to cover image" },
         tags: { type: "string[]", description: "Array of tag strings" },
         categoryId: { type: "string", description: "Category ID (null to unset)" },
@@ -121,7 +123,7 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await req.json();
-  const { title, slug, description, status, price, imageUrl, tags, categoryId, landingPageSections } = body;
+  const { title, slug, description, status, price, compareAtPrice, pricingType, imageUrl, tags, categoryId, landingPageSections } = body;
 
   try {
     const course = await prisma.course.update({
@@ -132,6 +134,8 @@ export async function PATCH(
         ...(description !== undefined && { description }),
         ...(status !== undefined && { status }),
         ...(price !== undefined && { price }),
+        ...(compareAtPrice !== undefined && { compareAtPrice }),
+        ...(pricingType !== undefined && { pricingType }),
         ...(imageUrl !== undefined && { imageUrl }),
         ...(tags !== undefined && { tags }),
         ...(categoryId !== undefined && { categoryId }),

@@ -14,12 +14,22 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
-import { CheckIcon, LoaderCircleIcon, CloudOffIcon } from "lucide-react";
+import {
+  CheckIcon,
+  LoaderCircleIcon,
+  CloudOffIcon,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Undo2,
+  Redo2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PageBuilderProps } from "./types";
 import type { SaveStatus } from "./types";
 import type { PageSection, SectionType, SectionStyle } from "./schemas";
 import { generateDefaultSections } from "./defaults";
+import { useHistory } from "./useHistory";
 import { SectionWrapper } from "./SectionWrapper";
 import { AddSectionButton } from "./AddSectionButton";
 import { SectionPropertiesPanel } from "./editors/SectionPropertiesPanel";
@@ -61,30 +71,93 @@ function createDefaultConfig(type: SectionType): PageSection["config"] {
       };
     case "TESTIMONIALS":
       return { heading: "What Students Say", items: [] };
+    case "FAQ_ACCORDION":
+      return { heading: "Frequently Asked Questions", items: [] };
+    case "VIDEO_EMBED":
+      return {
+        heading: "",
+        videoUrl: "",
+        provider: "youtube" as const,
+        aspectRatio: "16:9" as const,
+        maxWidth: "lg" as const,
+      };
+    case "STATS_BAR":
+      return { heading: "", columnCount: 4 as const, columns: [] };
+    case "PRICING_TABLE":
+      return {
+        heading: "Pricing",
+        description: "",
+        showCompareAtPrice: true,
+        ctaText: "Enroll Now",
+        ctaLink: "",
+        features: [],
+      };
+    case "LOGO_WALL":
+      return {
+        heading: "Trusted By",
+        logos: [],
+        grayscale: true,
+        maxLogoHeight: "md" as const,
+      };
+    case "DIVIDER_SPACER":
+      return {
+        variant: "line" as const,
+        thickness: "thin" as const,
+        width: "full" as const,
+        color: null,
+        spacingY: "md" as const,
+      };
   }
 }
+
+const DEFAULT_STYLE: SectionStyle = {
+  alignment: "center",
+  verticalAlignment: "center",
+  backgroundColor: null,
+  backgroundImageUrl: null,
+  paddingY: "md",
+  borderRadius: "none",
+  boxShadow: "none",
+  maxWidth: "full",
+  backgroundGradient: null,
+  paddingX: "md",
+};
+
+type PreviewWidth = "desktop" | "tablet" | "mobile";
+
+const PREVIEW_WIDTH_MAP: Record<PreviewWidth, string> = {
+  desktop: "max-w-4xl",
+  tablet: "max-w-md",
+  mobile: "max-w-sm",
+};
 
 // ── PageBuilder ──────────────────────────────────────────────────────
 
 export function PageBuilder({
-  courseId,
+  saveEndpoint,
+  savePayloadKey,
   initialSections,
-  courseTitle,
-  courseDescription,
-  courseImageUrl,
-  courseInstructor,
-  modules: builderModules,
+  context,
+  defaultSectionsConfig,
 }: PageBuilderProps) {
-  const [sections, setSections] = useState<PageSection[]>(() => {
+  const {
+    state: sections,
+    set: setSections,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  } = useHistory<PageSection[]>(() => {
     if (initialSections && initialSections.length > 0) return initialSections;
-    return generateDefaultSections({
-      title: courseTitle,
-      description: courseDescription,
-      imageUrl: courseImageUrl,
-    });
+    if (defaultSectionsConfig) {
+      return generateDefaultSections(defaultSectionsConfig);
+    }
+    return [];
   });
+
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
+  const [previewWidth, setPreviewWidth] = useState<PreviewWidth>("desktop");
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sectionsRef = useRef(sections);
@@ -96,32 +169,31 @@ export function PageBuilder({
     saveTimerRef.current = setTimeout(async () => {
       setSaveStatus("saving");
       try {
-        const res = await fetch(`/api/courses/${courseId}`, {
+        const res = await fetch(saveEndpoint, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ landingPageSections: sectionsRef.current }),
+          body: JSON.stringify({ [savePayloadKey]: sectionsRef.current }),
         });
         setSaveStatus(res.ok ? "saved" : "error");
       } catch {
         setSaveStatus("error");
       }
     }, 800);
-  }, [courseId]);
+  }, [saveEndpoint, savePayloadKey]);
 
   // Flush pending save on unmount
   useEffect(() => {
     return () => {
       if (saveTimerRef.current) {
         clearTimeout(saveTimerRef.current);
-        // fire-and-forget flush
-        fetch(`/api/courses/${courseId}`, {
+        fetch(saveEndpoint, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ landingPageSections: sectionsRef.current }),
+          body: JSON.stringify({ [savePayloadKey]: sectionsRef.current }),
         });
       }
     };
-  }, [courseId]);
+  }, [saveEndpoint, savePayloadKey]);
 
   // Trigger auto-save on sections change (skip initial mount)
   const isFirstRender = useRef(true);
@@ -132,6 +204,22 @@ export function PageBuilder({
     }
     scheduleSave();
   }, [sections, scheduleSave]);
+
+  // ── Keyboard shortcuts ────────────────────────────────────────────
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "z") {
+        e.preventDefault();
+        if (e.shiftKey) {
+          redo();
+        } else {
+          undo();
+        }
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [undo, redo]);
 
   // ── DnD setup ────────────────────────────────────────────────────
   const sensors = useSensors(
@@ -158,13 +246,7 @@ export function PageBuilder({
       type,
       order: position,
       visible: true,
-      style: {
-        alignment: "center",
-        verticalAlignment: "center",
-        backgroundColor: null,
-        backgroundImageUrl: null,
-        paddingY: "md",
-      },
+      style: { ...DEFAULT_STYLE },
       config: createDefaultConfig(type),
     } as PageSection;
 
@@ -240,18 +322,67 @@ export function PageBuilder({
   const selectedSection = sections.find((s) => s.id === selectedSectionId) ?? null;
 
   const rendererContext = {
-    courseId,
-    modules: builderModules,
-    instructor: courseInstructor ? { ...courseInstructor, courseCount: undefined } : undefined,
+    courseId: context?.courseId,
+    modules: context?.modules,
+    instructor: context?.instructor,
+    price: context?.price,
+    compareAtPrice: context?.compareAtPrice,
   };
 
   // ── Render ───────────────────────────────────────────────────────
   return (
     <div className="flex h-full">
       {/* Center: preview area */}
-      <div className="flex-1 overflow-auto bg-muted/30 p-6 relative">
-        {/* Save status badge */}
-        <div className="absolute top-3 right-3 z-10">
+      <div className="flex-1 overflow-auto bg-muted/30 p-6 relative bg-[radial-gradient(circle,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px]">
+        {/* Top toolbar */}
+        <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between">
+          {/* Left: undo/redo + preview width */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={undo}
+              disabled={!canUndo}
+              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              title="Undo (Cmd+Z)"
+            >
+              <Undo2 className="size-3.5" />
+            </button>
+            <button
+              onClick={redo}
+              disabled={!canRedo}
+              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              title="Redo (Cmd+Shift+Z)"
+            >
+              <Redo2 className="size-3.5" />
+            </button>
+
+            <div className="w-px h-4 bg-border mx-1" />
+
+            <div className="flex items-center gap-0.5 rounded-md border bg-background p-0.5">
+              {(
+                [
+                  { value: "desktop", icon: Monitor, label: "Desktop" },
+                  { value: "tablet", icon: Tablet, label: "Tablet" },
+                  { value: "mobile", icon: Smartphone, label: "Mobile" },
+                ] as const
+              ).map(({ value, icon: Icon, label }) => (
+                <button
+                  key={value}
+                  onClick={() => setPreviewWidth(value)}
+                  className={cn(
+                    "flex items-center justify-center size-7 rounded transition-colors",
+                    previewWidth === value
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  )}
+                  title={label}
+                >
+                  <Icon className="size-3.5" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right: save status */}
           <div
             className={cn(
               "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-opacity",
@@ -282,7 +413,7 @@ export function PageBuilder({
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto space-y-0">
+        <div className={cn(PREVIEW_WIDTH_MAP[previewWidth], "mx-auto space-y-0 mt-10 transition-all duration-300")}>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

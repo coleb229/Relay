@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# claude files
+.claude/
+.agents/
+
+# mcp config
+.mcp.json
+
+# generated assets & captures
+nanobanana-output/
+.firecrawl/
+skills-lock.json
+
+# playwright screenshots (root level)
+sidebar-*.png

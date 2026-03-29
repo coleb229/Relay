@@ -82,12 +82,19 @@ export function FeaturesGridSection({ config }: FeaturesGridSectionProps) {
         <div className={gridColsClass}>
           {columns.map((col, i) => {
             const Icon = ICON_MAP[col.icon] ?? BookOpen;
+            const iconStyles = [
+              { bg: "bg-primary/10", text: "text-primary" },
+              { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400" },
+              { bg: "bg-emerald-500/10", text: "text-emerald-600 dark:text-emerald-400" },
+              { bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400" },
+            ];
+            const style = iconStyles[i % iconStyles.length];
             return (
               <div
                 key={i}
                 className="rounded-xl border border-border/50 bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
               >
-                <div className="mb-3 flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className={`mb-3 flex size-10 items-center justify-center rounded-lg ${style.bg} ${style.text}`}>
                   <Icon className="size-5" />
                 </div>
                 {col.heading && (

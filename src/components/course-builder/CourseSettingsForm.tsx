@@ -18,6 +18,7 @@ import {
 import { CheckIcon, LoaderCircleIcon, XIcon, ImageIcon, DollarSignIcon, SettingsIcon, TagIcon } from "lucide-react";
 import { UploadButton } from "@uploadthing/react";
 import type { OurFileRouter } from "@/app/api/uploadthing/core";
+import { PricingFields } from "@/components/payments/PricingFields";
 
 interface Props {
   course: CourseData;
@@ -47,6 +48,12 @@ export function CourseSettingsForm({ course, categories, redirectAfterSave, onUp
   const [tags, setTags] = useState(course.tags.join(", "));
   const [imageUrl, setImageUrl] = useState(course.imageUrl ?? "");
   const [categoryId, setCategoryId] = useState(course.categoryId ?? "");
+  const [compareAtPrice, setCompareAtPrice] = useState(
+    course.compareAtPrice?.toString() ?? ""
+  );
+  const [pricingType, setPricingType] = useState(
+    course.pricingType ?? "FREE"
+  );
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
 
   async function handleSave() {
@@ -61,6 +68,8 @@ export function CourseSettingsForm({ course, categories, redirectAfterSave, onUp
           description: description.trim() || null,
           status,
           price: price !== "" ? parseFloat(price) : null,
+          compareAtPrice: compareAtPrice !== "" ? parseFloat(compareAtPrice) : null,
+          pricingType,
           imageUrl: imageUrl.trim() || null,
           categoryId: categoryId || null,
           tags: tags
@@ -264,39 +273,14 @@ export function CourseSettingsForm({ course, categories, redirectAfterSave, onUp
 
         {/* ── Pricing & Access Tab ────────────────────────────── */}
         <TabsContent value="pricing" className="pt-5 space-y-4">
-          <div className="space-y-1.5">
-            <Label htmlFor="price">
-              Price{" "}
-              <span className="text-muted-foreground font-normal">(USD)</span>
-            </Label>
-            <p className="text-xs text-muted-foreground">
-              Leave blank or set to 0 for a free course.
-            </p>
-            <div className="relative max-w-xs">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
-                $
-              </span>
-              <Input
-                id="price"
-                type="number"
-                min="0"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="pl-7"
-                placeholder="0.00"
-              />
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2">
-            <p className="text-sm font-medium">Access Model</p>
-            <p className="text-xs text-muted-foreground">
-              {price && parseFloat(price) > 0
-                ? `Students will pay $${parseFloat(price).toFixed(2)} to enroll in this course.`
-                : "This course is free. Anyone can enroll without payment."}
-            </p>
-          </div>
+          <PricingFields
+            pricingType={pricingType}
+            price={price}
+            compareAtPrice={compareAtPrice}
+            onPricingTypeChange={(v) => setPricingType(v as "FREE" | "ONE_TIME")}
+            onPriceChange={setPrice}
+            onCompareAtPriceChange={setCompareAtPrice}
+          />
         </TabsContent>
       </Tabs>
 

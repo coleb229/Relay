@@ -11,6 +11,12 @@ export const SECTION_TYPES = [
   "CURRICULUM_PREVIEW",
   "CALL_TO_ACTION",
   "TESTIMONIALS",
+  "FAQ_ACCORDION",
+  "VIDEO_EMBED",
+  "STATS_BAR",
+  "PRICING_TABLE",
+  "LOGO_WALL",
+  "DIVIDER_SPACER",
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPES)[number];
@@ -23,6 +29,11 @@ export const sectionStyleSchema = z.object({
   backgroundColor: z.string().nullable().default(null),
   backgroundImageUrl: z.string().nullable().default(null),
   paddingY: z.enum(["sm", "md", "lg", "xl"]).default("md"),
+  borderRadius: z.enum(["none", "sm", "md", "lg", "xl", "2xl"]).default("none"),
+  boxShadow: z.enum(["none", "sm", "md", "lg"]).default("none"),
+  maxWidth: z.enum(["sm", "md", "lg", "xl", "full"]).default("full"),
+  backgroundGradient: z.string().nullable().default(null),
+  paddingX: z.enum(["none", "sm", "md", "lg"]).default("md"),
 });
 
 export type SectionStyle = z.infer<typeof sectionStyleSchema>;
@@ -89,6 +100,75 @@ export const testimonialsConfigSchema = z.object({
     .default([]),
 });
 
+// ── New Section Config Schemas ─────────────────────────────────────
+
+export const faqAccordionConfigSchema = z.object({
+  heading: z.string().default("Frequently Asked Questions"),
+  items: z
+    .array(
+      z.object({
+        question: z.string().default(""),
+        answer: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+export const videoEmbedConfigSchema = z.object({
+  heading: z.string().default(""),
+  videoUrl: z.string().default(""),
+  provider: z.enum(["youtube", "vimeo", "custom"]).default("youtube"),
+  aspectRatio: z.enum(["16:9", "4:3", "1:1"]).default("16:9"),
+  maxWidth: z.enum(["sm", "md", "lg", "full"]).default("lg"),
+});
+
+export const statsBarConfigSchema = z.object({
+  heading: z.string().default(""),
+  columnCount: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(4),
+  columns: z
+    .array(
+      z.object({
+        value: z.string().default("0"),
+        label: z.string().default(""),
+        prefix: z.string().default(""),
+        suffix: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+export const pricingTableConfigSchema = z.object({
+  heading: z.string().default("Pricing"),
+  description: z.string().default(""),
+  showCompareAtPrice: z.boolean().default(true),
+  ctaText: z.string().default("Enroll Now"),
+  ctaLink: z.string().default(""),
+  features: z.array(z.string()).default([]),
+});
+
+export const logoWallConfigSchema = z.object({
+  heading: z.string().default("Trusted By"),
+  logos: z
+    .array(
+      z.object({
+        imageUrl: z.string().default(""),
+        alt: z.string().default(""),
+        link: z.string().nullable().default(null),
+      })
+    )
+    .default([]),
+  grayscale: z.boolean().default(true),
+  maxLogoHeight: z.enum(["sm", "md", "lg"]).default("md"),
+});
+
+export const dividerSpacerConfigSchema = z.object({
+  variant: z.enum(["line", "dashed", "dotted", "space_only"]).default("line"),
+  thickness: z.enum(["thin", "medium", "thick"]).default("thin"),
+  width: z.enum(["quarter", "half", "three_quarter", "full"]).default("full"),
+  color: z.string().nullable().default(null),
+  spacingY: z.enum(["sm", "md", "lg", "xl"]).default("md"),
+});
+
 // ── Section Schemas (discriminated union) ──────────────────────────
 
 const baseSectionFields = {
@@ -146,6 +226,42 @@ export const testimonialsSectionSchema = z.object({
   config: testimonialsConfigSchema,
 });
 
+export const faqAccordionSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("FAQ_ACCORDION"),
+  config: faqAccordionConfigSchema,
+});
+
+export const videoEmbedSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("VIDEO_EMBED"),
+  config: videoEmbedConfigSchema,
+});
+
+export const statsBarSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("STATS_BAR"),
+  config: statsBarConfigSchema,
+});
+
+export const pricingTableSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("PRICING_TABLE"),
+  config: pricingTableConfigSchema,
+});
+
+export const logoWallSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("LOGO_WALL"),
+  config: logoWallConfigSchema,
+});
+
+export const dividerSpacerSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("DIVIDER_SPACER"),
+  config: dividerSpacerConfigSchema,
+});
+
 export const pageSectionSchema = z.discriminatedUnion("type", [
   heroSectionSchema,
   featuresGridSectionSchema,
@@ -155,6 +271,12 @@ export const pageSectionSchema = z.discriminatedUnion("type", [
   curriculumPreviewSectionSchema,
   callToActionSectionSchema,
   testimonialsSectionSchema,
+  faqAccordionSectionSchema,
+  videoEmbedSectionSchema,
+  statsBarSectionSchema,
+  pricingTableSectionSchema,
+  logoWallSectionSchema,
+  dividerSpacerSectionSchema,
 ]);
 
 export const landingPageSectionsSchema = z.array(pageSectionSchema);
@@ -168,6 +290,12 @@ export type InstructorBioSection = z.infer<typeof instructorBioSectionSchema>;
 export type CurriculumPreviewSection = z.infer<typeof curriculumPreviewSectionSchema>;
 export type CallToActionSection = z.infer<typeof callToActionSectionSchema>;
 export type TestimonialsSection = z.infer<typeof testimonialsSectionSchema>;
+export type FaqAccordionSection = z.infer<typeof faqAccordionSectionSchema>;
+export type VideoEmbedSection = z.infer<typeof videoEmbedSectionSchema>;
+export type StatsBarSection = z.infer<typeof statsBarSectionSchema>;
+export type PricingTableSection = z.infer<typeof pricingTableSectionSchema>;
+export type LogoWallSection = z.infer<typeof logoWallSectionSchema>;
+export type DividerSpacerSection = z.infer<typeof dividerSpacerSectionSchema>;
 
 // ── Section Labels & Icons ─────────────────────────────────────────
 
@@ -180,6 +308,12 @@ export const SECTION_LABELS: Record<SectionType, string> = {
   CURRICULUM_PREVIEW: "Curriculum Preview",
   CALL_TO_ACTION: "Call to Action",
   TESTIMONIALS: "Testimonials",
+  FAQ_ACCORDION: "FAQ",
+  VIDEO_EMBED: "Video Embed",
+  STATS_BAR: "Stats Bar",
+  PRICING_TABLE: "Pricing",
+  LOGO_WALL: "Logo Wall",
+  DIVIDER_SPACER: "Divider",
 };
 
 export const SECTION_ICONS: Record<SectionType, string> = {
@@ -191,4 +325,10 @@ export const SECTION_ICONS: Record<SectionType, string> = {
   CURRICULUM_PREVIEW: "BookOpen",
   CALL_TO_ACTION: "MousePointerClick",
   TESTIMONIALS: "MessageSquareQuote",
+  FAQ_ACCORDION: "HelpCircle",
+  VIDEO_EMBED: "PlayCircle",
+  STATS_BAR: "BarChart3",
+  PRICING_TABLE: "CreditCard",
+  LOGO_WALL: "Building2",
+  DIVIDER_SPACER: "Minus",
 };

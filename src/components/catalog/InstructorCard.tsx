@@ -30,7 +30,7 @@ export function InstructorCard({ instructor }: InstructorCardProps) {
             {instructor.bio}
           </p>
         )}
-        <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+        <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
           <BookOpen className="size-3" />
           {instructor.courseCount} {instructor.courseCount === 1 ? "course" : "courses"}
         </div>

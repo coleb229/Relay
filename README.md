@@ -1,26 +1,55 @@
 # Relay
 
-An internal LMS management platform built on Next.js. Provides a fully-featured admin control panel for managing courses, students, enrollments, and analytics — with a REST API and built-in live documentation.
+A modern LMS platform built to surpass LearnWorlds in both feature depth and UX quality. Provides a full admin control panel, course builder, visual page builder, e-commerce, certificates, and a developer API — all with a fluid, modern interface.
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 16 (App Router, TypeScript) |
-| Styling | Tailwind CSS v4, shadcn/ui (Base UI) |
+| UI | Tailwind CSS v4, Base UI v1.2, CVA |
 | Auth | NextAuth v5 — Google OAuth, JWT sessions |
-| Database | MongoDB Atlas via Prisma 5 ORM |
+| Database | PostgreSQL (Supabase) via Prisma 5 ORM |
+| Payments | Stripe (checkout, webhooks, subscriptions) |
+| Uploads | UploadThing |
 | Hosting | Vercel |
 
 ## Features
 
-- **Google OAuth** — internal team sign-in, role-based access (ADMIN / INSTRUCTOR / STUDENT)
-- **Course management** — create, edit, publish courses with modules and lessons
-- **Student management** — enrollment tracking, progress monitoring
-- **Analytics** — completion rates, top courses, platform stats
-- **REST API** — full CRUD endpoints with session auth and role guards
-- **Live API docs** — `/docs` page auto-updates whenever route definitions change
+### Core Platform
+- **Google OAuth** — team sign-in, role-based access (ADMIN / INSTRUCTOR / STUDENT)
+- **Course management** — create, edit, publish courses with modules and lessons (TEXT / VIDEO / QUIZ)
+- **Course builder** — two-panel editor with drag-and-drop reordering, rich text (Tiptap), bulk publish, duplicate, image upload, file attachments
+- **Quiz system** — multiple question types, grading, attempt tracking
+- **Category management** — color-coded categories with ordering
+- **Student management** — enrollment tracking, progress monitoring, user profiles, role management
+
+### Website & Pages
+- **Visual page builder** — drag-and-drop landing page editor with 14 section types (Hero, Features Grid, Rich Text, Image Block, Instructor Bio, Curriculum Preview, CTA, Testimonials, FAQ Accordion, Pricing Table, Stats Bar, Logo Wall, Video Embed, Divider/Spacer)
+- **Course catalog** — public-facing course browser with filters, search, and landing pages
+- **Website management** — pages, navigation, and site settings
+
+### E-Commerce
+- **Stripe checkout** — cart, checkout flow, payment processing with webhooks
+- **Order management** — order history, payment status tracking
+- **Coupons** — percentage and fixed-amount discount codes
+- **Revenue analytics** — payment and revenue reporting
+
+### Certificates
+- **Certificate generation** — course completion certificates
+- **Public verification** — shareable certificate URLs
+
+### Navigation & UX
+- **Collapsible sidebar** — smooth animated expand/collapse sections using Base UI Collapsible, with localStorage persistence and auto-expand on navigation
+- **Analytics dashboard** — completion rates, top courses, platform stats with stat cards
+- **Loading states** — skeleton loaders for all dashboard pages
+- **Progress bar** — page transition progress indicator
 - **Theme system** — light / dark / system via `next-themes`, persistent preference
+
+### Developer
+- **REST API** — full CRUD endpoints with session auth and role guards
+- **Live API docs** — `/docs` page auto-generates from route definitions
+- **API-first** — every feature has corresponding documented API endpoints
 
 ## Local Development
 
@@ -43,8 +72,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Environment Variables
 
 ```bash
-# MongoDB Atlas
-DATABASE_URL="mongodb+srv://<user>:<pass>@cluster.mongodb.net/Relay"
+# PostgreSQL (Supabase)
+DATABASE_URL="postgresql://<user>:<pass>@<host>:5432/postgres"
 
 # Google OAuth (console.cloud.google.com)
 GOOGLE_CLIENT_ID="xxxx.apps.googleusercontent.com"
@@ -71,20 +100,31 @@ The full interactive reference is available at `/docs` when signed in.
 | `GET` | `/api/enrollments` | List enrollments (filter by course/user/status) |
 | `POST` | `/api/enrollments` | Enroll a user in a course *(admin/instructor)* |
 | `GET` | `/api/analytics` | Platform-wide aggregate statistics |
+| `GET/POST` | `/api/cart` | Cart management |
+| `POST` | `/api/checkout` | Stripe checkout session creation |
+| `GET` | `/api/orders` | Order history (paginated) |
+| `GET/POST` | `/api/coupons` | Coupon management *(admin)* |
+| `GET/POST` | `/api/certificates` | Certificate generation and listing |
+| `GET/POST` | `/api/pages` | Page builder pages CRUD |
+| `GET/PATCH` | `/api/site` | Site settings |
+| `GET` | `/api/revenue` | Revenue analytics |
+| `POST` | `/api/webhooks/stripe` | Stripe webhook handler |
 | `GET` | `/api/docs/spec` | Machine-readable endpoint registry (JSON) |
 
 ## Deployment
 
 1. Connect this repo to [Vercel](https://vercel.com/new)
 2. Add environment variables in Vercel dashboard
-3. Set MongoDB Atlas Network Access to `0.0.0.0/0`
+3. Configure Supabase project and add `DATABASE_URL`
 4. Add `https://your-domain.vercel.app/api/auth/callback/google` to Google OAuth redirect URIs
+5. Add Stripe keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`)
 
 ## Changelog
 
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| | 2026-03-29 | feat: collapsible sidebar navigation with smooth animations and state persistence |
 | `3efacfd` | 2026-03-28 | feat: visual page builder, course catalog, categories, enrollments, and Base UI button fix |
 | `50369db` | 2026-03-11 | feat: course builder phase 3 — duplicate, bulk publish, image upload, attachments |
 | `53cfcbe` | 2026-03-11 | feat: admin user profile editing and role management |

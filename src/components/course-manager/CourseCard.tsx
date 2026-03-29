@@ -6,7 +6,7 @@ import { Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getGradient, formatPrice, STATUS_BADGE_VARIANT, STATUS_LABEL } from "@/lib/course-utils";
+import { getGradient, formatPrice, STATUS_BADGE_VARIANT, STATUS_LABEL, DEFAULT_CATEGORY_COLOR } from "@/lib/course-utils";
 
 interface CourseCardProps {
   course: {
@@ -81,7 +81,7 @@ export function CourseCard({
             >
               <span
                 className="size-2 rounded-full shrink-0"
-                style={{ backgroundColor: course.category.color ?? "#8b5cf6" }}
+                style={{ backgroundColor: course.category.color ?? DEFAULT_CATEGORY_COLOR }}
               />
               {course.category.name}
             </span>

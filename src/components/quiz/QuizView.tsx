@@ -225,7 +225,7 @@ function QuestionBlock({
             {gradedAnswer && (
               <span className="shrink-0">
                 {gradedAnswer.isCorrect ? (
-                  <CheckCircleIcon className="size-4 text-emerald-500" />
+                  <CheckCircleIcon className="size-4 text-emerald-600 dark:text-emerald-400" />
                 ) : (
                   <XCircleIcon className="size-4 text-red-500" />
                 )}

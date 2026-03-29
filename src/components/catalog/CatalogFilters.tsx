@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DEFAULT_CATEGORY_COLOR } from "@/lib/course-utils";
 import {
   InputGroup,
   InputGroupAddon,
@@ -58,7 +59,7 @@ export function CatalogFilters({
           type="button"
           onClick={() => onCategoryIdChange("all")}
           className={cn(
-            "rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+            "rounded-full px-3 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             categoryId === "all"
               ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -72,7 +73,7 @@ export function CatalogFilters({
             type="button"
             onClick={() => onCategoryIdChange(cat.id)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors",
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               categoryId === cat.id
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -80,7 +81,7 @@ export function CatalogFilters({
           >
             <span
               className="size-2 rounded-full shrink-0"
-              style={{ backgroundColor: cat.color ?? "#8b5cf6" }}
+              style={{ backgroundColor: cat.color ?? DEFAULT_CATEGORY_COLOR }}
             />
             {cat.name}
           </button>

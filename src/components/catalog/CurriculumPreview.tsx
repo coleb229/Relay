@@ -105,7 +105,7 @@ export function CurriculumPreview({
                       {!enrolled ? (
                         <Lock className="size-3.5 text-muted-foreground/50 shrink-0" />
                       ) : isCompleted ? (
-                        <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
+                        <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                       ) : (
                         <Circle className="size-3.5 text-muted-foreground/30 shrink-0" />
                       )}

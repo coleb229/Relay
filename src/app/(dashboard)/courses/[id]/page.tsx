@@ -37,6 +37,7 @@ export default async function CourseDetailPage({ params }: Props) {
         description: true,
         imageUrl: true,
         price: true,
+        compareAtPrice: true,
         tags: true,
         status: true,
         landingPageSections: true,
@@ -218,7 +219,7 @@ export default async function CourseDetailPage({ params }: Props) {
                                   <span className="text-xs text-muted-foreground">{Math.round(lesson.duration / 60)} min</span>
                                 )}
                                 {lesson.isPublished ? (
-                                  <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0" />
+                                  <CheckCircle2 className="size-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                                 ) : (
                                   <Circle className="size-3.5 text-muted-foreground/30 shrink-0" />
                                 )}
@@ -303,7 +304,7 @@ function StatCard({ label, value, icon: Icon, color, bg }: {
   bg: string;
 }) {
   return (
-    <Card>
+    <Card className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
       <CardContent className="pt-5">
         <div className="flex items-center justify-between">
           <div>

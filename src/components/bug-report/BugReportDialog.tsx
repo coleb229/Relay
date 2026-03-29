@@ -115,7 +115,7 @@ export function BugReportDialog({ open, onOpenChange, user }: Props) {
         {status === "success" ? (
           <div className="flex flex-col items-center justify-center py-8 gap-3">
             <div className="rounded-full bg-emerald-500/10 p-3">
-              <CheckCircle2 className="size-8 text-emerald-500" />
+              <CheckCircle2 className="size-8 text-emerald-600 dark:text-emerald-400" />
             </div>
             <p className="text-sm font-medium">Report submitted!</p>
             {issueUrl && (

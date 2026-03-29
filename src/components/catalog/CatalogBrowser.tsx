@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { BookOpen } from "lucide-react";
+import { BookOpen, LoaderCircle } from "lucide-react";
 import { CatalogFilters } from "./CatalogFilters";
 import { CatalogGrid } from "./CatalogGrid";
 import type { CatalogCardProps } from "./CatalogCard";
@@ -134,7 +134,10 @@ export function CatalogBrowser({
           {totalCount} {totalCount === 1 ? "course" : "courses"} available
         </p>
         {loading && (
-          <p className="text-sm text-muted-foreground">Loading...</p>
+          <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+            <LoaderCircle className="size-3.5 animate-spin" />
+            Loading...
+          </p>
         )}
       </div>
 

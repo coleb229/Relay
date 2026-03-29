@@ -1,5 +1,8 @@
 import { FileText, Video, HelpCircle } from "lucide-react";
 
+/** Default category badge color — matches --chart-2 */
+export const DEFAULT_CATEGORY_COLOR = "oklch(0.65 0.2 275)";
+
 // ── Gradient fallback system ────────────────────────────────────────
 
 export const GRADIENTS = [

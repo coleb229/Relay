@@ -6,6 +6,7 @@ import Link from "next/link";
 import { LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress, ProgressLabel, ProgressValue } from "@/components/ui/progress";
+import { CheckoutButton } from "@/components/payments/CheckoutButton";
 
 interface EnrollButtonProps {
   courseId: string;
@@ -26,11 +27,6 @@ export function EnrollButton({ courseId, price, enrollment }: EnrollButtonProps)
   const isFree = !price || price <= 0;
 
   async function handleEnroll() {
-    if (!isFree) {
-      alert("Paid enrollment coming soon");
-      return;
-    }
-
     setLoading(true);
     setError(null);
 
@@ -78,15 +74,17 @@ export function EnrollButton({ courseId, price, enrollment }: EnrollButtonProps)
     );
   }
 
+  if (!isFree) {
+    return <CheckoutButton courseId={courseId} price={price!} />;
+  }
+
   return (
     <div className="space-y-2">
       <Button className="w-full" disabled={loading} onClick={handleEnroll}>
         {loading ? (
           <LoaderCircle className="size-4 animate-spin" />
-        ) : isFree ? (
-          "Enroll Now \u2014 Free"
         ) : (
-          `$${price!.toFixed(2)} \u2014 Enroll`
+          "Enroll Now \u2014 Free"
         )}
       </Button>
       {error && <p className="text-xs text-destructive text-center">{error}</p>}

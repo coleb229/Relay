@@ -10,6 +10,12 @@ import {
   BookOpen,
   MousePointerClick,
   MessageSquareQuote,
+  HelpCircle,
+  PlayCircle,
+  BarChart3,
+  CreditCard,
+  Building2,
+  Minus,
   PlusIcon,
 } from "lucide-react";
 import {
@@ -34,6 +40,12 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   BookOpen,
   MousePointerClick,
   MessageSquareQuote,
+  HelpCircle,
+  PlayCircle,
+  BarChart3,
+  CreditCard,
+  Building2,
+  Minus,
 };
 
 export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {

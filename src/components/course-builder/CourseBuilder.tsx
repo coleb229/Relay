@@ -311,7 +311,7 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
         {/* Center: Stats summary */}
         <div className="hidden md:flex items-center gap-3 text-xs text-muted-foreground">
           <span>{modules.length} modules</span>
-          <span className="text-border">|</span>
+          <span className="text-muted-foreground/30">|</span>
           <span>{publishedLessons}/{totalLessons} lessons published</span>
         </div>
 
@@ -428,23 +428,31 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
         </TabsContent>
         <TabsContent value="landing-page" className="flex-1 min-h-0">
           <PageBuilder
-            courseId={courseData.id}
+            saveEndpoint={`/api/courses/${courseData.id}`}
+            savePayloadKey="landingPageSections"
             initialSections={courseData.landingPageSections as import("@/components/page-builder/schemas").PageSection[] | null}
-            courseTitle={courseData.title}
-            courseDescription={courseData.description}
-            courseImageUrl={courseData.imageUrl}
-            courseInstructor={{ name: null, image: null, bio: null }}
-            modules={modules.map((m) => ({
-              id: m.id,
-              title: m.title,
-              lessons: m.lessons.map((l) => ({
-                id: l.id,
-                title: l.title,
-                type: l.type,
-                duration: l.duration,
-                isPublished: l.isPublished,
+            defaultSectionsConfig={{
+              title: courseData.title,
+              description: courseData.description,
+              imageUrl: courseData.imageUrl,
+            }}
+            context={{
+              courseId: courseData.id,
+              instructor: { name: null, image: null, bio: null },
+              modules: modules.map((m) => ({
+                id: m.id,
+                title: m.title,
+                lessons: m.lessons.map((l) => ({
+                  id: l.id,
+                  title: l.title,
+                  type: l.type,
+                  duration: l.duration,
+                  isPublished: l.isPublished,
+                })),
               })),
-            }))}
+              price: courseData.price,
+              compareAtPrice: courseData.compareAtPrice,
+            }}
           />
         </TabsContent>
       </Tabs>

@@ -23,6 +23,8 @@ export interface ModuleData {
   lessons: LessonData[];
 }
 
+export type PricingType = "FREE" | "ONE_TIME";
+
 export interface CourseData {
   id: string;
   slug: string;
@@ -31,6 +33,8 @@ export interface CourseData {
   imageUrl: string | null;
   status: CourseStatus;
   price: number | null;
+  compareAtPrice: number | null;
+  pricingType: PricingType;
   tags: string[];
   instructorId: string;
   categoryId: string | null;

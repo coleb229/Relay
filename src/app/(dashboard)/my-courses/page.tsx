@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, GraduationCap, Clock } from "lucide-react";
-import { getGradient } from "@/lib/course-utils";
+import { getGradient, DEFAULT_CATEGORY_COLOR } from "@/lib/course-utils";
 import { cn } from "@/lib/utils";
 
 export default async function MyCoursesPage() {
@@ -125,7 +125,7 @@ export default async function MyCoursesPage() {
                             className="size-2 rounded-full shrink-0"
                             style={{
                               backgroundColor:
-                                item.course.category.color ?? "#8b5cf6",
+                                item.course.category.color ?? DEFAULT_CATEGORY_COLOR,
                             }}
                           />
                           {item.course.category.name}
@@ -170,8 +170,8 @@ export default async function MyCoursesPage() {
                         <Clock className="size-3" />
                         {new Date(item.enrolledAt).toLocaleDateString()}
                       </span>
-                      <span className="font-medium text-primary">
-                        Continue Learning →
+                      <span className="font-medium text-primary inline-flex items-center gap-0.5">
+                        Continue Learning <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
                       </span>
                     </div>
                   </CardContent>

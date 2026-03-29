@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { ProgressBarProvider } from "@/components/providers/progress-bar-provider";
 import "@/types/index";
 import "./globals.css";
 
@@ -32,7 +33,9 @@ export default function RootLayout({
         className={`${jakarta.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <TooltipProvider>{children}</TooltipProvider>
+          <ProgressBarProvider>
+            <TooltipProvider>{children}</TooltipProvider>
+          </ProgressBarProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -17,6 +17,18 @@ import { definition as enrollmentsDefinition } from "@/app/api/enrollments/route
 import { definition as analyticsDefinition } from "@/app/api/analytics/route";
 import { definition as categoriesDefinition } from "@/app/api/categories/route";
 import { definition as categoryByIdDefinition } from "@/app/api/categories/[id]/route";
+import { definition as certTemplatesDefinition } from "@/app/api/certificates/templates/route";
+import { definition as certTemplateByIdDefinition } from "@/app/api/certificates/templates/[id]/route";
+import { definition as certificatesDefinition } from "@/app/api/certificates/route";
+import { definition as certificateByIdDefinition } from "@/app/api/certificates/[id]/route";
+import { definition as certificateRevokeDefinition } from "@/app/api/certificates/[id]/revoke/route";
+import { definition as certificateBulkDefinition } from "@/app/api/certificates/bulk/route";
+import { definition as certificateVerifyDefinition } from "@/app/api/certificates/verify/[code]/route";
+import { definition as myCertificatesDefinition } from "@/app/api/certificates/my/route";
+import { definition as pagesDefinition } from "@/app/api/pages/route";
+import { definition as pageByIdDefinition } from "@/app/api/pages/[id]/route";
+import { definition as siteNavigationDefinition } from "@/app/api/site/navigation/route";
+import { definition as siteSettingsDefinition } from "@/app/api/site/settings/route";
 
 interface RouteEntry {
   path: string;
@@ -32,6 +44,18 @@ const routes: RouteEntry[] = [
   { path: "/api/analytics", tag: "Analytics", definition: analyticsDefinition },
   { path: "/api/categories", tag: "Categories", definition: categoriesDefinition },
   { path: "/api/categories/{id}", tag: "Categories", definition: categoryByIdDefinition },
+  { path: "/api/certificates/templates", tag: "Certificates", definition: certTemplatesDefinition },
+  { path: "/api/certificates/templates/{id}", tag: "Certificates", definition: certTemplateByIdDefinition },
+  { path: "/api/certificates", tag: "Certificates", definition: certificatesDefinition },
+  { path: "/api/certificates/{id}", tag: "Certificates", definition: certificateByIdDefinition },
+  { path: "/api/certificates/{id}/revoke", tag: "Certificates", definition: certificateRevokeDefinition },
+  { path: "/api/certificates/bulk", tag: "Certificates", definition: certificateBulkDefinition },
+  { path: "/api/certificates/verify/{code}", tag: "Certificates", definition: certificateVerifyDefinition },
+  { path: "/api/certificates/my", tag: "Certificates", definition: myCertificatesDefinition },
+  { path: "/api/pages", tag: "Website", definition: pagesDefinition },
+  { path: "/api/pages/{id}", tag: "Website", definition: pageByIdDefinition },
+  { path: "/api/site/navigation", tag: "Website", definition: siteNavigationDefinition },
+  { path: "/api/site/settings", tag: "Website", definition: siteSettingsDefinition },
 ];
 
 /** Returns all documented endpoints as a flat list, preserving method order. */

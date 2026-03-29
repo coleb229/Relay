@@ -88,15 +88,16 @@ export default async function DashboardPage() {
           </p>
 
           <div className="flex flex-wrap gap-3 mt-5">
-            <Button size="sm" className="bg-[oklch(0.75_0.16_80)] text-[oklch(0.15_0.04_80)] hover:bg-[oklch(0.8_0.14_80)] border-0" render={<Link href="/courses" />}>
+            <Button size="sm" className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-md border-0" render={<Link href="/courses" />}>
               <Plus className="size-3.5 mr-1.5" />
               Create Course
             </Button>
-            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 hover:text-white" render={<Link href="/analytics" />}>
+            {/* Hero is always dark — white text is intentional regardless of theme */}
+            <Button size="sm" variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white" render={<Link href="/analytics" />}>
               <BarChart3 className="size-3.5 mr-1.5" />
               Analytics
             </Button>
-            <Button size="sm" variant="outline" className="border-white/20 text-white hover:bg-white/10 hover:text-white" render={<Link href="/students" />}>
+            <Button size="sm" variant="outline" className="bg-transparent border-white/20 text-white hover:bg-white/10 hover:text-white" render={<Link href="/students" />}>
               <Users className="size-3.5 mr-1.5" />
               Manage Users
             </Button>
@@ -109,7 +110,7 @@ export default async function DashboardPage() {
         {stats.map(({ label, value, description, icon: Icon, href, gradient, iconColor, iconBg }) => (
           <Link key={label} href={href}>
             <Card className="group hover:shadow-lg transition-all duration-200 cursor-pointer hover:-translate-y-0.5 overflow-hidden">
-              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 group-hover:opacity-15 transition-opacity`} />
+              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 group-hover:opacity-15 transition-opacity pointer-events-none`} />
               <CardHeader className="relative flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {label}

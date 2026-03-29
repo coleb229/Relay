@@ -25,6 +25,37 @@ const PADDING_OPTIONS = [
   { value: "xl", label: "XL" },
 ] as const;
 
+const PADDING_X_OPTIONS = [
+  { value: "none", label: "0" },
+  { value: "sm", label: "SM" },
+  { value: "md", label: "MD" },
+  { value: "lg", label: "LG" },
+] as const;
+
+const RADIUS_OPTIONS = [
+  { value: "none", label: "0" },
+  { value: "sm", label: "SM" },
+  { value: "md", label: "MD" },
+  { value: "lg", label: "LG" },
+  { value: "xl", label: "XL" },
+  { value: "2xl", label: "2XL" },
+] as const;
+
+const SHADOW_OPTIONS = [
+  { value: "none", label: "None" },
+  { value: "sm", label: "SM" },
+  { value: "md", label: "MD" },
+  { value: "lg", label: "LG" },
+] as const;
+
+const MAX_WIDTH_OPTIONS = [
+  { value: "sm", label: "SM" },
+  { value: "md", label: "MD" },
+  { value: "lg", label: "LG" },
+  { value: "xl", label: "XL" },
+  { value: "full", label: "Full" },
+] as const;
+
 export function StyleEditor({ style, onChange }: StyleEditorProps) {
   return (
     <div className="space-y-4">
@@ -80,9 +111,9 @@ export function StyleEditor({ style, onChange }: StyleEditorProps) {
         </ToggleGroup>
       </div>
 
-      {/* Padding */}
+      {/* Vertical Padding */}
       <div className="space-y-1.5">
-        <Label>Padding</Label>
+        <Label>Vertical Padding</Label>
         <ToggleGroup
           value={[style.paddingY]}
           onValueChange={(values) => {
@@ -95,6 +126,90 @@ export function StyleEditor({ style, onChange }: StyleEditorProps) {
         >
           {PADDING_OPTIONS.map((opt) => (
             <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Padding ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Horizontal Padding */}
+      <div className="space-y-1.5">
+        <Label>Horizontal Padding</Label>
+        <ToggleGroup
+          value={[style.paddingX]}
+          onValueChange={(values) => {
+            if (values.length > 0) {
+              onChange({ paddingX: values[0] as SectionStyle["paddingX"] });
+            }
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {PADDING_X_OPTIONS.map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Horizontal padding ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Border Radius */}
+      <div className="space-y-1.5">
+        <Label>Border Radius</Label>
+        <ToggleGroup
+          value={[style.borderRadius]}
+          onValueChange={(values) => {
+            if (values.length > 0) {
+              onChange({ borderRadius: values[0] as SectionStyle["borderRadius"] });
+            }
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {RADIUS_OPTIONS.map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Radius ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Box Shadow */}
+      <div className="space-y-1.5">
+        <Label>Box Shadow</Label>
+        <ToggleGroup
+          value={[style.boxShadow]}
+          onValueChange={(values) => {
+            if (values.length > 0) {
+              onChange({ boxShadow: values[0] as SectionStyle["boxShadow"] });
+            }
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {SHADOW_OPTIONS.map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Shadow ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Max Width */}
+      <div className="space-y-1.5">
+        <Label>Max Width</Label>
+        <ToggleGroup
+          value={[style.maxWidth]}
+          onValueChange={(values) => {
+            if (values.length > 0) {
+              onChange({ maxWidth: values[0] as SectionStyle["maxWidth"] });
+            }
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {MAX_WIDTH_OPTIONS.map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Max width ${opt.label}`}>
               <span className="text-xs font-medium">{opt.label}</span>
             </ToggleGroupItem>
           ))}
@@ -115,6 +230,24 @@ export function StyleEditor({ style, onChange }: StyleEditorProps) {
               onChange({ backgroundColor: e.target.value || null })
             }
             placeholder="oklch(0.95 0 0) or #f5f5f5"
+          />
+        </div>
+      </div>
+
+      {/* Background Gradient */}
+      <div className="space-y-1.5">
+        <Label>Background Gradient</Label>
+        <div className="flex items-center gap-2">
+          <div
+            className="size-7 shrink-0 rounded-md border border-input"
+            style={{ backgroundImage: style.backgroundGradient ?? undefined }}
+          />
+          <Input
+            value={style.backgroundGradient ?? ""}
+            onChange={(e) =>
+              onChange({ backgroundGradient: e.target.value || null })
+            }
+            placeholder="linear-gradient(135deg, #667eea, #764ba2)"
           />
         </div>
       </div>

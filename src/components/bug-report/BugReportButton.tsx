@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Bug } from "lucide-react";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { BugReportDialog } from "./BugReportDialog";
+
+const BugReportDialog = dynamic(
+  () =>
+    import("./BugReportDialog").then((mod) => ({
+      default: mod.BugReportDialog,
+    })),
+  { ssr: false }
+);
 
 interface Props {
   user: { name?: string | null; email?: string | null };
@@ -29,7 +37,9 @@ export function BugReportButton({ user }: Props) {
         <TooltipContent>Report a Bug</TooltipContent>
       </Tooltip>
 
-      <BugReportDialog open={open} onOpenChange={setOpen} user={user} />
+      {open && (
+        <BugReportDialog open={open} onOpenChange={setOpen} user={user} />
+      )}
     </>
   );
 }

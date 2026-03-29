@@ -5,7 +5,28 @@ import type { LessonData, LessonType } from "./types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RichTextEditor } from "./RichTextEditor";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const RichTextEditor = dynamic(
+  () =>
+    import("./RichTextEditor").then((mod) => ({
+      default: mod.RichTextEditor,
+    })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="rounded-lg border border-input overflow-hidden">
+        <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-input bg-muted/30">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton key={i} className="size-7 rounded" />
+          ))}
+        </div>
+        <Skeleton className="h-50 w-full" />
+      </div>
+    ),
+  }
+);
 import {
   Select,
   SelectContent,

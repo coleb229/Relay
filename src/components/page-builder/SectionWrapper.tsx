@@ -111,7 +111,7 @@ export function SectionWrapper({
 
         <button
           onClick={onDuplicate}
-          className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors"
+          className="flex items-center justify-center size-6 rounded hover:bg-primary/10 transition-colors"
           title="Duplicate"
         >
           <CopyIcon className="size-3.5 text-muted-foreground" />
@@ -119,7 +119,7 @@ export function SectionWrapper({
 
         <button
           onClick={onToggleVisibility}
-          className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors"
+          className="flex items-center justify-center size-6 rounded hover:bg-amber-500/10 transition-colors"
           title={section.visible ? "Hide section" : "Show section"}
         >
           {section.visible ? (

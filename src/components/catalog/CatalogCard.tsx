@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Users } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { getGradient, formatPrice } from "@/lib/course-utils";
+import { getGradient, formatPrice, DEFAULT_CATEGORY_COLOR } from "@/lib/course-utils";
 import { Progress } from "@/components/ui/progress";
 
 interface CatalogCardProps {
@@ -72,7 +72,7 @@ export function CatalogCard({ course, enrollment }: CatalogCardProps) {
               <span
                 className="size-2 rounded-full shrink-0"
                 style={{
-                  backgroundColor: course.category.color ?? "#8b5cf6",
+                  backgroundColor: course.category.color ?? DEFAULT_CATEGORY_COLOR,
                 }}
               />
               {course.category.name}

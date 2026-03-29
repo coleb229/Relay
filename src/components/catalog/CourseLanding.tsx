@@ -22,6 +22,7 @@ interface CourseLandingProps {
     description: string | null;
     imageUrl: string | null;
     price: number | null;
+    compareAtPrice?: number | null;
     tags: string[];
     category: { name: string; color: string | null } | null;
     instructor: {
@@ -105,6 +106,8 @@ export function CourseLanding({
                   },
                   enrolled: !!enrollment,
                   completedLessonIds,
+                  price: course.price,
+                  compareAtPrice: course.compareAtPrice,
                 }}
               />
             ))}
@@ -166,7 +169,7 @@ export function CourseLanding({
               className={`w-full h-full bg-linear-to-br ${gradient}`}
             />
           )}
-          <div className="absolute inset-0 bg-linear-to-t from-background via-background/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent" />
 
           <div className="absolute bottom-0 left-0 right-0 p-6">
             <div className="flex items-center gap-2 flex-wrap mb-2">
@@ -244,7 +247,7 @@ export function CourseLanding({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {course.tags.map((tag) => (
                   <div key={tag} className="flex items-start gap-2">
-                    <CheckCircle2 className="size-4 text-emerald-500 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
                     <span className="text-sm">{tag}</span>
                   </div>
                 ))}

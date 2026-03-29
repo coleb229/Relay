@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Plus, Pencil, Trash2, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, GripVertical, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -134,15 +134,27 @@ export default function CategoriesPage() {
             </TableRow>
           ) : categories.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
-                No categories yet. Create one to get started.
+              <TableCell colSpan={5} className="py-0">
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
+                    <Tag className="size-7 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-1">No categories yet</h3>
+                  <p className="text-sm text-muted-foreground max-w-sm mb-4">
+                    Create categories to organize your courses.
+                  </p>
+                  <Button onClick={openCreate}>
+                    <Plus className="size-4 mr-2" />
+                    New Category
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
             categories.map((cat) => (
               <TableRow key={cat.id}>
                 <TableCell>
-                  <GripVertical className="size-4 text-muted-foreground" />
+                  <GripVertical className="size-4 text-muted-foreground/40" />
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -209,7 +221,7 @@ export default function CategoriesPage() {
                   <button
                     key={c}
                     onClick={() => setForm((f) => ({ ...f, color: c }))}
-                    className="size-7 rounded-full ring-offset-2 transition-all"
+                    className="size-7 rounded-full ring-offset-2 transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     style={{
                       backgroundColor: c,
                       boxShadow: form.color === c ? `0 0 0 2px ${c}` : undefined,

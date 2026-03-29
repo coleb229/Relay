@@ -51,6 +51,8 @@ export default async function CourseEditPage({ params, searchParams }: Props) {
     tags: course.tags,
     instructorId: course.instructorId,
     categoryId: course.categoryId,
+    compareAtPrice: course.compareAtPrice,
+    pricingType: course.pricingType,
     landingPageSections: course.landingPageSections as unknown[] | null,
   };
 

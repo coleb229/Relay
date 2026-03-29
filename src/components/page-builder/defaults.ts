@@ -12,6 +12,11 @@ const defaultStyle = {
   backgroundColor: null,
   backgroundImageUrl: null,
   paddingY: "md" as const,
+  borderRadius: "none" as const,
+  boxShadow: "none" as const,
+  maxWidth: "full" as const,
+  backgroundGradient: null,
+  paddingX: "md" as const,
 };
 
 export function generateDefaultSections(course: {

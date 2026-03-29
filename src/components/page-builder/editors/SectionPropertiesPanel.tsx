@@ -4,15 +4,35 @@ import { XIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import type { PageSection, SectionStyle } from "../schemas";
 import { SECTION_LABELS } from "../schemas";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 import { StyleEditor } from "./StyleEditor";
-import { HeroEditor } from "./HeroEditor";
-import { FeaturesGridEditor } from "./FeaturesGridEditor";
-import { RichTextBlockEditor } from "./RichTextBlockEditor";
-import { ImageBlockEditor } from "./ImageBlockEditor";
-import { InstructorBioEditor } from "./InstructorBioEditor";
-import { CurriculumPreviewEditor } from "./CurriculumPreviewEditor";
-import { CallToActionEditor } from "./CallToActionEditor";
-import { TestimonialsEditor } from "./TestimonialsEditor";
+
+const editorLoading = () => (
+  <div className="space-y-3">
+    <Skeleton className="h-4 w-20" />
+    <Skeleton className="h-9 w-full rounded-lg" />
+    <Skeleton className="h-4 w-24" />
+    <Skeleton className="h-9 w-full rounded-lg" />
+    <Skeleton className="h-4 w-16" />
+    <Skeleton className="h-20 w-full rounded-lg" />
+  </div>
+);
+
+const HeroEditor = dynamic(() => import("./HeroEditor").then((m) => ({ default: m.HeroEditor })), { loading: editorLoading });
+const FeaturesGridEditor = dynamic(() => import("./FeaturesGridEditor").then((m) => ({ default: m.FeaturesGridEditor })), { loading: editorLoading });
+const RichTextBlockEditor = dynamic(() => import("./RichTextBlockEditor").then((m) => ({ default: m.RichTextBlockEditor })), { loading: editorLoading });
+const ImageBlockEditor = dynamic(() => import("./ImageBlockEditor").then((m) => ({ default: m.ImageBlockEditor })), { loading: editorLoading });
+const InstructorBioEditor = dynamic(() => import("./InstructorBioEditor").then((m) => ({ default: m.InstructorBioEditor })), { loading: editorLoading });
+const CurriculumPreviewEditor = dynamic(() => import("./CurriculumPreviewEditor").then((m) => ({ default: m.CurriculumPreviewEditor })), { loading: editorLoading });
+const CallToActionEditor = dynamic(() => import("./CallToActionEditor").then((m) => ({ default: m.CallToActionEditor })), { loading: editorLoading });
+const TestimonialsEditor = dynamic(() => import("./TestimonialsEditor").then((m) => ({ default: m.TestimonialsEditor })), { loading: editorLoading });
+const FaqAccordionEditor = dynamic(() => import("./FaqAccordionEditor").then((m) => ({ default: m.FaqAccordionEditor })), { loading: editorLoading });
+const VideoEmbedEditor = dynamic(() => import("./VideoEmbedEditor").then((m) => ({ default: m.VideoEmbedEditor })), { loading: editorLoading });
+const StatsBarEditor = dynamic(() => import("./StatsBarEditor").then((m) => ({ default: m.StatsBarEditor })), { loading: editorLoading });
+const PricingTableEditor = dynamic(() => import("./PricingTableEditor").then((m) => ({ default: m.PricingTableEditor })), { loading: editorLoading });
+const LogoWallEditor = dynamic(() => import("./LogoWallEditor").then((m) => ({ default: m.LogoWallEditor })), { loading: editorLoading });
+const DividerSpacerEditor = dynamic(() => import("./DividerSpacerEditor").then((m) => ({ default: m.DividerSpacerEditor })), { loading: editorLoading });
 
 interface SectionPropertiesPanelProps {
   section: PageSection;
@@ -76,6 +96,48 @@ function SectionConfigEditor({
     case "TESTIMONIALS":
       return (
         <TestimonialsEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "FAQ_ACCORDION":
+      return (
+        <FaqAccordionEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "VIDEO_EMBED":
+      return (
+        <VideoEmbedEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "STATS_BAR":
+      return (
+        <StatsBarEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "PRICING_TABLE":
+      return (
+        <PricingTableEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "LOGO_WALL":
+      return (
+        <LogoWallEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "DIVIDER_SPACER":
+      return (
+        <DividerSpacerEditor
           config={section.config}
           onChange={onConfigChange}
         />

@@ -27,6 +27,10 @@ model User {
   enrollments  Enrollment[]
   courses      Course[]      @relation("CourseInstructor")
   quizAttempts QuizAttempt[]
+  orders       Order[]
+  cart         Cart?
+  certificateTemplates CertificateTemplate[] @relation("CertificateTemplateCreator")
+  certificates         Certificate[]         @relation("CertificateRecipient")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -99,22 +103,30 @@ model Category {
 }
 
 model Course {
-  id           String       @id @default(cuid())
-  slug         String       @unique
-  title        String
-  description  String?
-  imageUrl     String?
-  status       CourseStatus @default(DRAFT)
-  price        Float?
-  tags         String[]
-  instructorId        String
-  categoryId          String?
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  title           String
+  description     String?
+  imageUrl        String?
+  status          CourseStatus @default(DRAFT)
+  price           Float?
+  compareAtPrice  Float?
+  pricingType     PricingType  @default(FREE)
+  tags            String[]
+  instructorId    String
+  categoryId      String?
   landingPageSections Json?
+
+  defaultCertificateTemplateId String?
 
   instructor  User         @relation("CourseInstructor", fields: [instructorId], references: [id])
   category    Category?    @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   modules     Module[]
   enrollments Enrollment[]
+  orders      Order[]
+  cartItems   CartItem[]
+  certificates         Certificate[]
+  certificateTemplates CertificateTemplate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -124,6 +136,17 @@ enum CourseStatus {
   DRAFT
   PUBLISHED
   ARCHIVED
+}
+
+enum CertificateTemplateStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum CertificateOrientation {
+  LANDSCAPE
+  PORTRAIT
 }
 
 model Module {
@@ -179,6 +202,7 @@ model Enrollment {
   user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   course   Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
   progress Progress[]
+  certificates Certificate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -276,4 +300,244 @@ model LessonAttachment {
   createdAt DateTime @default(now())
 
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// Payments & Commerce Models
+// ============================================================
+
+enum PricingType {
+  FREE
+  ONE_TIME
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  userId          String
+  courseId         String
+  amount          Float
+  originalAmount  Float
+  currency        String        @default("usd")
+  status          PaymentStatus @default(PENDING)
+  stripePaymentId String?       @unique
+  stripeSessionId String?       @unique
+  couponId        String?
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  coupon Coupon? @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([status, createdAt])
+  @@index([couponId])
+}
+
+model Coupon {
+  id                 String     @id @default(cuid())
+  code               String     @unique
+  type               CouponType
+  value              Float
+  maxRedemptions     Int?
+  currentRedemptions Int        @default(0)
+  expiresAt          DateTime?
+  isActive           Boolean    @default(true)
+
+  orders Order[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cart {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id       String @id @default(cuid())
+  cartId   String
+  courseId  String
+
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([cartId, courseId])
+}
+
+// ============================================================
+// Certificate Models
+// ============================================================
+
+model CertificateTemplate {
+  id          String                    @id @default(cuid())
+  name        String
+  description String?
+  designData  Json                      // Element positions, styles, layout config
+  status      CertificateTemplateStatus @default(DRAFT)
+  orientation CertificateOrientation    @default(LANDSCAPE)
+
+  // Branding
+  logoUrl                String?
+  instructorSignatureUrl String?
+  backgroundColor        String?       // oklch or hex color value
+  borderStyle            String?       // e.g. "classic", "modern", "minimal", "none"
+
+  // Ownership
+  courseId     String?
+  createdById  String
+
+  course      Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  createdBy   User          @relation("CertificateTemplateCreator", fields: [createdById], references: [id])
+  certificates Certificate[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+  @@index([status])
+}
+
+model Certificate {
+  id                String  @id @default(cuid())
+  certificateNumber String  @unique        // Human-readable: "CERT-XXXXXX"
+  verificationCode  String  @unique @default(cuid()) // URL-safe verification slug
+
+  // Relations
+  templateId   String
+  userId       String
+  courseId      String
+  enrollmentId String
+
+  template   CertificateTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  user       User                @relation("CertificateRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  course     Course              @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrollment Enrollment          @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  // Dates
+  issuedAt      DateTime  @default(now())
+  expiresAt     DateTime?
+  revokedAt     DateTime?
+  revokedReason String?
+
+  // Snapshot data (frozen at issuance time)
+  metadata Json // { studentName, courseTitle, completionDate, grade, instructorName }
+
+  // Generated assets
+  pdfUrl String?
+
+  // Analytics
+  viewCount     Int @default(0)
+  downloadCount Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([templateId])
+  @@index([enrollmentId])
+  @@index([issuedAt])
+}
+
+// ============================================================
+// Website Builder Models
+// ============================================================
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum PageType {
+  HOME
+  ABOUT
+  CONTACT
+  COURSES
+  BLOG
+  CUSTOM
+  TERMS
+  PRIVACY
+}
+
+model SitePage {
+  id             String     @id @default(cuid())
+  title          String
+  slug           String     @unique
+  description    String?
+  status         PageStatus @default(DRAFT)
+  type           PageType   @default(CUSTOM)
+  sections       Json?
+  seoTitle       String?
+  seoDescription String?
+  ogImageUrl     String?
+  order          Int        @default(0)
+  isSystem       Boolean    @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([type])
+  @@index([slug])
+}
+
+model SiteNavItem {
+  id       String  @id @default(cuid())
+  label    String
+  href     String
+  target   String?
+  parentId String?
+  order    Int     @default(0)
+  location String  @default("header")
+  visible  Boolean @default(true)
+
+  parent   SiteNavItem?  @relation("NavItemChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children SiteNavItem[] @relation("NavItemChildren")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([location, order])
+}
+
+model SiteSettings {
+  id           String  @id @default(cuid())
+  siteName     String  @default("My School")
+  tagline      String?
+  logoUrl      String?
+  faviconUrl   String?
+  primaryColor String?
+  accentColor  String?
+  fontFamily   String?
+  footerText   String?
+  socialLinks  Json?
+  customCss    String? @db.Text
+  analyticsId  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

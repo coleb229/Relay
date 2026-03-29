@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { GraduationCap } from "lucide-react";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ACTIVE: "default",
@@ -63,6 +64,17 @@ export default async function EnrollmentsPage() {
         </p>
       </div>
 
+      {enrollments.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
+            <GraduationCap className="size-7 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold mb-1">No enrollments yet</h3>
+          <p className="text-sm text-muted-foreground max-w-sm">
+            Enrollments will appear here when students sign up for courses.
+          </p>
+        </div>
+      ) : (
       <Table>
         <TableHeader>
           <TableRow>
@@ -75,17 +87,7 @@ export default async function EnrollmentsPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {enrollments.length === 0 ? (
-            <TableRow>
-              <TableCell
-                colSpan={6}
-                className="text-center text-muted-foreground py-8"
-              >
-                No enrollments yet.
-              </TableCell>
-            </TableRow>
-          ) : (
-            enrollments.map((enrollment) => {
+          {enrollments.map((enrollment) => {
               const totalLessons = lessonCountMap.get(enrollment.courseId) ?? 0;
               const completedLessons = enrollment._count.progress;
               const progressPct =
@@ -123,7 +125,7 @@ export default async function EnrollmentsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="h-2 w-16 rounded-full bg-muted overflow-hidden">
+                      <div className="h-2 w-20 rounded-full bg-border overflow-hidden">
                         <div
                           className="h-full bg-primary rounded-full transition-all"
                           style={{ width: `${progressPct}%` }}
@@ -144,10 +146,10 @@ export default async function EnrollmentsPage() {
                   </TableCell>
                 </TableRow>
               );
-            })
-          )}
+            })}
         </TableBody>
       </Table>
+      )}
     </div>
   );
 }
