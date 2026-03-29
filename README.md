@@ -124,7 +124,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
-| | 2026-03-29 | feat: collapsible sidebar navigation with smooth animations and state persistence |
+| `19a7cd7` | 2026-03-29 | feat: e-commerce, certificates, website builder, page builder extensions, collapsible sidebar |
 | `3efacfd` | 2026-03-28 | feat: visual page builder, course catalog, categories, enrollments, and Base UI button fix |
 | `50369db` | 2026-03-11 | feat: course builder phase 3 — duplicate, bulk publish, image upload, attachments |
 | `53cfcbe` | 2026-03-11 | feat: admin user profile editing and role management |
