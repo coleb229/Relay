@@ -44,7 +44,7 @@ export function LogoWallSection({ config }: LogoWallSectionProps) {
                 "w-auto object-contain",
                 LOGO_HEIGHT_MAP[maxLogoHeight],
                 grayscale &&
-                  "grayscale transition-all duration-300 hover:grayscale-0"
+                  "grayscale transition-[filter] duration-(--dur-state) ease-(--ease-out-quart) hover:grayscale-0"
               )}
             />
           );

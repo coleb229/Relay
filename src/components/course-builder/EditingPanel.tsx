@@ -6,6 +6,7 @@ import { ModuleForm } from "./ModuleForm";
 import { LessonForm } from "./LessonForm";
 import { QuizBuilder } from "./QuizBuilder";
 import { SurveyBuilder } from "./SurveyBuilder";
+import { EmptyState as EmptyStateUI } from "@/components/ui/empty-state";
 import {
   MousePointerClickIcon,
   BookOpen,
@@ -78,7 +79,7 @@ export function EditingPanel({
 
   if (selection.type === "module") {
     const module = modules.find((m) => m.id === selection.moduleId);
-    if (!module) return <EmptyState />;
+    if (!module) return <EditingEmptyState />;
     return (
       <main className="flex-1 overflow-y-auto p-6">
         <ModuleForm key={module.id} module={module} onUpdate={onModuleUpdate} />
@@ -89,7 +90,7 @@ export function EditingPanel({
   if (selection.type === "lesson") {
     const module = modules.find((m) => m.id === selection.moduleId);
     const lesson = module?.lessons.find((l) => l.id === selection.lessonId);
-    if (!lesson) return <EmptyState />;
+    if (!lesson) return <EditingEmptyState />;
     return (
       <main className="flex-1 overflow-y-auto p-6 space-y-6">
         <LessonForm key={lesson.id} lesson={lesson} onUpdate={onLessonUpdate} />
@@ -109,7 +110,7 @@ export function EditingPanel({
     );
   }
 
-  return <EmptyState />;
+  return <EditingEmptyState />;
 }
 
 // ── Course Stats Bar ─────────────────────────────────────────────────
@@ -157,7 +158,7 @@ function CourseStatsBar({
           </div>
           <div className="h-1.5 w-full rounded-full bg-border overflow-hidden">
             <div
-              className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+              className="h-full rounded-full bg-emerald-500 transition-[width] duration-(--dur-layout) ease-(--ease-out-quart)"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -207,15 +208,15 @@ function StatPill({
 
 // ── Empty State ──────────────────────────────────────────────────────
 
-function EmptyState() {
+function EditingEmptyState() {
   return (
-    <main className="flex-1 flex items-center justify-center text-center p-12">
-      <div className="space-y-2">
-        <MousePointerClickIcon className="size-8 text-muted-foreground mx-auto" />
-        <p className="text-sm text-muted-foreground">
-          Select a module or lesson from the left to edit it.
-        </p>
-      </div>
+    <main className="flex-1 flex items-center justify-center p-12">
+      <EmptyStateUI
+        variant="centered"
+        icon={MousePointerClickIcon}
+        title="Nothing selected"
+        description="Select a module or lesson from the left to edit it."
+      />
     </main>
   );
 }

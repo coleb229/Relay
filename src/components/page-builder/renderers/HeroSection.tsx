@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import type { HeroSection as HeroSectionType } from "../schemas";
 
 interface HeroSectionProps {
@@ -50,12 +51,14 @@ export function HeroSection({ config }: HeroSectionProps) {
           </p>
         )}
         {ctaText && (
-          <a
-            href={ctaLink || "#"}
-            className="mt-8 inline-flex h-11 items-center justify-center rounded-lg bg-white px-6 text-sm font-semibold text-primary shadow-lg transition-all hover:bg-white/90 hover:shadow-xl active:scale-[0.98] dark:bg-primary-foreground dark:text-primary"
+          <Button
+            variant="default"
+            size="lg"
+            render={<a href={ctaLink || "#"} />}
+            className="mt-8 h-11 bg-white px-6 text-primary shadow-sm hover:bg-white/90 dark:bg-primary-foreground dark:text-primary"
           >
             {ctaText}
-          </a>
+          </Button>
         )}
       </div>
     </div>

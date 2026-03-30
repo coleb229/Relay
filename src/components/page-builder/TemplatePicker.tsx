@@ -68,6 +68,10 @@ const SECTION_COLORS: Record<SectionType, string> = {
   TABS: "bg-cyan-500/20 text-cyan-700 dark:text-cyan-400",
   ACCORDION: "bg-purple-500/20 text-purple-700 dark:text-purple-400",
   GALLERY: "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400",
+  MULTI_COLUMN: "bg-stone-500/20 text-stone-700 dark:text-stone-400",
+  SOCIAL_PROOF: "bg-green-500/20 text-green-700 dark:text-green-400",
+  BANNER: "bg-orange-500/20 text-orange-700 dark:text-orange-400",
+  PROGRESS_BAR: "bg-lime-500/20 text-lime-700 dark:text-lime-400",
 };
 
 export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {
@@ -97,7 +101,7 @@ export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {
               key={value}
               onClick={() => setActiveCategory(value)}
               className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                "rounded-full px-3 py-1 text-xs font-medium transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
                 activeCategory === value
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -121,7 +125,7 @@ export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {
                 key={template.id}
                 onClick={() => onSelect(template)}
                 className={cn(
-                  "group relative flex flex-col rounded-lg border bg-background p-4 text-left transition-all hover:shadow-md hover:border-primary/50",
+                  "group relative flex flex-col rounded-lg border bg-background p-4 text-left transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/30",
                   isBlank && "border-dashed border-2"
                 )}
               >
@@ -129,7 +133,7 @@ export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {
                 <div className="flex items-center gap-2.5 mb-2">
                   <div
                     className={cn(
-                      "flex size-8 items-center justify-center rounded-md transition-colors",
+                      "flex size-8 items-center justify-center rounded-md transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
                       isBlank
                         ? "bg-muted group-hover:bg-primary/10"
                         : "bg-primary/10"
@@ -180,7 +184,7 @@ export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {
 
                 {isBlank && (
                   <div className="flex items-center justify-center mt-auto pt-2">
-                    <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors">
+                    <span className="text-xs text-muted-foreground group-hover:text-primary transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                       Start with an empty canvas
                     </span>
                   </div>

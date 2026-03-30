@@ -22,6 +22,10 @@ import {
   PanelTop,
   ListCollapse,
   GalleryHorizontalEnd,
+  Columns3,
+  TrendingUp,
+  Flag,
+  BarChart,
 } from "lucide-react";
 import {
   Popover,
@@ -56,6 +60,10 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   PanelTop,
   ListCollapse,
   GalleryHorizontalEnd,
+  Columns3,
+  TrendingUp,
+  Flag,
+  BarChart,
 };
 
 export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
@@ -69,7 +77,7 @@ export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
   return (
     <div className="group/add relative h-8 flex items-center justify-center">
       {/* Dashed line */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-dashed border-border/50 opacity-0 group-hover/add:opacity-100 transition-opacity" />
+      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t border-dashed border-border/50 opacity-0 group-hover/add:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)" />
 
       {/* Plus button */}
       <Popover open={open} onOpenChange={setOpen}>
@@ -77,7 +85,7 @@ export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
           render={
             <button
               className={cn(
-                "relative z-10 flex items-center justify-center size-6 rounded-full border bg-background text-muted-foreground shadow-sm transition-all",
+                "relative z-10 flex items-center justify-center size-6 rounded-full border bg-background text-muted-foreground shadow-sm transition-all duration-(--dur-feedback) ease-(--ease-out-quart)",
                 "opacity-0 group-hover/add:opacity-100 hover:bg-primary hover:text-primary-foreground hover:border-primary",
                 open && "opacity-100 bg-primary text-primary-foreground border-primary"
               )}
@@ -97,7 +105,7 @@ export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
                 <button
                   key={type}
                   onClick={() => handleSelect(type)}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors text-left"
+                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) text-left"
                 >
                   {IconComp && (
                     <IconComp className="size-4 text-muted-foreground shrink-0" />

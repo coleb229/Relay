@@ -167,7 +167,7 @@ function SortableLessonRow({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-1 rounded-lg px-2 py-1 group transition-colors",
+        "flex items-center gap-1 rounded-lg px-2 py-1 group transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
         isSelected ? "bg-primary/8 text-primary" : "hover:bg-muted/50"
       )}
     >
@@ -183,7 +183,7 @@ function SortableLessonRow({
           {...attributes}
           {...listeners}
           suppressHydrationWarning
-          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) touch-none"
           aria-label="Drag to reorder"
           tabIndex={-1}
         >
@@ -203,7 +203,7 @@ function SortableLessonRow({
       {/* Type badge */}
       <span
         className={cn(
-          "shrink-0 inline-flex items-center rounded border px-1 py-0 text-[10px] font-medium leading-4 opacity-0 group-hover:opacity-100",
+          "shrink-0 inline-flex items-center rounded border px-1 py-0 text-[10px] font-medium leading-4 opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)",
           LESSON_TYPE_COLORS[lesson.type]
         )}
       >
@@ -213,7 +213,7 @@ function SortableLessonRow({
       {/* Duplicate */}
       <button
         onClick={onDuplicate}
-        className="shrink-0 p-0.5 rounded hover:bg-muted text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+        className="shrink-0 p-0.5 rounded hover:bg-muted text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)"
         aria-label="Duplicate lesson"
       >
         <CopyIcon className="size-3" />
@@ -222,7 +222,7 @@ function SortableLessonRow({
       {/* Delete */}
       <button
         onClick={onDelete}
-        className="shrink-0 p-0.5 rounded hover:bg-destructive/10 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+        className="shrink-0 p-0.5 rounded hover:bg-destructive/10 text-destructive opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)"
         aria-label="Delete lesson"
       >
         <Trash2Icon className="size-3" />
@@ -315,7 +315,7 @@ function SortableModuleRow({
       {/* Module row */}
       <div
         className={cn(
-          "flex items-center gap-1 rounded-lg px-1 py-1 group transition-colors",
+          "flex items-center gap-1 rounded-lg px-1 py-1 group transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
           isSelected ? "bg-primary/8 text-primary" : "hover:bg-muted/50"
         )}
       >
@@ -324,7 +324,7 @@ function SortableModuleRow({
           {...attributes}
           {...listeners}
           suppressHydrationWarning
-          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors touch-none"
+          className="shrink-0 p-0.5 cursor-grab active:cursor-grabbing text-muted-foreground/40 hover:text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) touch-none"
           aria-label="Drag to reorder module"
           tabIndex={-1}
         >
@@ -334,7 +334,7 @@ function SortableModuleRow({
         {/* Expand toggle */}
         <button
           onClick={onToggleExpand}
-          className="shrink-0 p-0.5 rounded hover:bg-muted transition-colors"
+          className="shrink-0 p-0.5 rounded hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           aria-label={isExpanded ? "Collapse" : "Expand"}
         >
           {isExpanded ? (
@@ -354,7 +354,7 @@ function SortableModuleRow({
         </button>
 
         {/* Actions — visible on hover */}
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart) shrink-0">
           <button
             onClick={onAddLesson}
             className="p-0.5 rounded hover:bg-muted"
@@ -415,7 +415,7 @@ function SortableModuleRow({
           {/* Add Lesson */}
           <button
             onClick={onAddLesson}
-            className="flex items-center gap-1.5 w-full text-left text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg hover:bg-muted/50 transition-colors"
+            className="flex items-center gap-1.5 w-full text-left text-xs text-muted-foreground hover:text-foreground px-2 py-1 rounded-lg hover:bg-muted/50 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           >
             <PlusIcon className="size-3" />
             Add Lesson
@@ -433,7 +433,7 @@ function ModuleDragOverlay({ mod }: { mod: ModuleData }) {
     <div className="flex items-center gap-2 rounded-lg px-2 py-1.5 bg-background border border-border shadow-lg opacity-90 text-xs font-medium">
       <GripVerticalIcon className="size-3.5 text-muted-foreground" />
       <span className="truncate">{mod.title}</span>
-      <span className="text-muted-foreground">({mod.lessons.length} lessons)</span>
+      <span className="text-muted-foreground tabular-nums">({mod.lessons.length} lessons)</span>
     </div>
   );
 }
@@ -511,7 +511,7 @@ export function StructurePanel({
       <button
         onClick={() => onSelect({ type: "course" })}
         className={cn(
-          "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b border-border transition-colors hover:bg-muted/50 w-full text-left",
+          "flex items-center gap-2 px-4 py-3 text-sm font-medium border-b border-border transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50 w-full text-left",
           selection.type === "course" && "bg-primary/5 text-primary"
         )}
       >
@@ -527,7 +527,7 @@ export function StructurePanel({
         <button
           onClick={toggleSelectMode}
           className={cn(
-            "p-1 rounded text-xs transition-colors",
+            "p-1 rounded text-xs transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
             isSelectMode
               ? "bg-primary/10 text-primary"
               : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -597,7 +597,7 @@ export function StructurePanel({
       {/* Bulk action bar */}
       {isSelectMode && selectedLessonIds.size > 0 && (
         <div className="px-3 py-2 border-t border-border bg-muted/50 flex items-center gap-2">
-          <span className="text-xs text-muted-foreground flex-1">
+          <span className="text-xs text-muted-foreground tabular-nums flex-1">
             {selectedLessonIds.size} selected
           </span>
           <Button

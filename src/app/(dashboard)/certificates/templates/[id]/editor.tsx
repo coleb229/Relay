@@ -391,16 +391,16 @@ export function CertificateTemplateEditorPage({ template: initial, courses }: Ed
           <div>
             <p className="mb-2 text-xs font-medium text-muted-foreground uppercase tracking-wider">Add Elements</p>
             <div className="grid grid-cols-2 gap-1.5">
-              <button onClick={() => addElement("text")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors">
+              <button onClick={() => addElement("text")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                 <Type className="h-4 w-4 text-muted-foreground" /> Text
               </button>
-              <button onClick={() => addElement("image")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors">
+              <button onClick={() => addElement("image")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                 <Image className="h-4 w-4 text-muted-foreground" /> Image
               </button>
-              <button onClick={() => addElement("shape")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors">
+              <button onClick={() => addElement("shape")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                 <Square className="h-4 w-4 text-muted-foreground" /> Shape
               </button>
-              <button onClick={() => addElement("qrcode")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors">
+              <button onClick={() => addElement("qrcode")} className="flex flex-col items-center gap-1 rounded-lg border border-border p-2 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                 <QrCode className="h-4 w-4 text-muted-foreground" /> QR Code
               </button>
             </div>
@@ -413,7 +413,7 @@ export function CertificateTemplateEditorPage({ template: initial, courses }: Ed
                 <button
                   key={v.name}
                   onClick={() => addElement("variable", v.name)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-muted transition-colors"
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                 >
                   <Variable className="h-3 w-3 text-violet-500" />
                   {v.label}
@@ -717,7 +717,7 @@ export function CertificateTemplateEditorPage({ template: initial, courses }: Ed
                     const maxZ = Math.max(...elements.map((e) => e.zIndex ?? 0));
                     updateElement(selectedElement.id, { zIndex: maxZ + 1 });
                   }}
-                  className="flex-1 rounded border border-border px-2 py-1 text-xs hover:bg-muted transition-colors"
+                  className="flex-1 rounded border border-border px-2 py-1 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                 >
                   Bring Front
                 </button>
@@ -726,7 +726,7 @@ export function CertificateTemplateEditorPage({ template: initial, courses }: Ed
                     const minZ = Math.min(...elements.map((e) => e.zIndex ?? 0));
                     updateElement(selectedElement.id, { zIndex: minZ - 1 });
                   }}
-                  className="flex-1 rounded border border-border px-2 py-1 text-xs hover:bg-muted transition-colors"
+                  className="flex-1 rounded border border-border px-2 py-1 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                 >
                   Send Back
                 </button>

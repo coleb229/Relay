@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "../../../../../../../auth";
 import { notFound, redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
 import Link from "next/link";
 import { QuizView } from "@/components/quiz/QuizView";
 import { DiscussionThread } from "@/components/lesson-player/DiscussionThread";
@@ -33,6 +34,7 @@ interface Props {
   params: Promise<{ id: string; lessonId: string }>;
 }
 
+// Semantic color groups: content, interactive, assessment, community, system
 const TYPE_CONFIG: Record<
   string,
   { label: string; icon: React.ReactNode; color: string }
@@ -55,17 +57,17 @@ const TYPE_CONFIG: Record<
   PDF: {
     label: "PDF",
     icon: <FileIcon className="size-3.5" />,
-    color: "text-rose-600 dark:text-rose-400",
+    color: "text-sky-600 dark:text-sky-400",
   },
   AUDIO: {
     label: "Audio",
     icon: <HeadphonesIcon className="size-3.5" />,
-    color: "text-teal-600 dark:text-teal-400",
+    color: "text-slate-600 dark:text-slate-400",
   },
   PRESENTATION: {
     label: "Presentation",
     icon: <PresentationIcon className="size-3.5" />,
-    color: "text-orange-600 dark:text-orange-400",
+    color: "text-violet-600 dark:text-violet-400",
   },
   DOWNLOAD: {
     label: "Download",
@@ -75,12 +77,12 @@ const TYPE_CONFIG: Record<
   EMBED: {
     label: "Embed",
     icon: <CodeIcon className="size-3.5" />,
-    color: "text-indigo-600 dark:text-indigo-400",
+    color: "text-violet-600 dark:text-violet-400",
   },
   ASSIGNMENT: {
     label: "Assignment",
     icon: <ClipboardCheckIcon className="size-3.5" />,
-    color: "text-emerald-600 dark:text-emerald-400",
+    color: "text-amber-600 dark:text-amber-400",
   },
   LIVE_SESSION: {
     label: "Live Session",
@@ -90,22 +92,22 @@ const TYPE_CONFIG: Record<
   SURVEY: {
     label: "Survey",
     icon: <ClipboardListIcon className="size-3.5" />,
-    color: "text-cyan-600 dark:text-cyan-400",
+    color: "text-pink-600 dark:text-pink-400",
   },
   EBOOK: {
     label: "Ebook",
     icon: <BookOpenIcon className="size-3.5" />,
-    color: "text-lime-600 dark:text-lime-400",
+    color: "text-sky-600 dark:text-sky-400",
   },
   DISCUSSION: {
     label: "Discussion",
     icon: <MessageSquareIcon className="size-3.5" />,
-    color: "text-fuchsia-600 dark:text-fuchsia-400",
+    color: "text-pink-600 dark:text-pink-400",
   },
   SCORM: {
     label: "SCORM",
     icon: <PackageIcon className="size-3.5" />,
-    color: "text-yellow-600 dark:text-yellow-400",
+    color: "text-violet-600 dark:text-violet-400",
   },
 };
 
@@ -190,7 +192,7 @@ export default async function LessonPage({ params }: Props) {
       {/* Header */}
       <div className="space-y-2">
         <div className="flex items-center gap-3 flex-wrap">
-          <h1 className="text-2xl font-bold">{lesson.title}</h1>
+          <h1 className="text-xl font-semibold tracking-tight">{lesson.title}</h1>
           <Badge variant="outline" className={`text-xs ${typeConfig.color}`}>
             {typeConfig.icon}
             {typeConfig.label}
@@ -239,7 +241,7 @@ export default async function LessonPage({ params }: Props) {
           {lesson.duration && (
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               <ClockIcon className="size-3" />
-              {Math.round(lesson.duration / 60)} min
+              <span className="tabular-nums">{Math.round(lesson.duration / 60)} min</span>
             </p>
           )}
         </div>
@@ -303,7 +305,7 @@ export default async function LessonPage({ params }: Props) {
                     {lesson.fileName ?? lesson.title}
                   </p>
                   {lesson.duration && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground tabular-nums">
                       {Math.round(lesson.duration / 60)} min
                     </p>
                   )}
@@ -371,7 +373,7 @@ export default async function LessonPage({ params }: Props) {
               <a
                 href={lesson.fileUrl}
                 download={lesson.fileName ?? undefined}
-                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
               >
                 <DownloadIcon className="size-4" />
                 Download
@@ -499,12 +501,7 @@ export default async function LessonPage({ params }: Props) {
 // ── Shared sub-components ───────────────────────────────────────────
 
 function EmptyContent({ message }: { message: string }) {
-  return (
-    <div className="text-center py-10 border border-dashed rounded-lg">
-      <FileIcon className="size-8 text-muted-foreground mx-auto mb-2" />
-      <p className="text-sm text-muted-foreground">{message}</p>
-    </div>
-  );
+  return <EmptyState icon={FileIcon} title={message} />;
 }
 
 function LiveSessionContent({
@@ -553,7 +550,7 @@ function LiveSessionContent({
             <p className="text-sm text-muted-foreground">{platformLabel}</p>
             {sessionDate && (
               <div className="flex items-center gap-3 mt-2 text-sm">
-                <span className="flex items-center gap-1 text-muted-foreground">
+                <span className="flex items-center gap-1 text-muted-foreground tabular-nums">
                   <CalendarIcon className="size-3.5" />
                   {sessionDate.toLocaleDateString(undefined, {
                     weekday: "long",
@@ -593,7 +590,7 @@ function LiveSessionContent({
             href={meetingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           >
             <ExternalLinkIcon className="size-4" />
             Join {platformLabel}

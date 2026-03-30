@@ -58,7 +58,7 @@ export function SectionWrapper({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group/section relative rounded-lg border-2 transition-colors",
+        "group/section relative rounded-lg border-2 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
         isSelected
           ? "border-primary/50"
           : "border-transparent hover:border-primary/20",
@@ -74,7 +74,7 @@ export function SectionWrapper({
       <div
         data-toolbar
         className={cn(
-          "absolute -top-3 right-2 z-10 flex items-center gap-0.5 rounded-md border bg-background px-1 py-0.5 shadow-sm transition-opacity",
+          "absolute -top-3 right-2 z-10 flex items-center gap-0.5 rounded-md border bg-background px-1 py-0.5 shadow-sm transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)",
           isSelected
             ? "opacity-100"
             : "opacity-0 group-hover/section:opacity-100"
@@ -83,7 +83,7 @@ export function SectionWrapper({
         <button
           {...attributes}
           {...listeners}
-          className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
+          className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) cursor-grab active:cursor-grabbing"
           title="Drag to reorder"
         >
           <GripVerticalIcon className="size-3.5 text-muted-foreground" />
@@ -92,7 +92,7 @@ export function SectionWrapper({
         {onMoveUp && (
           <button
             onClick={onMoveUp}
-            className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors"
+            className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
             title="Move up"
           >
             <ChevronUpIcon className="size-3.5 text-muted-foreground" />
@@ -102,7 +102,7 @@ export function SectionWrapper({
         {onMoveDown && (
           <button
             onClick={onMoveDown}
-            className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors"
+            className="flex items-center justify-center size-6 rounded hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
             title="Move down"
           >
             <ChevronDownIcon className="size-3.5 text-muted-foreground" />
@@ -111,7 +111,7 @@ export function SectionWrapper({
 
         <button
           onClick={onDuplicate}
-          className="flex items-center justify-center size-6 rounded hover:bg-primary/10 transition-colors"
+          className="flex items-center justify-center size-6 rounded hover:bg-primary/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           title="Duplicate"
         >
           <CopyIcon className="size-3.5 text-muted-foreground" />
@@ -119,7 +119,7 @@ export function SectionWrapper({
 
         <button
           onClick={onToggleVisibility}
-          className="flex items-center justify-center size-6 rounded hover:bg-amber-500/10 transition-colors"
+          className="flex items-center justify-center size-6 rounded hover:bg-amber-500/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           title={section.visible ? "Hide section" : "Show section"}
         >
           {section.visible ? (
@@ -131,7 +131,7 @@ export function SectionWrapper({
 
         <button
           onClick={onDelete}
-          className="flex items-center justify-center size-6 rounded hover:bg-destructive/10 transition-colors"
+          className="flex items-center justify-center size-6 rounded hover:bg-destructive/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
           title="Delete"
         >
           <Trash2Icon className="size-3.5 text-destructive" />

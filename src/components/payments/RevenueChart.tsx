@@ -50,6 +50,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
                   border: "1px solid var(--border)",
                   borderRadius: "8px",
                   fontSize: "12px",
+                  fontVariantNumeric: "tabular-nums",
                 }}
               />
               <Area

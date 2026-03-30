@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { GraduationCap } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const STATUS_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ACTIVE: "default",
@@ -57,23 +59,17 @@ export default async function EnrollmentsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Enrollments</h1>
-        <p className="text-muted-foreground mt-1">
-          All student enrollments across courses
-        </p>
-      </div>
+      <PageHeader
+        title="Enrollments"
+        description="All student enrollments across courses"
+      />
 
       {enrollments.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
-            <GraduationCap className="size-7 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-semibold mb-1">No enrollments yet</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Enrollments will appear here when students sign up for courses.
-          </p>
-        </div>
+        <EmptyState
+          icon={GraduationCap}
+          title="No enrollments yet"
+          description="Enrollments will appear here when students sign up for courses."
+        />
       ) : (
       <Table>
         <TableHeader>
@@ -127,11 +123,11 @@ export default async function EnrollmentsPage() {
                     <div className="flex items-center gap-2">
                       <div className="h-2 w-20 rounded-full bg-border overflow-hidden">
                         <div
-                          className="h-full bg-primary rounded-full transition-all"
+                          className="h-full bg-primary rounded-full transition-[width] duration-(--dur-layout) ease-(--ease-out-quart)"
                           style={{ width: `${progressPct}%` }}
                         />
                       </div>
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-muted-foreground tabular-nums">
                         {completedLessons}/{totalLessons}
                       </span>
                     </div>

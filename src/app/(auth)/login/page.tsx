@@ -18,30 +18,27 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   return (
     <div className="min-h-screen flex">
       {/* Left hero panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[oklch(0.25_0.06_275)] via-[oklch(0.18_0.04_275)] to-[oklch(0.12_0.03_275)] overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 relative bg-linear-to-br from-sidebar-accent to-sidebar overflow-hidden">
         {/* Hero illustration */}
         <img src="/images/ui/login-hero.svg" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-screen" />
-        {/* Gradient orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[oklch(0.44_0.24_275)] opacity-20 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-[oklch(0.75_0.14_80)] opacity-15 blur-[100px]" />
 
         <div className="relative z-10 flex flex-col justify-between p-12 text-white">
           <div>
             {/* Logo */}
             <div className="flex items-center gap-3 mb-16">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-[oklch(0.75_0.16_80)]">
-                <svg viewBox="0 0 24 24" fill="none" className="size-5 text-[oklch(0.17_0.025_275)]" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-sidebar-primary">
+                <svg viewBox="0 0 24 24" fill="none" className="size-5 text-sidebar-primary-foreground" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                 </svg>
               </div>
-              <span className="text-xl font-bold tracking-tight">Relay</span>
+              <span className="text-xl font-semibold tracking-tight">Relay</span>
             </div>
 
             {/* Hero text */}
-            <h1 className="text-4xl font-bold tracking-tight leading-tight mb-4">
+            <h1 className="text-3xl font-semibold tracking-tight leading-tight mb-4">
               Build and manage
               <br />
-              <span className="text-[oklch(0.82_0.14_80)]">your learning platform</span>
+              <span className="text-accent">your learning platform</span>
             </h1>
             <p className="text-lg text-white/75 max-w-md leading-relaxed">
               Create courses, track student progress, and scale your educational business with a powerful, open-source LMS.
@@ -83,16 +80,16 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <div className="relative w-full max-w-sm px-4 sm:px-6">
           {/* Mobile logo (hidden on desktop) */}
           <div className="flex flex-col items-center mb-8 lg:hidden">
-            <div className="flex size-12 items-center justify-center rounded-xl bg-primary mb-3 shadow-lg">
+            <div className="flex size-12 items-center justify-center rounded-xl bg-primary mb-3">
               <svg viewBox="0 0 24 24" fill="none" className="size-6 text-primary-foreground" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">Relay</h1>
+            <h1 className="text-xl font-semibold tracking-tight">Relay</h1>
             <p className="text-sm text-muted-foreground mt-1">LMS Platform</p>
           </div>
 
-          <Card className="shadow-xl ring-1 ring-border/50">
+          <Card className="ring-1 ring-border">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-xl">Welcome back</CardTitle>
               <CardDescription>

@@ -47,14 +47,14 @@ export function FaqAccordionSection({ config }: FaqAccordionSectionProps) {
                 <span className="text-base font-medium">{item.question}</span>
                 <ChevronDown
                   className={cn(
-                    "size-5 shrink-0 text-muted-foreground transition-transform duration-200",
+                    "size-5 shrink-0 text-muted-foreground transition-transform duration-(--dur-state) ease-(--ease-out-quart)",
                     isOpen && "rotate-180"
                   )}
                 />
               </button>
               <div
                 className={cn(
-                  "grid transition-all duration-200 ease-in-out",
+                  "grid transition-[grid-template-rows,opacity] duration-(--dur-state) ease-(--ease-out-quart)",
                   isOpen
                     ? "grid-rows-[1fr] opacity-100"
                     : "grid-rows-[0fr] opacity-0"

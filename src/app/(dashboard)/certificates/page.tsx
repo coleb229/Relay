@@ -2,9 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "../../../../auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Award, FileText, TrendingUp, Clock } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatMetric, MetricGrid } from "@/components/ui/stat-metric";
 import { CertificateTemplateList } from "@/components/certificates/CertificateTemplateList";
 import { CertificateStatusBadge } from "@/components/certificates/CertificateStatusBadge";
 
@@ -44,73 +45,18 @@ export default async function CertificatesPage() {
     }),
   ]);
 
-  const stats = [
-    {
-      label: "Templates",
-      value: templates.length,
-      description: "Certificate designs",
-      icon: FileText,
-      gradient: "from-violet-500/15 to-purple-500/5",
-      iconColor: "text-violet-600 dark:text-violet-400",
-      iconBg: "bg-violet-500/15",
-    },
-    {
-      label: "Total Issued",
-      value: totalIssued,
-      description: "All-time certificates",
-      icon: Award,
-      gradient: "from-emerald-500/15 to-teal-500/5",
-      iconColor: "text-emerald-600 dark:text-emerald-400",
-      iconBg: "bg-emerald-500/15",
-    },
-    {
-      label: "Active",
-      value: activeCerts,
-      description: "Valid certificates",
-      icon: TrendingUp,
-      gradient: "from-blue-500/15 to-cyan-500/5",
-      iconColor: "text-blue-600 dark:text-blue-400",
-      iconBg: "bg-blue-500/15",
-    },
-    {
-      label: "Recent",
-      value: recentIssued,
-      description: "Last 7 days",
-      icon: Clock,
-      gradient: "from-amber-500/15 to-orange-500/5",
-      iconColor: "text-amber-600 dark:text-amber-400",
-      iconBg: "bg-amber-500/15",
-    },
-  ];
-
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Certificates</h1>
-          <p className="text-sm text-muted-foreground">Manage certificate templates and issued certificates</p>
-        </div>
-      </div>
+      <PageHeader title="Certificates" description="Manage certificate templates and issued certificates" />
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="pt-0">
-              <div className="flex items-center gap-3">
-                <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${stat.iconBg}`}>
-                  <stat.icon className={`h-4 w-4 ${stat.iconColor}`} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.label}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <MetricGrid>
+        <StatMetric label="Templates" value={templates.length} description="Certificate designs" icon={FileText} />
+        <StatMetric label="Total Issued" value={totalIssued} description="All-time certificates" icon={Award} />
+        <StatMetric label="Active" value={activeCerts} description="Valid certificates" icon={TrendingUp} />
+        <StatMetric label="Recent" value={recentIssued} description="Last 7 days" icon={Clock} />
+      </MetricGrid>
 
       {/* Templates Section */}
       <div>
@@ -137,7 +83,7 @@ export default async function CertificatesPage() {
                 </thead>
                 <tbody>
                   {certificates.map((cert) => (
-                    <tr key={cert.id} className="border-b border-border/50 last:border-0 hover:bg-muted/50 transition-colors">
+                    <tr key={cert.id} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)">
                       <td className="px-4 py-2.5">
                         <Link href={`/certificates/${cert.id}`} className="font-mono text-xs text-primary hover:underline">
                           {cert.certificateNumber}

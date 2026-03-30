@@ -38,6 +38,10 @@ const CountdownTimerEditor = dynamic(() => import("./CountdownTimerEditor").then
 const TabsEditor = dynamic(() => import("./TabsEditor").then((m) => ({ default: m.TabsEditor })), { loading: editorLoading });
 const AccordionEditor = dynamic(() => import("./AccordionEditor").then((m) => ({ default: m.AccordionEditor })), { loading: editorLoading });
 const GalleryEditor = dynamic(() => import("./GalleryEditor").then((m) => ({ default: m.GalleryEditor })), { loading: editorLoading });
+const MultiColumnEditor = dynamic(() => import("./MultiColumnEditor").then((m) => ({ default: m.MultiColumnEditor })), { loading: editorLoading });
+const SocialProofEditor = dynamic(() => import("./SocialProofEditor").then((m) => ({ default: m.SocialProofEditor })), { loading: editorLoading });
+const BannerEditor = dynamic(() => import("./BannerEditor").then((m) => ({ default: m.BannerEditor })), { loading: editorLoading });
+const ProgressBarEditor = dynamic(() => import("./ProgressBarEditor").then((m) => ({ default: m.ProgressBarEditor })), { loading: editorLoading });
 
 interface SectionPropertiesPanelProps {
   section: PageSection;
@@ -182,6 +186,34 @@ function SectionConfigEditor({
           onChange={onConfigChange}
         />
       );
+    case "MULTI_COLUMN":
+      return (
+        <MultiColumnEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "SOCIAL_PROOF":
+      return (
+        <SocialProofEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "BANNER":
+      return (
+        <BannerEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "PROGRESS_BAR":
+      return (
+        <ProgressBarEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
     default:
       return null;
   }
@@ -202,8 +234,8 @@ export function SectionPropertiesPanel({
         </h3>
         <button
           onClick={onClose}
-          className="size-6 flex items-center justify-center rounded-md hover:bg-muted transition-colors"
-        >
+          className="size-6 flex items-center justify-center rounded-md hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
+>
           <XIcon className="size-3.5" />
         </button>
       </div>

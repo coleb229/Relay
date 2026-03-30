@@ -109,7 +109,7 @@ export function CertificateTemplateList({ templates: initialTemplates }: Certifi
             <button
               key={s}
               onClick={() => setStatusFilter(s)}
-              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) ${
                 statusFilter === s
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -151,7 +151,7 @@ export function CertificateTemplateList({ templates: initialTemplates }: Certifi
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border/50 py-16">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border py-16">
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-500/10">
             <Award className="h-7 w-7 text-violet-600" />
           </div>

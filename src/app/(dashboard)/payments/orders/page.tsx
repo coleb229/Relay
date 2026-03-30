@@ -1,6 +1,7 @@
 import { auth } from "../../../../../auth";
 import { redirect } from "next/navigation";
 import { OrdersTable } from "@/components/payments/OrdersTable";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function OrdersPage() {
   const session = await auth();
@@ -8,12 +9,10 @@ export default async function OrdersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Orders</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          View and manage all course purchases.
-        </p>
-      </div>
+      <PageHeader
+        title="Orders"
+        description="View and manage all course purchases."
+      />
       <OrdersTable />
     </div>
   );

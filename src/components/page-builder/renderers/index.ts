@@ -19,3 +19,7 @@ export { CountdownTimerSection } from "./CountdownTimerSection";
 export { TabsSection } from "./TabsSection";
 export { AccordionSection } from "./AccordionSection";
 export { GallerySection } from "./GallerySection";
+export { MultiColumnSection } from "./MultiColumnSection";
+export { SocialProofSection } from "./SocialProofSection";
+export { BannerSection } from "./BannerSection";
+export { ProgressBarSection } from "./ProgressBarSection";

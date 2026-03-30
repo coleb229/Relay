@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { BookOpen, GraduationCap, Clock } from "lucide-react";
 import { getGradient, DEFAULT_CATEGORY_COLOR } from "@/lib/course-utils";
 import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function MyCoursesPage() {
   const session = await auth();
@@ -51,30 +53,20 @@ export default async function MyCoursesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">My Courses</h1>
-        <p className="text-muted-foreground mt-1">
-          Continue where you left off
-        </p>
-      </div>
+      <PageHeader title="My Courses" description="Continue where you left off" />
 
       {enriched.length === 0 ? (
-        <Card>
-          <CardContent className="flex flex-col items-center justify-center py-16 text-center">
-            <GraduationCap className="size-12 text-muted-foreground/30 mb-4" />
-            <h2 className="text-lg font-semibold mb-1">
-              No courses yet
-            </h2>
-            <p className="text-sm text-muted-foreground mb-4 max-w-sm">
-              You haven&apos;t enrolled in any courses yet. Browse the catalog
-              to find something that interests you.
-            </p>
-            <Button render={<Link href="/courses" />} nativeButton={false}>
-              <BookOpen className="size-4" />
-              Browse Courses
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={GraduationCap}
+          title="No courses yet"
+          description="You haven't enrolled in any courses yet. Browse the catalog to find something that interests you."
+          variant="centered"
+        >
+          <Button render={<Link href="/courses" />} nativeButton={false}>
+            <BookOpen className="size-4" />
+            Browse Courses
+          </Button>
+        </EmptyState>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {enriched.map((item) => {
@@ -86,7 +78,7 @@ export default async function MyCoursesPage() {
                 href={`/courses/${item.course.id}`}
                 className="group"
               >
-                <Card className="overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-1">
+                <Card className="relative overflow-hidden transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/30 before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-0.5 before:rounded-l-xl before:bg-primary/0 before:transition-colors before:duration-(--dur-state) before:ease-(--ease-out-quart) hover:before:bg-primary/40">
                   {/* Cover */}
                   <div className="relative aspect-video overflow-hidden">
                     {item.course.imageUrl ? (
@@ -94,7 +86,7 @@ export default async function MyCoursesPage() {
                         src={item.course.imageUrl}
                         alt={item.course.title}
                         fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-cover transition-[filter] duration-(--dur-state) ease-(--ease-out-quart) group-hover:brightness-105"
                       />
                     ) : (
                       <div
@@ -158,20 +150,20 @@ export default async function MyCoursesPage() {
                       </div>
                       <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-emerald-500 transition-all duration-500"
+                          className="h-full rounded-full bg-emerald-500 transition-[width] duration-(--dur-layout) ease-(--ease-out-quart)"
                           style={{ width: `${item.progressPct}%` }}
                         />
                       </div>
                     </div>
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-1 text-xs text-muted-foreground border-t border-border/50">
+                    <div className="flex items-center justify-between pt-1 text-xs text-muted-foreground border-t border-border">
                       <span className="flex items-center gap-1">
                         <Clock className="size-3" />
                         {new Date(item.enrolledAt).toLocaleDateString()}
                       </span>
                       <span className="font-medium text-primary inline-flex items-center gap-0.5">
-                        Continue Learning <span className="group-hover:translate-x-0.5 transition-transform">&rarr;</span>
+                        Continue Learning <span className="group-hover:translate-x-0.5 transition-transform duration-(--dur-state) ease-(--ease-out-quart)">&rarr;</span>
                       </span>
                     </div>
                   </CardContent>

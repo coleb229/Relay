@@ -22,7 +22,9 @@ export function ImageBlockSection({ config }: ImageBlockSectionProps) {
       <img
         src={imageUrl}
         alt={caption || ""}
-        className="w-full rounded-xl shadow-md"
+        loading="lazy"
+        decoding="async"
+        className="w-full rounded-xl"
       />
       {caption && (
         <figcaption className="mt-3 text-center text-sm text-muted-foreground">

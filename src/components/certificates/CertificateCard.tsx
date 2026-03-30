@@ -40,7 +40,7 @@ export function CertificateCard({ certificate, showStudent = false }: Certificat
   };
 
   return (
-    <Card className="group transition-shadow hover:shadow-md">
+    <Card className="group transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/30">
       <div className="px-4 pt-4">
         <CertificatePreview
           designData={certificate.template.designData as Parameters<typeof CertificatePreview>[0]["designData"]}

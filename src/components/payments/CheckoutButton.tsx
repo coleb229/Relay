@@ -84,7 +84,7 @@ export function CheckoutButton({ courseId, price, showCouponInput = true }: Chec
         <button
           type="button"
           onClick={() => setShowCoupon(true)}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 mx-auto"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) flex items-center gap-1 mx-auto"
         >
           <Tag className="size-3" />
           Have a coupon?

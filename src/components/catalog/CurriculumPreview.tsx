@@ -53,7 +53,7 @@ export function CurriculumPreview({
             <button
               type="button"
               onClick={() => toggle(mod.id)}
-              className="flex w-full items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors text-left"
+              className="flex w-full items-center gap-3 px-4 py-3 bg-muted/30 hover:bg-muted/50 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) text-left"
             >
               <span className="text-xs font-mono text-muted-foreground w-5">
                 {i + 1}.
@@ -67,7 +67,7 @@ export function CurriculumPreview({
               </span>
               <ChevronDown
                 className={cn(
-                  "size-4 text-muted-foreground transition-transform",
+                  "size-4 text-muted-foreground transition-transform duration-(--dur-state) ease-(--ease-out-quart)",
                   isOpen && "rotate-180"
                 )}
               />

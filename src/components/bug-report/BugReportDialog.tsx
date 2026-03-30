@@ -209,7 +209,7 @@ export function BugReportDialog({ open, onOpenChange, user }: Props) {
                         <button
                           type="button"
                           onClick={() => removeImage(i)}
-                          className="absolute -top-1.5 -right-1.5 rounded-full bg-destructive text-destructive-foreground size-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute -top-1.5 -right-1.5 rounded-full bg-destructive text-destructive-foreground size-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)"
                         >
                           <X className="size-3" />
                         </button>

@@ -66,7 +66,7 @@ function Lightbox({
     >
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+        className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-white/20"
       >
         <XIcon className="size-5" />
       </button>
@@ -78,7 +78,7 @@ function Lightbox({
               e.stopPropagation();
               prev();
             }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-white/20"
           >
             <ChevronLeft className="size-6" />
           </button>
@@ -87,7 +87,7 @@ function Lightbox({
               e.stopPropagation();
               next();
             }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-2 text-white transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-white/20"
           >
             <ChevronRight className="size-6" />
           </button>
@@ -197,7 +197,7 @@ export function GallerySection({ config }: GallerySectionProps) {
                   src={image.imageUrl}
                   alt={image.alt}
                   className={cn(
-                    "h-full w-full transition-transform duration-300 group-hover:scale-105",
+                    "h-full w-full transition-[filter] duration-(--dur-state) ease-(--ease-out-quart) group-hover:brightness-105",
                     aspectRatio === "auto" ? "object-contain" : "object-cover"
                   )}
                 />
@@ -256,13 +256,13 @@ export function GallerySection({ config }: GallerySectionProps) {
             <>
               <button
                 onClick={() => scrollTo(activeIndex > 0 ? activeIndex - 1 : images.length - 1)}
-                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white transition-colors hover:bg-black/60"
+                className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-black/60"
               >
                 <ChevronLeft className="size-5" />
               </button>
               <button
                 onClick={() => scrollTo(activeIndex < images.length - 1 ? activeIndex + 1 : 0)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white transition-colors hover:bg-black/60"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-black/60"
               >
                 <ChevronRight className="size-5" />
               </button>
@@ -277,7 +277,7 @@ export function GallerySection({ config }: GallerySectionProps) {
                   key={i}
                   onClick={() => scrollTo(i)}
                   className={cn(
-                    "size-2 rounded-full transition-colors",
+                    "size-2 rounded-full transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
                     i === activeIndex ? "bg-primary" : "bg-muted-foreground/30"
                   )}
                 />

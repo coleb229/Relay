@@ -59,7 +59,7 @@ export function CatalogFilters({
           type="button"
           onClick={() => onCategoryIdChange("all")}
           className={cn(
-            "rounded-full px-3 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "rounded-full px-3 py-1.5 text-sm font-medium transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             categoryId === "all"
               ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -73,7 +73,7 @@ export function CatalogFilters({
             type="button"
             onClick={() => onCategoryIdChange(cat.id)}
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               categoryId === cat.id
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted/80"

@@ -153,6 +153,46 @@ function createDefaultConfig(type: SectionType): PageSection["config"] {
         autoplayInterval: 5,
         images: [],
       };
+    case "MULTI_COLUMN":
+      return {
+        heading: "",
+        subheading: "",
+        columnCount: 3 as const,
+        gap: "md" as const,
+        verticalAlign: "top" as const,
+        equalHeight: true,
+        columns: [],
+      };
+    case "SOCIAL_PROOF":
+      return {
+        heading: "",
+        subheading: "",
+        layout: "combined" as const,
+        stats: [],
+        activityFeed: [],
+        badges: [],
+        showActivityAnimation: true,
+        maxVisibleActivities: 3,
+      };
+    case "BANNER":
+      return {
+        message: "",
+        variant: "info" as const,
+        icon: true,
+        ctaText: "",
+        ctaLink: "",
+        dismissible: false,
+        sticky: false,
+      };
+    case "PROGRESS_BAR":
+      return {
+        heading: "",
+        bars: [],
+        showPercentage: true,
+        animate: true,
+        height: "md" as const,
+        borderRadius: "full" as const,
+      };
   }
 }
 
@@ -407,7 +447,7 @@ export function PageBuilder({
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
               title="Undo (Cmd+Z)"
             >
               <Undo2 className="size-3.5" />
@@ -415,7 +455,7 @@ export function PageBuilder({
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors"
+              className="flex items-center justify-center size-7 rounded-md border bg-background text-muted-foreground hover:bg-muted disabled:opacity-30 disabled:pointer-events-none transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
               title="Redo (Cmd+Shift+Z)"
             >
               <Redo2 className="size-3.5" />
@@ -435,7 +475,7 @@ export function PageBuilder({
                   key={value}
                   onClick={() => setPreviewWidth(value)}
                   className={cn(
-                    "flex items-center justify-center size-7 rounded transition-colors",
+                    "flex items-center justify-center size-7 rounded transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
                     previewWidth === value
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:bg-muted"
@@ -451,7 +491,7 @@ export function PageBuilder({
 
             <button
               onClick={handleChangeTemplate}
-              className="flex items-center gap-1.5 rounded-md border bg-background px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors"
+              className="flex items-center gap-1.5 rounded-md border bg-background px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
               title="Change template"
             >
               <LayoutTemplate className="size-3.5" />
@@ -462,7 +502,7 @@ export function PageBuilder({
           {/* Right: save status */}
           <div
             className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-opacity",
+              "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)",
               saveStatus === "idle" && "opacity-0",
               saveStatus === "saving" && "bg-amber-500/10 text-amber-700 dark:text-amber-400",
               saveStatus === "saved" && "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",

@@ -33,7 +33,7 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
   const certCount = template._count?.certificates ?? 0;
 
   return (
-    <Card className="group relative transition-shadow hover:shadow-md">
+    <Card className="group relative transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/30">
       {/* Preview thumbnail */}
       <div className="px-4 pt-4">
         <Link href={`/certificates/templates/${template.id}`}>
@@ -44,7 +44,7 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
             borderStyle={template.borderStyle}
             logoUrl={template.logoUrl}
             compact
-            className="cursor-pointer transition-transform hover:scale-[1.02]"
+            className="cursor-pointer transition-transform duration-(--dur-feedback) ease-(--ease-out-quart) hover:scale-[1.02]"
             variables={{
               studentName: "Jane Student",
               courseTitle: template.course?.title ?? "Course Title",
@@ -61,7 +61,7 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
           <div className="min-w-0 flex-1">
             <Link
               href={`/certificates/templates/${template.id}`}
-              className="block truncate font-medium text-foreground hover:text-primary transition-colors"
+              className="block truncate font-medium text-foreground hover:text-primary transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
             >
               {template.name}
             </Link>
@@ -95,14 +95,14 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
               <div className="absolute right-0 top-full z-10 mt-1 w-36 overflow-hidden rounded-lg border border-border bg-popover shadow-lg">
                 <Link
                   href={`/certificates/templates/${template.id}`}
-                  className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors"
+                  className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                 >
                   <Pencil className="h-3 w-3" /> Edit
                 </Link>
                 {onDuplicate && (
                   <button
                     onClick={() => onDuplicate(template.id)}
-                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors"
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                   >
                     <Copy className="h-3 w-3" /> Duplicate
                   </button>
@@ -110,7 +110,7 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
                 {onArchive && (
                   <button
                     onClick={() => onArchive(template.id)}
-                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors"
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                   >
                     <Archive className="h-3 w-3" /> Archive
                   </button>
@@ -118,7 +118,7 @@ export function CertificateTemplateCard({ template, onDuplicate, onArchive, onDe
                 {onDelete && (
                   <button
                     onClick={() => onDelete(template.id)}
-                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10 transition-colors"
+                    className="flex w-full items-center gap-2 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                   >
                     <Trash2 className="h-3 w-3" /> Delete
                   </button>

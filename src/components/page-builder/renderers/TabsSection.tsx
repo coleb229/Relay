@@ -35,7 +35,7 @@ export function TabsSection({ config }: TabsSectionProps) {
               key={index}
               onClick={() => setActiveIndex(index)}
               className={cn(
-                "px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors -mb-px",
+                "px-4 py-2.5 text-sm font-medium whitespace-nowrap border-b-2 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) -mb-px",
                 activeIndex === index
                   ? "border-primary text-primary"
                   : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"

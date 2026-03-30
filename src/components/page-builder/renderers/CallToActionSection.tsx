@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import type { CallToActionSection as CallToActionSectionType } from "../schemas";
 
 interface CallToActionSectionProps {
@@ -25,12 +26,14 @@ export function CallToActionSection({ config }: CallToActionSectionProps) {
         </p>
       )}
       {buttonText && (
-        <a
-          href={buttonLink || "#"}
-          className="mt-8 inline-flex h-11 items-center justify-center rounded-lg bg-primary px-8 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/25 transition-all hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98] active:shadow-sm"
+        <Button
+          variant="default"
+          size="lg"
+          render={<a href={buttonLink || "#"} />}
+          className="mt-8 h-11 px-8"
         >
           {buttonText}
-        </a>
+        </Button>
       )}
     </div>
   );

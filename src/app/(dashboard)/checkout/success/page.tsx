@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 
@@ -32,17 +33,12 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="relative mb-6">
-        <div className="size-16 rounded-full bg-emerald-200 dark:bg-emerald-900/30 flex items-center justify-center animate-[pulse_2s_ease-in-out_1]">
-          <CheckCircle className="size-8 text-emerald-600 dark:text-emerald-400" />
-        </div>
-        <div className="absolute inset-0 rounded-full ring-4 ring-emerald-500/20 animate-ping repeat-[1] animation-duration-[1s]" />
-      </div>
-      <h1 className="text-2xl font-bold mb-2">Payment Successful!</h1>
-      <p className="text-muted-foreground mb-6 max-w-md">
-        You&apos;re now enrolled in <strong>{courseName}</strong>. You can start learning right away.
-      </p>
+    <EmptyState
+      icon={CheckCircle}
+      title="Payment Successful!"
+      description={`You're now enrolled in ${courseName}. You can start learning right away.`}
+      variant="centered"
+    >
       <div className="flex items-center gap-3">
         {courseId && (
           <Button
@@ -60,6 +56,6 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           My Courses
         </Button>
       </div>
-    </div>
+    </EmptyState>
   );
 }

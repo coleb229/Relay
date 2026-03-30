@@ -4,6 +4,7 @@ import { auth } from "../../../../../auth";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { StatMetric, MetricGrid } from "@/components/ui/stat-metric";
 import {
   BookOpen,
   Users,
@@ -151,7 +152,7 @@ export default async function CourseDetailPage({ params }: Props) {
                   </span>
                 )}
               </div>
-              <h1 className="text-2xl font-bold tracking-tight">{course.title}</h1>
+              <h1 className="text-xl font-semibold tracking-tight">{course.title}</h1>
               {course.description && (
                 <p className="text-sm text-muted-foreground max-w-2xl line-clamp-2">{course.description}</p>
               )}
@@ -178,12 +179,12 @@ export default async function CourseDetailPage({ params }: Props) {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Enrollments" value={course._count.enrollments} icon={Users} color="text-blue-600 dark:text-blue-400" bg="bg-blue-500/10" />
-        <StatCard label="Published Lessons" value={`${publishedLessons}/${totalLessons}`} icon={BookOpen} color="text-emerald-600 dark:text-emerald-400" bg="bg-emerald-500/10" />
-        <StatCard label="Avg. Completion" value={`${avgCompletion}%`} icon={CheckCircle2} color="text-violet-600 dark:text-violet-400" bg="bg-violet-500/10" />
-        <StatCard label="Revenue" value={revenue > 0 ? `$${revenue.toFixed(0)}` : "Free"} icon={DollarSign} color="text-amber-600 dark:text-amber-400" bg="bg-amber-500/10" />
-      </div>
+      <MetricGrid>
+        <StatMetric label="Enrollments" value={course._count.enrollments} icon={Users} />
+        <StatMetric label="Published Lessons" value={`${publishedLessons}/${totalLessons}`} icon={BookOpen} />
+        <StatMetric label="Avg. Completion" value={`${avgCompletion}%`} icon={CheckCircle2} />
+        <StatMetric label="Revenue" value={revenue > 0 ? `$${revenue.toFixed(0)}` : "Free"} icon={DollarSign} />
+      </MetricGrid>
 
       {/* Curriculum + Details */}
       <div className="grid gap-6 lg:grid-cols-3">
@@ -304,30 +305,6 @@ export default async function CourseDetailPage({ params }: Props) {
         </div>
       </div>
     </div>
-  );
-}
-
-function StatCard({ label, value, icon: Icon, color, bg }: {
-  label: string;
-  value: string | number;
-  icon: typeof Users;
-  color: string;
-  bg: string;
-}) {
-  return (
-    <Card className="group hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5">
-      <CardContent className="pt-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="text-2xl font-bold tracking-tight mt-0.5">{value}</p>
-          </div>
-          <div className={`${bg} rounded-lg p-2.5`}>
-            <Icon className={`size-5 ${color}`} />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
   );
 }
 

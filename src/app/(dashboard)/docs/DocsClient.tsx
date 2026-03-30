@@ -235,7 +235,7 @@ export function DocsClient({
                         <button
                           key={tag}
                           onClick={() => setActiveTag(tag)}
-                          className={`group flex items-center justify-between text-sm px-2 py-1.5 rounded-lg transition-colors text-left ${
+                          className={`group flex items-center justify-between text-sm px-2 py-1.5 rounded-lg transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) text-left ${
                             isActive
                               ? "bg-primary/10 text-primary font-medium"
                               : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -267,7 +267,7 @@ export function DocsClient({
         {/* Page header */}
         <div>
           <div className="flex items-center gap-3 mb-3">
-            <h1 className="text-2xl font-bold tracking-tight">API Reference</h1>
+            <h1 className="text-xl font-semibold tracking-tight">API Reference</h1>
             <span className="inline-flex items-center rounded-md bg-muted px-2.5 py-1 text-xs font-mono text-muted-foreground">
               {totalEndpoints} endpoints
             </span>

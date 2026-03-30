@@ -4,6 +4,9 @@ import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatMetric, MetricGrid } from "@/components/ui/stat-metric";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   Globe,
   Plus,
@@ -44,14 +47,10 @@ export default async function WebsitePage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Website</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Manage your site pages, navigation, and branding
-          </p>
-        </div>
+      <PageHeader
+        title="Website"
+        description="Manage your site pages, navigation, and branding"
+      >
         <Button
           render={<Link href="/website/pages/new" />}
           nativeButton={false}
@@ -60,54 +59,13 @@ export default async function WebsitePage() {
           <Plus className="size-4" />
           New Page
         </Button>
-      </div>
+      </PageHeader>
 
-      {/* Quick stats */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Link href="/website" className="group">
-          <Card className="transition-shadow hover:shadow-md">
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-violet-500/15">
-                <FileText className="size-5 text-violet-600 dark:text-violet-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{pages.length}</p>
-                <p className="text-xs text-muted-foreground">
-                  {publishedCount} published, {draftCount} draft
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/website/navigation" className="group">
-          <Card className="transition-shadow hover:shadow-md">
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-emerald-500/15">
-                <Navigation className="size-5 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{navItemCount}</p>
-                <p className="text-xs text-muted-foreground">Navigation items</p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/website/settings" className="group">
-          <Card className="transition-shadow hover:shadow-md">
-            <CardContent className="flex items-center gap-4 p-5">
-              <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/15">
-                <Settings className="size-5 text-amber-600 dark:text-amber-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{settings ? "Configured" : "Not set"}</p>
-                <p className="text-xs text-muted-foreground">Site branding</p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
+      <MetricGrid>
+        <StatMetric label="Pages" value={pages.length} description={`${publishedCount} published, ${draftCount} draft`} icon={FileText} href="/website" />
+        <StatMetric label="Navigation Items" value={navItemCount} icon={Navigation} href="/website/navigation" />
+        <StatMetric label="Site Branding" value={settings ? "Configured" : "Not set"} icon={Settings} href="/website/settings" />
+      </MetricGrid>
 
       {/* Pages list */}
       <Card>
@@ -116,25 +74,21 @@ export default async function WebsitePage() {
         </CardHeader>
         <CardContent>
           {pages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="flex size-14 items-center justify-center rounded-full bg-muted mb-4">
-                <Globe className="size-7 text-muted-foreground" />
-              </div>
-              <p className="font-medium text-muted-foreground">No pages yet</p>
-              <p className="text-sm text-muted-foreground/70 mt-1 max-w-sm">
-                Create your first page to start building your website. Pages use
-                the same visual editor as course landing pages.
-              </p>
+            <EmptyState
+              icon={Globe}
+              title="No pages yet"
+              description="Create your first page to start building your website. Pages use the same visual editor as course landing pages."
+            >
               <Button
                 render={<Link href="/website/pages/new" />}
                 nativeButton={false}
                 variant="outline"
-                className="mt-4 gap-2"
+                className="gap-2"
               >
                 <Plus className="size-4" />
                 Create your first page
               </Button>
-            </div>
+            </EmptyState>
           ) : (
             <div className="divide-y">
               {pages.map((page) => (

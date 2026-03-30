@@ -28,10 +28,10 @@ export function PublicHeader({ siteName, logoUrl, navItems }: PublicHeaderProps)
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 border-b border-border bg-background">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 font-semibold text-zinc-900">
+        <Link href="/" className="flex items-center gap-2 font-semibold text-foreground">
           {logoUrl ? (
             <img src={logoUrl} alt={siteName} className="h-8 w-auto" />
           ) : (
@@ -46,7 +46,7 @@ export function PublicHeader({ siteName, logoUrl, navItems }: PublicHeaderProps)
           ))}
           <Link
             href="/login"
-            className="ml-4 inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+            className="ml-4 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-primary/90"
           >
             <LogIn className="h-4 w-4" />
             Login
@@ -56,7 +56,7 @@ export function PublicHeader({ siteName, logoUrl, navItems }: PublicHeaderProps)
         {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex items-center justify-center rounded-lg p-2 text-zinc-600 transition-colors hover:bg-zinc-100 md:hidden"
+          className="inline-flex items-center justify-center rounded-lg p-2 text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted md:hidden"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -66,7 +66,7 @@ export function PublicHeader({ siteName, logoUrl, navItems }: PublicHeaderProps)
       {/* Mobile menu */}
       <div
         className={cn(
-          "overflow-hidden border-t border-zinc-200 bg-white transition-all duration-200 ease-in-out md:hidden",
+          "overflow-hidden border-t border-border bg-background transition-all duration-(--dur-layout) ease-(--ease-out-quart) md:hidden",
           mobileOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0 border-t-0"
         )}
       >
@@ -77,7 +77,7 @@ export function PublicHeader({ siteName, logoUrl, navItems }: PublicHeaderProps)
           <Link
             href="/login"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-100"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted"
           >
             <LogIn className="h-4 w-4" />
             Login
@@ -94,7 +94,7 @@ function NavItemDesktop({ item }: { item: PublicNavItem }) {
       <Link
         href={item.href}
         target={item.target ?? undefined}
-        className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+        className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted hover:text-foreground"
       >
         {item.label}
       </Link>
@@ -106,18 +106,18 @@ function NavItemDesktop({ item }: { item: PublicNavItem }) {
       <Link
         href={item.href}
         target={item.target ?? undefined}
-        className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+        className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted hover:text-foreground"
       >
         {item.label}
-        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+        <ChevronDown className="h-3.5 w-3.5 transition-transform duration-(--dur-state) ease-(--ease-out-quart) group-hover:rotate-180" />
       </Link>
-      <div className="invisible absolute left-0 top-full z-50 min-w-[180px] rounded-lg border border-zinc-200 bg-white py-1 opacity-0 shadow-lg transition-all group-hover:visible group-hover:opacity-100">
+      <div className="invisible absolute left-0 top-full z-50 min-w-[180px] rounded-lg border border-border bg-popover py-1 opacity-0 shadow-lg transition-all duration-(--dur-state) ease-(--ease-out-quart) group-hover:visible group-hover:opacity-100">
         {item.children.map((child) => (
           <Link
             key={child.id}
             href={child.href}
             target={child.target ?? undefined}
-            className="block px-4 py-2 text-sm text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+            className="block px-4 py-2 text-sm text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50 hover:text-foreground"
           >
             {child.label}
           </Link>
@@ -142,7 +142,7 @@ function NavItemMobile({
         href={item.href}
         target={item.target ?? undefined}
         onClick={onNavigate}
-        className="block rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+        className="block rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted hover:text-foreground"
       >
         {item.label}
       </Link>
@@ -153,20 +153,20 @@ function NavItemMobile({
     <div>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-900"
+        className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted hover:text-foreground"
       >
         {item.label}
         <ChevronDown
-          className={cn("h-3.5 w-3.5 transition-transform", expanded && "rotate-180")}
+          className={cn("h-3.5 w-3.5 transition-transform duration-(--dur-state) ease-(--ease-out-quart)", expanded && "rotate-180")}
         />
       </button>
       {expanded && (
-        <div className="ml-4 space-y-1 border-l border-zinc-200 pl-3">
+        <div className="ml-4 space-y-1 border-l border-border pl-3">
           <Link
             href={item.href}
             target={item.target ?? undefined}
             onClick={onNavigate}
-            className="block rounded-lg px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+            className="block rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50 hover:text-foreground"
           >
             {item.label}
           </Link>
@@ -176,7 +176,7 @@ function NavItemMobile({
               href={child.href}
               target={child.target ?? undefined}
               onClick={onNavigate}
-              className="block rounded-lg px-3 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-zinc-50 hover:text-zinc-900"
+              className="block rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50 hover:text-foreground"
             >
               {child.label}
             </Link>

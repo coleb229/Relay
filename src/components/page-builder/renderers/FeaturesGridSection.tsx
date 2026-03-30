@@ -30,15 +30,13 @@ export function FeaturesGridSection({ config }: FeaturesGridSectionProps) {
             const Icon = FEATURE_ICONS[col.icon] ?? BookOpen;
             const iconStyles = [
               { bg: "bg-primary/10", text: "text-primary" },
-              { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400" },
-              { bg: "bg-emerald-500/10", text: "text-emerald-600 dark:text-emerald-400" },
-              { bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400" },
+              { bg: "bg-accent/10", text: "text-accent-foreground" },
             ];
             const style = iconStyles[i % iconStyles.length];
             return (
               <div
                 key={i}
-                className="rounded-xl border border-border/50 bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
+                className="rounded-xl border border-border bg-card p-6 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/30"
               >
                 <div className={`mb-3 flex size-10 items-center justify-center rounded-lg ${style.bg} ${style.text}`}>
                   <Icon className="size-5" />

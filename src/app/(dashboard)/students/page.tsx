@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -11,6 +10,9 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { Users, GraduationCap, BookOpen } from "lucide-react";
+import { PageHeader } from "@/components/ui/page-header";
+import { StatMetric, MetricGrid } from "@/components/ui/stat-metric";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ADMIN: "default",
@@ -30,59 +32,23 @@ export default async function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Users</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage all registered users across your platform
-        </p>
-      </div>
+      <PageHeader
+        title="Users"
+        description="Manage all registered users across your platform"
+      />
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-3">
-        <Card>
-          <CardContent className="pt-4 pb-4 flex items-center gap-3">
-            <div className="bg-blue-500/15 rounded-lg p-2">
-              <Users className="size-4 text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tracking-tight">{totalUsers}</p>
-              <p className="text-xs text-muted-foreground">Total Users</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-4 flex items-center gap-3">
-            <div className="bg-emerald-500/15 rounded-lg p-2">
-              <GraduationCap className="size-4 text-emerald-600 dark:text-emerald-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tracking-tight">{studentCount}</p>
-              <p className="text-xs text-muted-foreground">Students</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-4 pb-4 flex items-center gap-3">
-            <div className="bg-violet-500/15 rounded-lg p-2">
-              <BookOpen className="size-4 text-violet-600 dark:text-violet-400" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold tracking-tight">{instructorCount}</p>
-              <p className="text-xs text-muted-foreground">Instructors</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <MetricGrid>
+        <StatMetric label="Total Users" value={totalUsers} icon={Users} />
+        <StatMetric label="Students" value={studentCount} icon={GraduationCap} />
+        <StatMetric label="Instructors" value={instructorCount} icon={BookOpen} />
+      </MetricGrid>
 
       {users.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-center">
-          <div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
-            <Users className="size-7 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-semibold mb-1">No users yet</h3>
-          <p className="text-sm text-muted-foreground max-w-sm">
-            Users will appear here once they sign up for your platform.
-          </p>
-        </div>
+        <EmptyState
+          icon={Users}
+          title="No users yet"
+          description="Users will appear here once they sign up for your platform."
+        />
       ) : (
         <Table>
           <TableHeader>

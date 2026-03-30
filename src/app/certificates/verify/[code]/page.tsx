@@ -66,14 +66,14 @@ export default async function CertificateVerifyPage({
   const StatusIcon = config.icon;
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-zinc-200 bg-white px-6 py-4">
+      <header className="border-b border-border bg-card px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center gap-2">
-          <Award className="h-5 w-5 text-violet-600" />
-          <span className="font-semibold text-zinc-900">Relay</span>
-          <span className="text-zinc-400">|</span>
-          <span className="text-sm text-zinc-500">Certificate Verification</span>
+          <Award className="h-5 w-5 text-primary" />
+          <span className="font-semibold text-foreground">Relay</span>
+          <span className="text-muted-foreground">|</span>
+          <span className="text-sm text-muted-foreground">Certificate Verification</span>
         </div>
       </header>
 
@@ -83,7 +83,7 @@ export default async function CertificateVerifyPage({
           <StatusIcon className={`h-6 w-6 ${config.color}`} />
           <div>
             <p className={`font-semibold ${config.color}`}>{config.label}</p>
-            <p className="text-sm text-zinc-600">{config.description}</p>
+            <p className="text-sm text-muted-foreground">{config.description}</p>
           </div>
         </div>
 
@@ -110,9 +110,9 @@ export default async function CertificateVerifyPage({
 
           {/* Certificate details */}
           <div className="space-y-4">
-            <h1 className="text-2xl font-bold text-zinc-900">Certificate Details</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">Certificate Details</h1>
 
-            <div className="space-y-3 rounded-xl bg-white p-5 shadow-sm ring-1 ring-zinc-200">
+            <div className="space-y-3 rounded-xl bg-card p-5 ring-1 ring-border">
               <DetailRow label="Certificate Number" value={certificate.certificateNumber} mono />
               <DetailRow label="Recipient" value={meta.studentName ?? certificate.user.name ?? "—"} />
               <DetailRow label="Course" value={meta.courseTitle ?? certificate.course.title} />
@@ -128,7 +128,7 @@ export default async function CertificateVerifyPage({
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 bg-white px-6 py-6 text-center text-xs text-zinc-400">
+      <footer className="border-t border-border bg-card px-6 py-6 text-center text-xs text-muted-foreground">
         Powered by Relay LMS &middot; Certificate verification page
       </footer>
     </div>
@@ -137,9 +137,9 @@ export default async function CertificateVerifyPage({
 
 function DetailRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-zinc-100 pb-2 last:border-0 last:pb-0">
-      <span className="text-sm text-zinc-500">{label}</span>
-      <span className={`text-sm font-medium text-zinc-900 ${mono ? "font-mono" : ""}`}>{value}</span>
+    <div className="flex items-baseline justify-between gap-4 border-b border-border pb-2 last:border-0 last:pb-0">
+      <span className="text-sm text-muted-foreground">{label}</span>
+      <span className={`text-sm font-medium text-foreground ${mono ? "font-mono" : ""}`}>{value}</span>
     </div>
   );
 }

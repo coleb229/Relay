@@ -18,13 +18,13 @@ export function TestimonialsSection({ config }: TestimonialsSectionProps) {
           {heading}
         </h2>
       )}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
         {items.map((item, i) => (
           <div
             key={i}
-            className="relative rounded-xl border border-border/50 bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
+            className="relative rounded-xl border border-border bg-card p-6 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:border-primary/20"
           >
-            <Quote className="mb-3 size-5 text-primary/30" />
+            <Quote className="mb-3 size-5 text-accent/50" />
             <blockquote className="text-sm italic leading-relaxed text-muted-foreground">
               &ldquo;{item.quote}&rdquo;
             </blockquote>

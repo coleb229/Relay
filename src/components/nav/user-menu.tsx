@@ -35,7 +35,7 @@ export function UserMenu({ name, email, image }: UserMenuProps) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none">
+      <DropdownMenuTrigger className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-sm transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none">
         <Avatar className="size-8 shrink-0">
           <AvatarImage src={image ?? undefined} />
           <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">

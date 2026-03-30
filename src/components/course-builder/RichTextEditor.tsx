@@ -40,7 +40,7 @@ function ToolbarButton({ onClick, isActive, title, children }: ToolbarButtonProp
       }}
       title={title}
       className={cn(
-        "inline-flex items-center justify-center size-7 rounded text-sm transition-colors",
+        "inline-flex items-center justify-center size-7 rounded text-sm transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
         isActive
           ? "bg-primary/10 text-primary"
           : "text-muted-foreground hover:bg-muted hover:text-foreground"
@@ -84,7 +84,7 @@ export function RichTextEditor({ value, onChange }: Props) {
   );
 
   return (
-    <div className="rounded-lg border border-input overflow-hidden focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 transition-colors dark:bg-input/30">
+    <div className="rounded-lg border border-input overflow-hidden focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) dark:bg-input/30">
       {/* Toolbar */}
       <div className="flex items-center gap-0.5 px-2 py-1.5 border-b border-input bg-muted/30 flex-wrap">
         <ToolbarButton

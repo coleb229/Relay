@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface Order {
   id: string;
@@ -133,9 +134,11 @@ export function OrdersTable() {
           <LoaderCircle className="size-5 animate-spin text-muted-foreground" />
         </div>
       ) : orders.length === 0 ? (
-        <div className="text-center py-12 text-sm text-muted-foreground">
-          No orders found.
-        </div>
+        <EmptyState
+          variant="inline"
+          title="No orders found"
+          description="Try adjusting your filters."
+        />
       ) : (
         <div className="border border-border rounded-lg overflow-hidden">
           <table className="w-full text-sm">
@@ -153,7 +156,7 @@ export function OrdersTable() {
               {orders.map((order) => (
                 <tr
                   key={order.id}
-                  className="border-b border-border last:border-0 transition-colors hover:bg-muted/50"
+                  className="border-b border-border last:border-0 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50"
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
@@ -187,11 +190,11 @@ export function OrdersTable() {
                     )}
                   </td>
                   <td className="px-4 py-3">
-                    <span className="font-semibold">
+                    <span className="font-semibold tabular-nums">
                       ${order.amount.toFixed(2)}
                     </span>
                     {order.originalAmount !== order.amount && (
-                      <span className="text-xs text-muted-foreground line-through ml-1">
+                      <span className="text-xs text-muted-foreground line-through tabular-nums ml-1">
                         ${order.originalAmount.toFixed(2)}
                       </span>
                     )}

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Plus, Pencil, Trash2, GripVertical, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -104,16 +106,12 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Categories</h1>
-          <p className="text-muted-foreground mt-1">Organize courses into categories</p>
-        </div>
+      <PageHeader title="Categories" description="Organize courses into categories">
         <Button onClick={openCreate}>
           <Plus className="size-4 mr-2" />
           New Category
         </Button>
-      </div>
+      </PageHeader>
 
       <Table>
         <TableHeader>
@@ -135,19 +133,17 @@ export default function CategoriesPage() {
           ) : categories.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5} className="py-0">
-                <div className="flex flex-col items-center justify-center py-16 text-center">
-                  <div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
-                    <Tag className="size-7 text-muted-foreground" />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-1">No categories yet</h3>
-                  <p className="text-sm text-muted-foreground max-w-sm mb-4">
-                    Create categories to organize your courses.
-                  </p>
+                <EmptyState
+                  icon={Tag}
+                  title="No categories yet"
+                  description="Create categories to organize your courses."
+                  variant="centered"
+                >
                   <Button onClick={openCreate}>
                     <Plus className="size-4 mr-2" />
                     New Category
                   </Button>
-                </div>
+                </EmptyState>
               </TableCell>
             </TableRow>
           ) : (
@@ -221,7 +217,7 @@ export default function CategoriesPage() {
                   <button
                     key={c}
                     onClick={() => setForm((f) => ({ ...f, color: c }))}
-                    className="size-7 rounded-full ring-offset-2 transition-all outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className="size-7 rounded-full ring-offset-2 transition-all duration-(--dur-feedback) ease-(--ease-out-quart) outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     style={{
                       backgroundColor: c,
                       boxShadow: form.color === c ? `0 0 0 2px ${c}` : undefined,

@@ -21,6 +21,10 @@ import { CountdownTimerSection } from "./CountdownTimerSection";
 import { TabsSection } from "./TabsSection";
 import { AccordionSection } from "./AccordionSection";
 import { GallerySection } from "./GallerySection";
+import { MultiColumnSection } from "./MultiColumnSection";
+import { SocialProofSection } from "./SocialProofSection";
+import { BannerSection } from "./BannerSection";
+import { ProgressBarSection } from "./ProgressBarSection";
 
 export interface SectionRendererProps {
   section: PageSection;
@@ -212,6 +216,14 @@ export function SectionRenderer({ section, context }: SectionRendererProps) {
         return <AccordionSection config={section.config} />;
       case "GALLERY":
         return <GallerySection config={section.config} />;
+      case "MULTI_COLUMN":
+        return <MultiColumnSection config={section.config} />;
+      case "SOCIAL_PROOF":
+        return <SocialProofSection config={section.config} />;
+      case "BANNER":
+        return <BannerSection config={section.config} />;
+      case "PROGRESS_BAR":
+        return <ProgressBarSection config={section.config} />;
       default:
         return null;
     }

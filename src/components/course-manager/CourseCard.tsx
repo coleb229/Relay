@@ -37,7 +37,8 @@ export function CourseCard({
   return (
     <div
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-all duration-200 hover:shadow-xl hover:-translate-y-1",
+        "group relative flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:ring-primary/30",
+        "before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-0.5 before:rounded-l-xl before:bg-primary/0 before:transition-colors before:duration-(--dur-state) before:ease-(--ease-out-quart) hover:before:bg-primary/40",
         selected && "ring-2 ring-primary shadow-lg shadow-primary/10"
       )}
     >
@@ -48,7 +49,7 @@ export function CourseCard({
             src={course.imageUrl}
             alt={course.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-[filter] duration-(--dur-state) ease-(--ease-out-quart) group-hover:brightness-105"
           />
         ) : (
           <div
@@ -64,7 +65,7 @@ export function CourseCard({
         )}
 
         {/* Gradient overlay for readability */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)" />
 
         {/* Status badge (top-left) */}
         <div className="absolute top-2.5 left-2.5">
@@ -75,7 +76,7 @@ export function CourseCard({
 
         {/* Category chip (bottom-left, over image) */}
         {course.category && (
-          <div className="absolute bottom-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute bottom-2.5 left-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)">
             <span
               className="inline-flex items-center gap-1.5 rounded-full bg-black/50 backdrop-blur-sm px-2.5 py-1 text-[11px] font-medium text-white"
             >
@@ -91,7 +92,7 @@ export function CourseCard({
         {/* Checkbox (top-right) */}
         <div
           className={cn(
-            "absolute top-2.5 right-2.5 transition-opacity",
+            "absolute top-2.5 right-2.5 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)",
             selectionMode ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           )}
           onClick={(e) => e.preventDefault()}
@@ -119,7 +120,7 @@ export function CourseCard({
         )}
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between pt-4 text-sm border-t border-border/50 mt-3">
+        <div className="flex items-center justify-between pt-4 text-sm border-t border-border mt-3">
           <span className="font-semibold">
             {formatPrice(course.price)}
           </span>

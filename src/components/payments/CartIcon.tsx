@@ -27,7 +27,7 @@ export function CartIcon() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="relative p-2 rounded-md hover:bg-muted transition-colors"
+        className="relative p-2 rounded-md hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
         aria-label="Open cart"
       >
         <ShoppingCart className="size-4" />

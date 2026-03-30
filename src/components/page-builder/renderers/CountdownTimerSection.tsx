@@ -25,7 +25,7 @@ function calculateTimeLeft(targetDate: string) {
 function TimeSegment({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="flex items-center justify-center min-w-[3.5rem] h-16 rounded-lg bg-foreground/5 border border-border/50 tabular-nums text-3xl font-bold text-foreground">
+      <div className="flex items-center justify-center min-w-[3.5rem] h-16 rounded-lg bg-foreground/5 border border-border tabular-nums text-3xl font-bold text-foreground">
         {String(value).padStart(2, "0")}
       </div>
       <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">

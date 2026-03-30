@@ -54,7 +54,7 @@ export default async function QuizResultsPage({ params }: Props) {
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold">Quiz Results — {lesson.title}</h1>
+        <h1 className="text-xl font-semibold tracking-tight">Quiz Results — {lesson.title}</h1>
         <p className="text-sm text-muted-foreground mt-1">
           {attempts.length} attempt{attempts.length !== 1 ? "s" : ""} &middot;{" "}
           {questionCount} question{questionCount !== 1 ? "s" : ""}
@@ -91,10 +91,10 @@ export default async function QuizResultsPage({ params }: Props) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="font-medium">
+                    <span className="font-medium tabular-nums">
                       {correct}/{questionCount}
                     </span>{" "}
-                    <span className="text-muted-foreground text-xs">
+                    <span className="text-muted-foreground text-xs tabular-nums">
                       ({pct}%)
                     </span>
                   </TableCell>

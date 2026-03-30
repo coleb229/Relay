@@ -94,7 +94,7 @@ export function PricingFields({
 
       <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2">
         <p className="text-sm font-medium">Access Model</p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground tabular-nums">
           {pricingType === "FREE"
             ? "This course is free. Anyone can enroll without payment."
             : pricingType === "SUBSCRIPTION"

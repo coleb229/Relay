@@ -46,7 +46,7 @@ export function PublicFooter({
     : [];
 
   return (
-    <footer className="border-t border-zinc-800 bg-zinc-900 text-zinc-400">
+    <footer className="border-t border-sidebar-border bg-sidebar text-sidebar-foreground/60">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center gap-8 sm:flex-row sm:items-start sm:justify-between">
           {/* Branding */}
@@ -54,7 +54,7 @@ export function PublicFooter({
             {logoUrl ? (
               <img src={logoUrl} alt={siteName} className="h-8 w-auto brightness-0 invert" />
             ) : (
-              <span className="text-lg font-semibold text-white">{siteName}</span>
+              <span className="text-lg font-semibold text-sidebar-foreground">{siteName}</span>
             )}
           </div>
 
@@ -66,7 +66,7 @@ export function PublicFooter({
                   key={item.id}
                   href={item.href}
                   target={item.target ?? undefined}
-                  className="text-sm text-zinc-400 transition-colors hover:text-white"
+                  className="text-sm text-sidebar-foreground/60 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:text-sidebar-foreground"
                 >
                   {item.label}
                 </Link>
@@ -83,7 +83,7 @@ export function PublicFooter({
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-zinc-500 transition-colors hover:text-white"
+                  className="text-sidebar-foreground/40 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:text-sidebar-foreground"
                   aria-label={key}
                 >
                   {SOCIAL_ICONS[key.toLowerCase()] ?? (
@@ -96,7 +96,7 @@ export function PublicFooter({
         </div>
 
         {/* Copyright */}
-        <div className="mt-8 border-t border-zinc-800 pt-6 text-center text-sm text-zinc-500">
+        <div className="mt-8 border-t border-sidebar-border pt-6 text-center text-sm text-sidebar-foreground/40">
           {footerText || `© ${new Date().getFullYear()} ${siteName}. All rights reserved.`}
         </div>
       </div>

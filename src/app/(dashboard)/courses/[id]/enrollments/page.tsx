@@ -39,7 +39,7 @@ export default async function CourseEnrollmentsPage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Enrollments — {course.title}</h1>
+      <h1 className="text-xl font-semibold tracking-tight">Enrollments — {course.title}</h1>
 
       <Table>
         <TableHeader>

@@ -37,7 +37,7 @@ export function StatsBarSection({ config }: StatsBarSectionProps) {
       <div className={gridColsClass}>
         {columns.map((stat, i) => (
           <div key={i} className="text-center">
-            <p className="text-3xl font-bold text-foreground sm:text-4xl">
+            <p className="text-2xl font-semibold tabular-nums text-foreground sm:text-3xl">
               {stat.prefix}
               {stat.value}
               {stat.suffix}

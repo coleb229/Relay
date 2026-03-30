@@ -297,7 +297,7 @@ function PostCard({
               <button
                 key={emoji}
                 onClick={() => onReaction(post.id, emoji)}
-                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs border transition-colors ${
+                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs border transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) ${
                   data.hasCurrentUser
                     ? "bg-primary/10 border-primary/30 text-primary"
                     : "bg-muted/50 border-border hover:bg-muted text-muted-foreground"
@@ -312,7 +312,7 @@ function PostCard({
             <div className="relative">
               <button
                 onClick={() => setShowEmojis((v) => !v)}
-                className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                 title="Add reaction"
               >
                 <SmileIcon className="size-3.5" />
@@ -326,7 +326,7 @@ function PostCard({
                         onReaction(post.id, emoji);
                         setShowEmojis(false);
                       }}
-                      className="p-1 rounded hover:bg-muted text-sm transition-colors"
+                      className="p-1 rounded hover:bg-muted text-sm transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                     >
                       {emoji}
                     </button>
@@ -339,7 +339,7 @@ function PostCard({
             {!isReply && (
               <button
                 onClick={() => setShowReplyForm((v) => !v)}
-                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors p-1 rounded hover:bg-muted"
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) p-1 rounded hover:bg-muted"
               >
                 <ReplyIcon className="size-3.5" />
                 Reply

@@ -57,15 +57,15 @@ function ModuleItem({
   );
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border/50">
+    <div className="overflow-hidden rounded-lg border border-border">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between gap-3 bg-card px-4 py-3 text-left transition-colors hover:bg-muted/50"
+        className="flex w-full items-center justify-between gap-3 bg-card px-4 py-3 text-left transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50"
       >
         <div className="flex-1">
           <span className="text-sm font-medium">{module.title}</span>
-          <span className="ml-2 text-xs text-muted-foreground">
+          <span className="ml-2 text-xs tabular-nums text-muted-foreground">
             {publishedLessons.length}{" "}
             {publishedLessons.length === 1 ? "lesson" : "lessons"}
             {showDuration && totalDuration > 0 && (
@@ -75,13 +75,13 @@ function ModuleItem({
         </div>
         <ChevronDown
           className={cn(
-            "size-4 shrink-0 text-muted-foreground transition-transform",
+            "size-4 shrink-0 text-muted-foreground transition-transform duration-(--dur-state) ease-(--ease-out-quart)",
             open && "rotate-180"
           )}
         />
       </button>
       {open && publishedLessons.length > 0 && (
-        <ul className="divide-y divide-border/30 border-t border-border/50 bg-background">
+        <ul className="divide-y divide-border border-t border-border bg-background">
           {publishedLessons.map((lesson) => (
             <li
               key={lesson.id}
@@ -140,7 +140,7 @@ export function CurriculumPreviewSection({
         <h2 className="text-2xl font-semibold tracking-tight">
           Course Curriculum
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-sm tabular-nums text-muted-foreground">
           {modules.length} {modules.length === 1 ? "module" : "modules"} &middot;{" "}
           {totalLessons} {totalLessons === 1 ? "lesson" : "lessons"}
         </p>

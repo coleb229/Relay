@@ -48,23 +48,23 @@ export function AccordionSection({ config }: AccordionSectionProps) {
             <div key={index}>
               <button
                 onClick={() => toggle(index)}
-                className="flex w-full items-center justify-between px-4 py-3.5 text-left font-medium hover:bg-muted/50 transition-colors"
+                className="flex w-full items-center justify-between px-4 py-3.5 text-left font-medium hover:bg-muted/50 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
               >
                 <span>{item.heading || `Item ${index + 1}`}</span>
                 <ChevronDownIcon
                   className={cn(
-                    "size-4 text-muted-foreground transition-transform duration-200",
+                    "size-4 text-muted-foreground transition-transform duration-(--dur-state) ease-(--ease-out-quart)",
                     isOpen && "rotate-180"
                   )}
                 />
               </button>
               <div
                 className={cn(
-                  "overflow-hidden transition-all duration-200",
-                  isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  "grid transition-[grid-template-rows,opacity] duration-(--dur-state) ease-(--ease-out-quart)",
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                 )}
               >
-                <div className="px-4 pb-4">
+                <div className="overflow-hidden px-4 pb-4">
                   {item.content ? (
                     <div
                       className="prose prose-sm max-w-none dark:prose-invert"

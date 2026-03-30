@@ -30,7 +30,7 @@ export function ImageUploadField({
         <button
           type="button"
           onClick={() => setMode(mode === "upload" ? "url" : "upload")}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) flex items-center gap-1"
         >
           {mode === "upload" ? (
             <>
@@ -59,7 +59,7 @@ export function ImageUploadField({
           <Button
             variant="destructive"
             size="icon-xs"
-            className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)"
             onClick={() => onChange(null)}
             aria-label="Remove image"
           >

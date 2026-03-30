@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
 import type { PricingTableSection as PricingTableSectionType } from "../schemas";
 
@@ -42,11 +43,11 @@ export function PricingTableSection({
       <div className="mx-auto max-w-md rounded-xl border border-border p-8 shadow-md">
         <div className="mb-6 text-center">
           {compareAtPrice && showCompareAtPrice && !isFree && (
-            <p className="text-sm text-muted-foreground line-through">
+            <p className="text-sm tabular-nums text-muted-foreground line-through">
               {formatPrice(compareAtPrice)}
             </p>
           )}
-          <p className="text-4xl font-bold text-foreground">
+          <p className="text-4xl font-bold tabular-nums text-foreground">
             {formatPrice(price)}
           </p>
         </div>
@@ -63,12 +64,14 @@ export function PricingTableSection({
         )}
 
         {ctaText && (
-          <a
-            href={ctaLink || "#"}
-            className="block w-full rounded-lg bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+          <Button
+            variant="default"
+            size="lg"
+            render={<a href={ctaLink || "#"} />}
+            className="w-full py-3"
           >
             {ctaText}
-          </a>
+          </Button>
         )}
       </div>
     </div>

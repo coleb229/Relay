@@ -231,7 +231,7 @@ export function CourseSettingsForm({ course, categories, redirectAfterSave, onUp
               <button
                 type="button"
                 onClick={() => setImageUrl("")}
-                className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 hover:bg-background transition-colors shadow-sm"
+                className="absolute top-2 right-2 p-1.5 rounded-md bg-background/80 hover:bg-background transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) shadow-sm"
                 aria-label="Remove image"
               >
                 <XIcon className="size-4" />

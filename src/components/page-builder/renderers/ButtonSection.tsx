@@ -39,7 +39,7 @@ export function ButtonSection({ config }: ButtonSectionProps) {
   } = config;
 
   const baseClasses = cn(
-    "inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer",
+    "inline-flex items-center justify-center font-medium transition-all duration-(--dur-feedback) ease-(--ease-out-quart) cursor-pointer",
     SIZE_CLASSES[size],
     RADIUS_CLASSES[borderRadius],
     fullWidth && "w-full"

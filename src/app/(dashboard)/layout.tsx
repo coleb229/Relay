@@ -20,7 +20,7 @@ export default async function DashboardLayout({
     <SidebarProvider>
       <AppSidebar user={session.user} />
       <div className="flex flex-col flex-1 overflow-hidden">
-        <header className="h-14 shrink-0 border-b bg-background/95 backdrop-blur-sm px-4 flex items-center justify-between shadow-[0_1px_4px_0_rgb(0_0_0/0.08)]">
+        <header className="h-14 shrink-0 border-b bg-background px-4 flex items-center justify-between shadow-[0_1px_4px_0_rgb(0_0_0/0.08)]">
           <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
           <div className="flex items-center gap-1.5">
             <BugReportButton user={session.user} />

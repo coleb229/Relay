@@ -109,14 +109,14 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+          className="fixed inset-0 bg-black/40 z-40 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)"
           onClick={onClose}
         />
       )}
 
       {/* Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-background border-l border-border z-50 shadow-xl transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-background border-l border-border z-50 shadow-xl transition-transform duration-(--dur-layout) ease-(--ease-out-quart) ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -134,7 +134,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             </h2>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-md hover:bg-muted transition-colors"
+              className="p-1.5 rounded-md hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
             >
               <X className="size-4" />
             </button>
@@ -173,12 +173,12 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{item.course.title}</p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-sm font-semibold">
+                        <span className="text-sm font-semibold tabular-nums">
                           ${item.price.toFixed(2)}
                         </span>
                         {item.course.compareAtPrice &&
                           item.course.compareAtPrice > item.price && (
-                            <span className="text-xs text-muted-foreground line-through">
+                            <span className="text-xs text-muted-foreground line-through tabular-nums">
                               ${item.course.compareAtPrice.toFixed(2)}
                             </span>
                           )}
@@ -187,7 +187,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     <button
                       onClick={() => removeItem(item.id)}
                       disabled={removingId === item.id}
-                      className="p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors shrink-0 self-start"
+                      className="p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) shrink-0 self-start"
                     >
                       {removingId === item.id ? (
                         <LoaderCircle className="size-3.5 animate-spin" />
@@ -201,7 +201,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                 {cart.items.length > 0 && (
                   <button
                     onClick={clearCart}
-                    className="text-xs text-muted-foreground hover:text-destructive transition-colors"
+                    className="text-xs text-muted-foreground hover:text-destructive transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                   >
                     Clear cart
                   </button>
@@ -250,17 +250,17 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Subtotal</span>
-                  <span>${subtotal.toFixed(2)}</span>
+                  <span className="tabular-nums">${subtotal.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-emerald-600 dark:text-emerald-400">
                     <span>Discount</span>
-                    <span>-${discount.toFixed(2)}</span>
+                    <span className="tabular-nums">-${discount.toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-semibold text-base pt-1.5 border-t border-border">
                   <span>Total</span>
-                  <span>${total.toFixed(2)}</span>
+                  <span className="tabular-nums">${total.toFixed(2)}</span>
                 </div>
               </div>
 

@@ -42,7 +42,7 @@ function IconPickerButton({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
-        className="flex size-8 items-center justify-center rounded-md border border-input bg-background hover:bg-muted transition-colors"
+        className="flex size-8 items-center justify-center rounded-md border border-input bg-background hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
         aria-label="Pick icon"
       >
         <IconComponent className="size-4" />

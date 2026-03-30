@@ -22,6 +22,10 @@ export const SECTION_TYPES = [
   "TABS",
   "ACCORDION",
   "GALLERY",
+  "MULTI_COLUMN",
+  "SOCIAL_PROOF",
+  "BANNER",
+  "PROGRESS_BAR",
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPES)[number];
@@ -233,6 +237,91 @@ export const galleryConfigSchema = z.object({
     .default([]),
 });
 
+export const multiColumnConfigSchema = z.object({
+  heading: z.string().default(""),
+  subheading: z.string().default(""),
+  columnCount: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
+  gap: z.enum(["sm", "md", "lg"]).default("md"),
+  verticalAlign: z.enum(["top", "center", "bottom"]).default("top"),
+  equalHeight: z.boolean().default(true),
+  columns: z
+    .array(
+      z.object({
+        imageUrl: z.string().nullable().default(null),
+        icon: z.string().default(""),
+        heading: z.string().default(""),
+        text: z.string().default(""),
+        buttonText: z.string().default(""),
+        buttonLink: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+export const socialProofConfigSchema = z.object({
+  heading: z.string().default(""),
+  subheading: z.string().default(""),
+  layout: z.enum(["stats", "activity", "badges", "combined"]).default("combined"),
+  stats: z
+    .array(
+      z.object({
+        value: z.number().default(0),
+        label: z.string().default(""),
+        prefix: z.string().default(""),
+        suffix: z.string().default(""),
+        animate: z.boolean().default(true),
+      })
+    )
+    .default([]),
+  activityFeed: z
+    .array(
+      z.object({
+        name: z.string().default(""),
+        action: z.string().default("enrolled"),
+        timeAgo: z.string().default("2h ago"),
+        avatarUrl: z.string().nullable().default(null),
+      })
+    )
+    .default([]),
+  badges: z
+    .array(
+      z.object({
+        icon: z.string().default("Shield"),
+        label: z.string().default(""),
+      })
+    )
+    .default([]),
+  showActivityAnimation: z.boolean().default(true),
+  maxVisibleActivities: z.number().default(3),
+});
+
+export const bannerConfigSchema = z.object({
+  message: z.string().default(""),
+  variant: z.enum(["info", "success", "warning", "announcement"]).default("info"),
+  icon: z.boolean().default(true),
+  ctaText: z.string().default(""),
+  ctaLink: z.string().default(""),
+  dismissible: z.boolean().default(false),
+  sticky: z.boolean().default(false),
+});
+
+export const progressBarConfigSchema = z.object({
+  heading: z.string().default(""),
+  bars: z
+    .array(
+      z.object({
+        label: z.string().default(""),
+        value: z.number().min(0).max(100).default(50),
+        color: z.string().nullable().default(null),
+      })
+    )
+    .default([]),
+  showPercentage: z.boolean().default(true),
+  animate: z.boolean().default(true),
+  height: z.enum(["sm", "md", "lg"]).default("md"),
+  borderRadius: z.enum(["none", "sm", "full"]).default("full"),
+});
+
 export const buttonConfigSchema = z.object({
   text: z.string().default("Click Here"),
   href: z.string().default(""),
@@ -369,6 +458,30 @@ export const gallerySectionSchema = z.object({
   config: galleryConfigSchema,
 });
 
+export const multiColumnSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("MULTI_COLUMN"),
+  config: multiColumnConfigSchema,
+});
+
+export const socialProofSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("SOCIAL_PROOF"),
+  config: socialProofConfigSchema,
+});
+
+export const bannerSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("BANNER"),
+  config: bannerConfigSchema,
+});
+
+export const progressBarSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("PROGRESS_BAR"),
+  config: progressBarConfigSchema,
+});
+
 export const pageSectionSchema = z.discriminatedUnion("type", [
   heroSectionSchema,
   featuresGridSectionSchema,
@@ -389,6 +502,10 @@ export const pageSectionSchema = z.discriminatedUnion("type", [
   tabsSectionSchema,
   accordionSectionSchema,
   gallerySectionSchema,
+  multiColumnSectionSchema,
+  socialProofSectionSchema,
+  bannerSectionSchema,
+  progressBarSectionSchema,
 ]);
 
 export const landingPageSectionsSchema = z.array(pageSectionSchema);
@@ -413,6 +530,10 @@ export type CountdownTimerSection = z.infer<typeof countdownTimerSectionSchema>;
 export type TabsSection = z.infer<typeof tabsSectionSchema>;
 export type AccordionSection = z.infer<typeof accordionSectionSchema>;
 export type GallerySection = z.infer<typeof gallerySectionSchema>;
+export type MultiColumnSection = z.infer<typeof multiColumnSectionSchema>;
+export type SocialProofSection = z.infer<typeof socialProofSectionSchema>;
+export type BannerSection = z.infer<typeof bannerSectionSchema>;
+export type ProgressBarSection = z.infer<typeof progressBarSectionSchema>;
 
 // ── Section Labels & Icons ─────────────────────────────────────────
 
@@ -436,6 +557,10 @@ export const SECTION_LABELS: Record<SectionType, string> = {
   TABS: "Tabs",
   ACCORDION: "Accordion",
   GALLERY: "Gallery",
+  MULTI_COLUMN: "Multi-Column",
+  SOCIAL_PROOF: "Social Proof",
+  BANNER: "Banner",
+  PROGRESS_BAR: "Progress Bar",
 };
 
 export const SECTION_ICONS: Record<SectionType, string> = {
@@ -458,4 +583,8 @@ export const SECTION_ICONS: Record<SectionType, string> = {
   TABS: "PanelTop",
   ACCORDION: "ListCollapse",
   GALLERY: "GalleryHorizontalEnd",
+  MULTI_COLUMN: "Columns3",
+  SOCIAL_PROOF: "TrendingUp",
+  BANNER: "Flag",
+  PROGRESS_BAR: "BarChart",
 };

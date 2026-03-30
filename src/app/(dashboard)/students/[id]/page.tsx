@@ -40,12 +40,12 @@ export default async function UserProfilePage({ params }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{user.name ?? user.email}</h1>
-        <p className="text-muted-foreground">{user.email}</p>
-        <Badge className="mt-1" variant="secondary">
-          {user.role}
-        </Badge>
+      <div className="flex items-center gap-3">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">{user.name ?? user.email}</h1>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
+        </div>
+        <Badge variant="secondary">{user.role}</Badge>
       </div>
 
       {user.bio && !isAdmin && (

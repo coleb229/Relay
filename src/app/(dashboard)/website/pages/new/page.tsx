@@ -99,7 +99,7 @@ export default function NewPagePage() {
                 key={type}
                 onClick={() => setSelectedType(type)}
                 className={cn(
-                  "flex items-start gap-3 rounded-lg border p-3 text-left transition-colors",
+                  "flex items-start gap-3 rounded-lg border p-3 text-left transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
                   selectedType === type
                     ? "border-primary bg-primary/5 ring-1 ring-primary"
                     : "hover:bg-muted/50"

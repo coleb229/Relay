@@ -218,7 +218,7 @@ function QuestionField({
                 <button
                   key={n}
                   onClick={() => onChange(n)}
-                  className="p-1 rounded hover:bg-muted transition-colors"
+                  className="p-1 rounded hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                   title={`${n} star${n > 1 ? "s" : ""}`}
                 >
                   <StarIcon
@@ -301,7 +301,7 @@ function QuestionField({
                   <button
                     key={n}
                     onClick={() => onChange(n)}
-                    className={`size-9 rounded-lg border text-sm font-medium transition-colors ${
+                    className={`size-9 rounded-lg border text-sm font-medium transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) ${
                       (value as number) === n
                         ? "bg-primary text-primary-foreground border-primary"
                         : "border-border hover:bg-muted text-foreground"

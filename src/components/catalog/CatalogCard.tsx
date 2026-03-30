@@ -37,7 +37,8 @@ export function CatalogCard({ course, enrollment }: CatalogCardProps) {
     <Link
       href={`/courses/${course.id}`}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+        "group relative flex flex-col overflow-hidden rounded-xl bg-card text-card-foreground ring-1 ring-foreground/10 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:ring-primary/30",
+        "before:absolute before:inset-y-0 before:left-0 before:z-10 before:w-0.5 before:rounded-l-xl before:bg-primary/0 before:transition-colors before:duration-(--dur-state) before:ease-(--ease-out-quart) hover:before:bg-primary/40"
       )}
     >
       {/* Cover image */}
@@ -47,7 +48,7 @@ export function CatalogCard({ course, enrollment }: CatalogCardProps) {
             src={course.imageUrl}
             alt={course.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-[filter] duration-(--dur-state) ease-(--ease-out-quart) group-hover:brightness-105"
           />
         ) : (
           <div
@@ -63,7 +64,7 @@ export function CatalogCard({ course, enrollment }: CatalogCardProps) {
         )}
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-(--dur-feedback) ease-(--ease-out-quart)" />
 
         {/* Category chip (always visible) */}
         {course.category && (
@@ -113,7 +114,7 @@ export function CatalogCard({ course, enrollment }: CatalogCardProps) {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-4 border-t border-border/50 mt-auto">
+        <div className="pt-4 border-t border-border mt-auto">
           {enrollment ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">

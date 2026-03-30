@@ -34,17 +34,17 @@ export function InstructorBioSection({ instructor }: InstructorBioSectionProps) 
           <img
             src={instructor.image}
             alt={instructor.name}
-            className="size-24 shrink-0 rounded-full object-cover shadow-md ring-2 ring-border"
+            className="size-24 shrink-0 rounded-full object-cover ring-2 ring-border"
           />
         ) : (
-          <div className="flex size-24 shrink-0 items-center justify-center rounded-full bg-primary/10 shadow-md ring-2 ring-border">
+          <div className="flex size-24 shrink-0 items-center justify-center rounded-full bg-primary/10 ring-2 ring-border">
             <GraduationCap className="size-10 text-primary" />
           </div>
         )}
         <div className={cn("flex-1", !instructor.image && "text-center sm:text-left")}>
-          <h3 className="text-xl font-bold">{instructor.name}</h3>
+          <h3 className="text-xl font-semibold">{instructor.name}</h3>
           {instructor.courseCount !== undefined && (
-            <p className="mt-0.5 text-sm text-muted-foreground">
+            <p className="mt-0.5 text-sm tabular-nums text-muted-foreground">
               {instructor.courseCount} {instructor.courseCount === 1 ? "course" : "courses"}
             </p>
           )}

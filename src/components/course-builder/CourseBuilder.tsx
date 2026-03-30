@@ -269,7 +269,7 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
   return (
     <div className="flex flex-col h-full">
       {/* Enhanced top bar */}
-      <div className="shrink-0 flex items-center gap-3 px-4 h-14 border-b border-border bg-background/95 backdrop-blur-sm">
+      <div className="shrink-0 flex items-center gap-3 px-4 h-14 border-b border-border bg-background">
         {/* Left: Back + Title */}
         <Button variant="ghost" size="icon-sm" render={<Link href="/courses" />} nativeButton={false}>
           <ChevronLeftIcon className="size-4" />
@@ -297,7 +297,7 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
                 setTitleDraft(courseData.title);
                 setEditingTitle(true);
               }}
-              className="font-semibold text-sm truncate hover:text-primary transition-colors text-left"
+              className="font-semibold text-sm truncate hover:text-primary transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) text-left"
               title="Click to edit title"
             >
               {courseData.title}
@@ -310,9 +310,9 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
 
         {/* Center: Stats summary */}
         <div className="hidden md:flex items-center gap-3 text-xs text-muted-foreground">
-          <span>{modules.length} modules</span>
+          <span className="tabular-nums">{modules.length} modules</span>
           <span className="text-muted-foreground/30">|</span>
-          <span>{publishedLessons}/{totalLessons} lessons published</span>
+          <span className="tabular-nums">{publishedLessons}/{totalLessons} lessons published</span>
         </div>
 
         {/* Right: Actions */}

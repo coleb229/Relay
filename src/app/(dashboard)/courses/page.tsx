@@ -3,6 +3,7 @@ import { auth } from "../../../../auth";
 import { redirect } from "next/navigation";
 import { CourseManager } from "@/components/course-manager/CourseManager";
 import { CatalogBrowser } from "@/components/catalog/CatalogBrowser";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function CoursesPage() {
   const session = await auth();
@@ -90,12 +91,7 @@ export default async function CoursesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Courses</h1>
-        <p className="text-muted-foreground mt-1">
-          Manage and organize your course catalog
-        </p>
-      </div>
+      <PageHeader title="Courses" description="Manage and organize your course catalog" />
       <CourseManager
         initialCourses={coursesResult}
         initialTotalCount={totalCount}

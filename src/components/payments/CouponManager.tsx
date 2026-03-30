@@ -284,14 +284,14 @@ export function CouponManager() {
             </thead>
             <tbody>
               {coupons.map((coupon) => (
-                <tr key={coupon.id} className="border-b border-border last:border-0 transition-colors hover:bg-muted/50">
+                <tr key={coupon.id} className="border-b border-border last:border-0 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted/50">
                   <td className="px-4 py-3 font-mono text-xs font-semibold">
                     {coupon.code}
                   </td>
                   <td className="px-4 py-3">
                     {coupon.type === "PERCENTAGE"
                       ? `${coupon.value}%`
-                      : `$${coupon.value.toFixed(2)}`}
+                      : <span className="tabular-nums">${`$${coupon.value.toFixed(2)}`}</span>}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {coupon.currentRedemptions}
@@ -306,7 +306,7 @@ export function CouponManager() {
                     <button
                       onClick={() => toggleActive(coupon)}
                       disabled={togglingId === coupon.id}
-                      className="flex items-center gap-1.5 text-xs rounded-md px-2 py-1 -mx-2 -my-1 transition-colors hover:bg-muted disabled:opacity-50"
+                      className="flex items-center gap-1.5 text-xs rounded-md px-2 py-1 -mx-2 -my-1 transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted disabled:opacity-50"
                     >
                       {coupon.isActive ? (
                         <>
@@ -325,7 +325,7 @@ export function CouponManager() {
                     <button
                       onClick={() => handleDelete(coupon.id)}
                       disabled={deletingId === coupon.id}
-                      className="p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      className="p-1.5 rounded-md hover:bg-destructive/10 hover:text-destructive transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
                     >
                       {deletingId === coupon.id ? (
                         <LoaderCircle className="size-3.5 animate-spin" />

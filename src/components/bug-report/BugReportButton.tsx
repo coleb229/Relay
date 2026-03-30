@@ -29,7 +29,7 @@ export function BugReportButton({ user }: Props) {
       <Tooltip>
         <TooltipTrigger
           aria-label="Report a bug"
-          className="relative inline-flex size-8 items-center justify-center rounded-lg text-sm transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none"
+          className="relative inline-flex size-8 items-center justify-center rounded-lg text-sm transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) hover:bg-muted hover:text-foreground focus-visible:outline-none"
           onClick={() => setOpen(true)}
         >
           <Bug className="size-4" />
