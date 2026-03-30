@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { FEATURE_ICONS } from "../feature-icons";
+import { getIcon } from "../icon-registry";
 import type { MultiColumnSection as MultiColumnSectionType } from "../schemas";
 
 interface MultiColumnSectionProps {
@@ -66,7 +66,7 @@ export function MultiColumnSection({ config }: MultiColumnSectionProps) {
       >
         {columns.map((col, i) => {
           const iconStyle = ICON_STYLES[i % ICON_STYLES.length];
-          const Icon = col.icon ? FEATURE_ICONS[col.icon] : null;
+          const Icon = col.icon ? getIcon(col.icon) : null;
 
           return (
             <div

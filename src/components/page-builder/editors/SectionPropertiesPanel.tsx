@@ -42,6 +42,11 @@ const MultiColumnEditor = dynamic(() => import("./MultiColumnEditor").then((m) =
 const SocialProofEditor = dynamic(() => import("./SocialProofEditor").then((m) => ({ default: m.SocialProofEditor })), { loading: editorLoading });
 const BannerEditor = dynamic(() => import("./BannerEditor").then((m) => ({ default: m.BannerEditor })), { loading: editorLoading });
 const ProgressBarEditor = dynamic(() => import("./ProgressBarEditor").then((m) => ({ default: m.ProgressBarEditor })), { loading: editorLoading });
+const TableEditor = dynamic(() => import("./TableEditor").then((m) => ({ default: m.TableEditor })), { loading: editorLoading });
+const CodeBlockEditor = dynamic(() => import("./CodeBlockEditor").then((m) => ({ default: m.CodeBlockEditor })), { loading: editorLoading });
+const MapEditor = dynamic(() => import("./MapEditor").then((m) => ({ default: m.MapEditor })), { loading: editorLoading });
+const ContactInfoEditor = dynamic(() => import("./ContactInfoEditor").then((m) => ({ default: m.ContactInfoEditor })), { loading: editorLoading });
+const EmbedEditor = dynamic(() => import("./EmbedEditor").then((m) => ({ default: m.EmbedEditor })), { loading: editorLoading });
 
 interface SectionPropertiesPanelProps {
   section: PageSection;
@@ -210,6 +215,41 @@ function SectionConfigEditor({
     case "PROGRESS_BAR":
       return (
         <ProgressBarEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "TABLE":
+      return (
+        <TableEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "CODE_BLOCK":
+      return (
+        <CodeBlockEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "MAP":
+      return (
+        <MapEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "CONTACT_INFO":
+      return (
+        <ContactInfoEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "EMBED":
+      return (
+        <EmbedEditor
           config={section.config}
           onChange={onConfigChange}
         />

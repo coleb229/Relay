@@ -23,3 +23,8 @@ export { MultiColumnSection } from "./MultiColumnSection";
 export { SocialProofSection } from "./SocialProofSection";
 export { BannerSection } from "./BannerSection";
 export { ProgressBarSection } from "./ProgressBarSection";
+export { TableSection } from "./TableSection";
+export { CodeBlockSection } from "./CodeBlockSection";
+export { MapSection } from "./MapSection";
+export { ContactInfoSection } from "./ContactInfoSection";
+export { EmbedSection } from "./EmbedSection";

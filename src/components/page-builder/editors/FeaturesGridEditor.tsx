@@ -1,18 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { PlusIcon, TrashIcon, BookOpen } from "lucide-react";
-import { FEATURE_ICONS, FEATURE_ICON_NAMES } from "../feature-icons";
+import { PlusIcon, TrashIcon } from "lucide-react";
+import { IconPicker } from "./IconPicker";
 
 interface Column {
   icon: string;
@@ -27,50 +21,6 @@ interface FeaturesGridEditorProps {
     columns: Column[];
   };
   onChange: (config: FeaturesGridEditorProps["config"]) => void;
-}
-
-function IconPickerButton({
-  value,
-  onSelect,
-}: {
-  value: string;
-  onSelect: (icon: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const IconComponent = FEATURE_ICONS[value] ?? BookOpen;
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        className="flex size-8 items-center justify-center rounded-md border border-input bg-background hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)"
-        aria-label="Pick icon"
-      >
-        <IconComponent className="size-4" />
-      </PopoverTrigger>
-      <PopoverContent side="bottom" align="start" className="w-56 p-2">
-        <div className="grid grid-cols-5 gap-1">
-          {FEATURE_ICON_NAMES.map((name) => {
-            const Icon = FEATURE_ICONS[name];
-            return (
-              <button
-                key={name}
-                type="button"
-                onClick={() => {
-                  onSelect(name);
-                  setOpen(false);
-                }}
-                className="flex size-8 items-center justify-center rounded-md hover:bg-muted transition-colors data-[active]:bg-primary/10"
-                data-active={value === name ? "" : undefined}
-                title={name}
-              >
-                <Icon className="size-4" />
-              </button>
-            );
-          })}
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
 }
 
 export function FeaturesGridEditor({ config, onChange }: FeaturesGridEditorProps) {
@@ -145,7 +95,7 @@ export function FeaturesGridEditor({ config, onChange }: FeaturesGridEditorProps
             </div>
 
             <div className="flex items-start gap-2">
-              <IconPickerButton
+              <IconPicker
                 value={col.icon}
                 onSelect={(icon) => updateColumn(index, { icon })}
               />

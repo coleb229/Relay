@@ -25,6 +25,11 @@ import { MultiColumnSection } from "./MultiColumnSection";
 import { SocialProofSection } from "./SocialProofSection";
 import { BannerSection } from "./BannerSection";
 import { ProgressBarSection } from "./ProgressBarSection";
+import { TableSection } from "./TableSection";
+import { CodeBlockSection } from "./CodeBlockSection";
+import { MapSection } from "./MapSection";
+import { ContactInfoSection } from "./ContactInfoSection";
+import { EmbedSection } from "./EmbedSection";
 
 export interface SectionRendererProps {
   section: PageSection;
@@ -224,6 +229,16 @@ export function SectionRenderer({ section, context }: SectionRendererProps) {
         return <BannerSection config={section.config} />;
       case "PROGRESS_BAR":
         return <ProgressBarSection config={section.config} />;
+      case "TABLE":
+        return <TableSection config={section.config} />;
+      case "CODE_BLOCK":
+        return <CodeBlockSection config={section.config} />;
+      case "MAP":
+        return <MapSection config={section.config} />;
+      case "CONTACT_INFO":
+        return <ContactInfoSection config={section.config} />;
+      case "EMBED":
+        return <EmbedSection config={section.config} />;
       default:
         return null;
     }

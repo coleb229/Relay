@@ -26,6 +26,11 @@ export const SECTION_TYPES = [
   "SOCIAL_PROOF",
   "BANNER",
   "PROGRESS_BAR",
+  "TABLE",
+  "CODE_BLOCK",
+  "MAP",
+  "CONTACT_INFO",
+  "EMBED",
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPES)[number];
@@ -322,6 +327,94 @@ export const progressBarConfigSchema = z.object({
   borderRadius: z.enum(["none", "sm", "full"]).default("full"),
 });
 
+export const tableConfigSchema = z.object({
+  heading: z.string().default(""),
+  columns: z
+    .array(
+      z.object({
+        header: z.string().default(""),
+        align: z.enum(["left", "center", "right"]).default("left"),
+      })
+    )
+    .default([]),
+  rows: z.array(z.array(z.string())).default([]),
+  showHeader: z.boolean().default(true),
+  striped: z.boolean().default(true),
+  bordered: z.boolean().default(false),
+  hoverable: z.boolean().default(true),
+  compact: z.boolean().default(false),
+  caption: z.string().default(""),
+});
+
+export const codeBlockConfigSchema = z.object({
+  code: z.string().default(""),
+  language: z.string().default("plaintext"),
+  filename: z.string().default(""),
+  showLineNumbers: z.boolean().default(true),
+  theme: z.enum(["light", "dark"]).default("dark"),
+  wrapLines: z.boolean().default(false),
+});
+
+export const mapConfigSchema = z.object({
+  heading: z.string().default(""),
+  embedUrl: z.string().default(""),
+  height: z.enum(["sm", "md", "lg", "xl"]).default("md"),
+  borderRadius: z.enum(["none", "sm", "md", "lg"]).default("md"),
+  caption: z.string().default(""),
+});
+
+export const contactInfoConfigSchema = z.object({
+  heading: z.string().default("Contact Us"),
+  layout: z.enum(["card", "inline", "split"]).default("card"),
+  items: z
+    .array(
+      z.object({
+        type: z
+          .enum(["address", "phone", "email", "hours", "custom"])
+          .default("custom"),
+        icon: z.string().default("MapPin"),
+        label: z.string().default(""),
+        value: z.string().default(""),
+        link: z.string().nullable().default(null),
+      })
+    )
+    .default([]),
+  socialLinks: z
+    .array(
+      z.object({
+        platform: z
+          .enum([
+            "facebook",
+            "twitter",
+            "instagram",
+            "linkedin",
+            "youtube",
+            "tiktok",
+            "github",
+            "website",
+          ])
+          .default("website"),
+        url: z.string().default(""),
+      })
+    )
+    .default([]),
+  showMap: z.boolean().default(false),
+  mapEmbedUrl: z.string().default(""),
+  mapHeight: z.enum(["sm", "md", "lg"]).default("sm"),
+});
+
+export const embedConfigSchema = z.object({
+  mode: z.enum(["url", "html"]).default("url"),
+  url: z.string().default(""),
+  html: z.string().default(""),
+  height: z.enum(["sm", "md", "lg", "xl", "custom"]).default("md"),
+  customHeight: z.number().default(400),
+  aspectRatio: z.enum(["auto", "16:9", "4:3", "1:1"]).default("auto"),
+  showBorder: z.boolean().default(true),
+  borderRadius: z.enum(["none", "sm", "md", "lg"]).default("md"),
+  caption: z.string().default(""),
+});
+
 export const buttonConfigSchema = z.object({
   text: z.string().default("Click Here"),
   href: z.string().default(""),
@@ -482,6 +575,36 @@ export const progressBarSectionSchema = z.object({
   config: progressBarConfigSchema,
 });
 
+export const tableSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("TABLE"),
+  config: tableConfigSchema,
+});
+
+export const codeBlockSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("CODE_BLOCK"),
+  config: codeBlockConfigSchema,
+});
+
+export const mapSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("MAP"),
+  config: mapConfigSchema,
+});
+
+export const contactInfoSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("CONTACT_INFO"),
+  config: contactInfoConfigSchema,
+});
+
+export const embedSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("EMBED"),
+  config: embedConfigSchema,
+});
+
 export const pageSectionSchema = z.discriminatedUnion("type", [
   heroSectionSchema,
   featuresGridSectionSchema,
@@ -506,6 +629,11 @@ export const pageSectionSchema = z.discriminatedUnion("type", [
   socialProofSectionSchema,
   bannerSectionSchema,
   progressBarSectionSchema,
+  tableSectionSchema,
+  codeBlockSectionSchema,
+  mapSectionSchema,
+  contactInfoSectionSchema,
+  embedSectionSchema,
 ]);
 
 export const landingPageSectionsSchema = z.array(pageSectionSchema);
@@ -534,6 +662,11 @@ export type MultiColumnSection = z.infer<typeof multiColumnSectionSchema>;
 export type SocialProofSection = z.infer<typeof socialProofSectionSchema>;
 export type BannerSection = z.infer<typeof bannerSectionSchema>;
 export type ProgressBarSection = z.infer<typeof progressBarSectionSchema>;
+export type TableSection = z.infer<typeof tableSectionSchema>;
+export type CodeBlockSection = z.infer<typeof codeBlockSectionSchema>;
+export type MapSection = z.infer<typeof mapSectionSchema>;
+export type ContactInfoSection = z.infer<typeof contactInfoSectionSchema>;
+export type EmbedSection = z.infer<typeof embedSectionSchema>;
 
 // ── Section Labels & Icons ─────────────────────────────────────────
 
@@ -561,6 +694,11 @@ export const SECTION_LABELS: Record<SectionType, string> = {
   SOCIAL_PROOF: "Social Proof",
   BANNER: "Banner",
   PROGRESS_BAR: "Progress Bar",
+  TABLE: "Table",
+  CODE_BLOCK: "Code Block",
+  MAP: "Map",
+  CONTACT_INFO: "Contact Info",
+  EMBED: "Embed",
 };
 
 export const SECTION_ICONS: Record<SectionType, string> = {
@@ -587,4 +725,53 @@ export const SECTION_ICONS: Record<SectionType, string> = {
   SOCIAL_PROOF: "TrendingUp",
   BANNER: "Flag",
   PROGRESS_BAR: "BarChart",
+  TABLE: "Table2",
+  CODE_BLOCK: "Code2",
+  MAP: "MapPin",
+  CONTACT_INFO: "Contact",
+  EMBED: "Globe",
+};
+
+// ── Section Categories ────────────────────────────────────────────
+
+export const SECTION_CATEGORY_ORDER = ["content", "media", "layout", "marketing", "people"] as const;
+export type SectionCategory = (typeof SECTION_CATEGORY_ORDER)[number];
+
+export const SECTION_CATEGORY_LABELS: Record<SectionCategory, string> = {
+  content: "Content",
+  media: "Media",
+  layout: "Layout",
+  marketing: "Marketing",
+  people: "People & Info",
+};
+
+export const SECTION_CATEGORY_MAP: Record<SectionType, SectionCategory> = {
+  HERO: "content",
+  RICH_TEXT: "content",
+  IMAGE_BLOCK: "content",
+  FEATURES_GRID: "content",
+  TABLE: "content",
+  CODE_BLOCK: "content",
+  VIDEO_EMBED: "media",
+  GALLERY: "media",
+  MAP: "media",
+  EMBED: "media",
+  MULTI_COLUMN: "layout",
+  TABS: "layout",
+  ACCORDION: "layout",
+  DIVIDER_SPACER: "layout",
+  BANNER: "layout",
+  BUTTON: "layout",
+  CALL_TO_ACTION: "marketing",
+  PRICING_TABLE: "marketing",
+  TESTIMONIALS: "marketing",
+  SOCIAL_PROOF: "marketing",
+  STATS_BAR: "marketing",
+  LOGO_WALL: "marketing",
+  COUNTDOWN_TIMER: "marketing",
+  PROGRESS_BAR: "marketing",
+  INSTRUCTOR_BIO: "people",
+  CURRICULUM_PREVIEW: "people",
+  CONTACT_INFO: "people",
+  FAQ_ACCORDION: "people",
 };

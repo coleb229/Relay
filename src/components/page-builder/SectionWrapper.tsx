@@ -55,6 +55,7 @@ export function SectionWrapper({
 
   return (
     <div
+      id={`section-${section.id}`}
       ref={setNodeRef}
       style={style}
       className={cn(

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { FEATURE_ICONS } from "../feature-icons";
+import { getIcon } from "../icon-registry";
 import type { SocialProofSection as SocialProofSectionType } from "../schemas";
 
 interface SocialProofSectionProps {
@@ -216,7 +216,7 @@ export function SocialProofSection({ config }: SocialProofSectionProps) {
       {showBadges && badges.length > 0 && (
         <div className="flex flex-wrap items-center justify-center gap-4">
           {badges.map((badge, i) => {
-            const Icon = FEATURE_ICONS[badge.icon];
+            const Icon = getIcon(badge.icon);
             return (
               <div
                 key={i}

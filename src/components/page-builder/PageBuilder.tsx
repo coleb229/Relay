@@ -24,6 +24,7 @@ import {
   Undo2,
   Redo2,
   LayoutTemplate,
+  PanelLeftIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PageBuilderProps } from "./types";
@@ -35,6 +36,7 @@ import { SectionWrapper } from "./SectionWrapper";
 import { AddSectionButton } from "./AddSectionButton";
 import { SectionPropertiesPanel } from "./editors/SectionPropertiesPanel";
 import { TemplatePicker } from "./TemplatePicker";
+import { SectionOutlinePanel } from "./SectionOutlinePanel";
 import type { PageTemplate, TemplateContext } from "./templates";
 
 // ── Default config factory per section type ──────────────────────────
@@ -193,6 +195,68 @@ function createDefaultConfig(type: SectionType): PageSection["config"] {
         height: "md" as const,
         borderRadius: "full" as const,
       };
+    case "TABLE":
+      return {
+        heading: "",
+        columns: [
+          { header: "Feature", align: "left" as const },
+          { header: "Basic", align: "center" as const },
+          { header: "Pro", align: "center" as const },
+        ],
+        rows: [
+          ["Storage", "5 GB", "100 GB"],
+          ["Support", "Email", "Priority"],
+        ],
+        showHeader: true,
+        striped: true,
+        bordered: false,
+        hoverable: true,
+        compact: false,
+        caption: "",
+      };
+    case "CODE_BLOCK":
+      return {
+        code: 'function greet(name: string) {\n  return `Hello, ${name}!`;\n}',
+        language: "typescript",
+        filename: "",
+        showLineNumbers: true,
+        theme: "dark" as const,
+        wrapLines: false,
+      };
+    case "MAP":
+      return {
+        heading: "",
+        embedUrl: "",
+        height: "md" as const,
+        borderRadius: "md" as const,
+        caption: "",
+      };
+    case "CONTACT_INFO":
+      return {
+        heading: "Contact Us",
+        layout: "card" as const,
+        items: [
+          { type: "email" as const, icon: "Mail", label: "Email", value: "", link: null },
+          { type: "phone" as const, icon: "Phone", label: "Phone", value: "", link: null },
+          { type: "address" as const, icon: "MapPin", label: "Address", value: "", link: null },
+        ],
+        socialLinks: [],
+        showMap: false,
+        mapEmbedUrl: "",
+        mapHeight: "sm" as const,
+      };
+    case "EMBED":
+      return {
+        mode: "url" as const,
+        url: "",
+        html: "",
+        height: "md" as const,
+        customHeight: 400,
+        aspectRatio: "auto" as const,
+        showBorder: true,
+        borderRadius: "md" as const,
+        caption: "",
+      };
   }
 }
 
@@ -233,6 +297,7 @@ export function PageBuilder({
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [previewWidth, setPreviewWidth] = useState<PreviewWidth>("desktop");
+  const [showOutline, setShowOutline] = useState(true);
 
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sectionsRef = useRef(sections);
@@ -438,6 +503,18 @@ export function PageBuilder({
 
   return (
     <div className="flex h-full">
+      {/* Left: outline panel */}
+      {showOutline && (
+        <SectionOutlinePanel
+          sections={sections}
+          selectedSectionId={selectedSectionId}
+          onSelect={setSelectedSectionId}
+          onReorder={setSections}
+          onToggleVisibility={(id) => toggleVisibility(id)}
+          onCollapse={() => setShowOutline(false)}
+        />
+      )}
+
       {/* Center: preview area */}
       <div className="flex-1 overflow-auto bg-muted/30 p-6 relative bg-[radial-gradient(circle,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px]">
         {/* Top toolbar */}
@@ -496,6 +573,20 @@ export function PageBuilder({
             >
               <LayoutTemplate className="size-3.5" />
               Templates
+            </button>
+
+            <button
+              onClick={() => setShowOutline((v) => !v)}
+              className={cn(
+                "flex items-center gap-1.5 rounded-md border bg-background px-2 py-1 text-xs transition-colors duration-(--dur-feedback) ease-(--ease-out-quart)",
+                showOutline
+                  ? "text-primary border-primary/30"
+                  : "text-muted-foreground hover:bg-muted"
+              )}
+              title={showOutline ? "Hide outline" : "Show outline"}
+            >
+              <PanelLeftIcon className="size-3.5" />
+              Outline
             </button>
           </div>
 

@@ -72,6 +72,11 @@ const SECTION_COLORS: Record<SectionType, string> = {
   SOCIAL_PROOF: "bg-green-500/20 text-green-700 dark:text-green-400",
   BANNER: "bg-orange-500/20 text-orange-700 dark:text-orange-400",
   PROGRESS_BAR: "bg-lime-500/20 text-lime-700 dark:text-lime-400",
+  TABLE: "bg-slate-500/20 text-slate-700 dark:text-slate-400",
+  CODE_BLOCK: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400",
+  MAP: "bg-blue-500/20 text-blue-700 dark:text-blue-400",
+  CONTACT_INFO: "bg-teal-500/20 text-teal-700 dark:text-teal-400",
+  EMBED: "bg-cyan-500/20 text-cyan-700 dark:text-cyan-400",
 };
 
 export function TemplatePicker({ context, onSelect }: TemplatePickerProps) {

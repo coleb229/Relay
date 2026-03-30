@@ -1,70 +1,36 @@
 "use client";
 
 import { useState } from "react";
-import {
-  ImageIcon,
-  LayoutGrid,
-  FileText,
-  Image,
-  User,
-  BookOpen,
-  MousePointerClick,
-  MessageSquareQuote,
-  HelpCircle,
-  PlayCircle,
-  BarChart3,
-  CreditCard,
-  Building2,
-  Minus,
-  PlusIcon,
-  RectangleHorizontal,
-  Timer,
-  PanelTop,
-  ListCollapse,
-  GalleryHorizontalEnd,
-  Columns3,
-  TrendingUp,
-  Flag,
-  BarChart,
-} from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandGroup,
+  CommandItem,
+  CommandEmpty,
+} from "@/components/ui/command";
 import { cn } from "@/lib/utils";
-import { SECTION_TYPES, SECTION_LABELS, SECTION_ICONS, type SectionType } from "./schemas";
+import {
+  SECTION_TYPES,
+  SECTION_LABELS,
+  SECTION_ICONS,
+  SECTION_CATEGORY_ORDER,
+  SECTION_CATEGORY_LABELS,
+  SECTION_CATEGORY_MAP,
+  type SectionType,
+} from "./schemas";
+import { SECTION_ICON_MAP } from "./section-icon-map";
 
 interface AddSectionButtonProps {
   position: number;
   onAdd: (type: SectionType, position: number) => void;
 }
-
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  ImageIcon,
-  LayoutGrid,
-  FileText,
-  Image,
-  User,
-  BookOpen,
-  MousePointerClick,
-  MessageSquareQuote,
-  HelpCircle,
-  PlayCircle,
-  BarChart3,
-  CreditCard,
-  Building2,
-  Minus,
-  RectangleHorizontal,
-  Timer,
-  PanelTop,
-  ListCollapse,
-  GalleryHorizontalEnd,
-  Columns3,
-  TrendingUp,
-  Flag,
-  BarChart,
-};
 
 export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
   const [open, setOpen] = useState(false);
@@ -94,27 +60,39 @@ export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {
         >
           <PlusIcon className="size-3.5" />
         </PopoverTrigger>
-        <PopoverContent side="bottom" align="center" className="w-64 p-2">
-          <p className="text-xs font-medium text-muted-foreground px-2 pb-1.5">
-            Add section
-          </p>
-          <div className="grid grid-cols-2 gap-1">
-            {SECTION_TYPES.map((type) => {
-              const IconComp = ICON_MAP[SECTION_ICONS[type]];
-              return (
-                <button
-                  key={type}
-                  onClick={() => handleSelect(type)}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-muted transition-colors duration-(--dur-feedback) ease-(--ease-out-quart) text-left"
-                >
-                  {IconComp && (
-                    <IconComp className="size-4 text-muted-foreground shrink-0" />
-                  )}
-                  <span className="truncate">{SECTION_LABELS[type]}</span>
-                </button>
-              );
-            })}
-          </div>
+        <PopoverContent side="bottom" align="center" className="w-80 p-0">
+          <Command>
+            <CommandInput placeholder="Search sections..." />
+            <CommandList>
+              <CommandEmpty>No sections found</CommandEmpty>
+              {SECTION_CATEGORY_ORDER.map((category) => {
+                const types = SECTION_TYPES.filter(
+                  (t) => SECTION_CATEGORY_MAP[t] === category
+                );
+                return (
+                  <CommandGroup
+                    key={category}
+                    heading={SECTION_CATEGORY_LABELS[category]}
+                  >
+                    {types.map((type) => {
+                      const IconComp = SECTION_ICON_MAP[SECTION_ICONS[type]];
+                      return (
+                        <CommandItem
+                          key={type}
+                          onSelect={() => handleSelect(type)}
+                        >
+                          {IconComp && (
+                            <IconComp className="size-4 text-muted-foreground" />
+                          )}
+                          <span>{SECTION_LABELS[type]}</span>
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                );
+              })}
+            </CommandList>
+          </Command>
         </PopoverContent>
       </Popover>
     </div>
