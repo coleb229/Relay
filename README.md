@@ -124,6 +124,7 @@ The full interactive reference is available at `/docs` when signed in.
 <!-- CHANGELOG_START -->
 | Commit | Date | Description |
 |--------|------|-------------|
+| `d39395e` | 2026-03-30 | feat: page builder sprints 14-19 — new section types, icon picker, categories, outline panel |
 | `0329f73` | 2026-03-30 | feat: complete Impeccable design system overhaul — all 26 sprints done |
 | `f5e5967` | 2026-03-29 | feat: page builder templates, new section types, lesson player, public pages, and code cleanup |
 | `19a7cd7` | 2026-03-29 | feat: e-commerce, certificates, website builder, page builder extensions, collapsible sidebar |
