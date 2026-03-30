@@ -9,7 +9,12 @@ import {
 } from "@/components/ui/card";
 import { BookOpen, Layers, Zap } from "lucide-react";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ callbackUrl?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { callbackUrl } = await searchParams;
   return (
     <div className="min-h-screen flex">
       {/* Left hero panel */}
@@ -98,7 +103,7 @@ export default function LoginPage() {
               <form
                 action={async () => {
                   "use server";
-                  await signIn("google", { redirectTo: "/" });
+                  await signIn("google", { redirectTo: callbackUrl || "/" });
                 }}
               >
                 <Button type="submit" className="w-full gap-2" size="lg">

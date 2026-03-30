@@ -318,7 +318,7 @@ export function CourseBuilder({ course, initialModules, categories, redirectAfte
         {/* Right: Actions */}
         <div className="flex items-center gap-2 shrink-0">
           {/* Preview */}
-          <Button variant="outline" size="sm" render={<Link href={`/courses/${course.id}`} />} nativeButton={false}>
+          <Button variant="outline" size="sm" render={<Link href={`/course/${courseData.slug}`} target="_blank" />} nativeButton={false}>
             <EyeIcon className="size-3.5" />
             <span className="hidden sm:inline">Preview</span>
           </Button>

@@ -3,6 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUploadField } from "./ImageUploadField";
 
 interface HeroEditorProps {
   config: {
@@ -40,17 +41,12 @@ export function HeroEditor({ config, onChange }: HeroEditorProps) {
         />
       </div>
 
-      <div className="space-y-1.5">
-        <Label htmlFor="hero-bg-image">Background Image URL</Label>
-        <Input
-          id="hero-bg-image"
-          value={config.backgroundImageUrl ?? ""}
-          onChange={(e) =>
-            onChange({ ...config, backgroundImageUrl: e.target.value || null })
-          }
-          placeholder="https://example.com/hero.jpg"
-        />
-      </div>
+      <ImageUploadField
+        label="Background Image"
+        value={config.backgroundImageUrl}
+        onChange={(url) => onChange({ ...config, backgroundImageUrl: url })}
+        placeholder="https://example.com/hero.jpg"
+      />
 
       <div className="space-y-1.5">
         <Label htmlFor="hero-cta-text">CTA Text</Label>

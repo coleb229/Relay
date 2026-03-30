@@ -1,61 +1,7 @@
 import { cn } from "@/lib/utils";
-import {
-  BookOpen,
-  Users,
-  Clock,
-  Star,
-  Zap,
-  Target,
-  Lightbulb,
-  Rocket,
-  Shield,
-  Award,
-  Heart,
-  Globe,
-  Code,
-  Music,
-  Camera,
-  Palette,
-  Layers,
-  Brain,
-  Trophy,
-  Compass,
-  CheckCircle2,
-  Sparkles,
-  GraduationCap,
-  PlayCircle,
-  FileText,
-  type LucideIcon,
-} from "lucide-react";
+import { BookOpen } from "lucide-react";
+import { FEATURE_ICONS } from "../feature-icons";
 import type { FeaturesGridSection as FeaturesGridSectionType } from "../schemas";
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  BookOpen,
-  Users,
-  Clock,
-  Star,
-  Zap,
-  Target,
-  Lightbulb,
-  Rocket,
-  Shield,
-  Award,
-  Heart,
-  Globe,
-  Code,
-  Music,
-  Camera,
-  Palette,
-  Layers,
-  Brain,
-  Trophy,
-  Compass,
-  CheckCircle2,
-  Sparkles,
-  GraduationCap,
-  PlayCircle,
-  FileText,
-};
 
 interface FeaturesGridSectionProps {
   config: FeaturesGridSectionType["config"];
@@ -81,7 +27,7 @@ export function FeaturesGridSection({ config }: FeaturesGridSectionProps) {
       {columns.length > 0 && (
         <div className={gridColsClass}>
           {columns.map((col, i) => {
-            const Icon = ICON_MAP[col.icon] ?? BookOpen;
+            const Icon = FEATURE_ICONS[col.icon] ?? BookOpen;
             const iconStyles = [
               { bg: "bg-primary/10", text: "text-primary" },
               { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400" },

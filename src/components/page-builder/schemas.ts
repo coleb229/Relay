@@ -17,6 +17,11 @@ export const SECTION_TYPES = [
   "PRICING_TABLE",
   "LOGO_WALL",
   "DIVIDER_SPACER",
+  "BUTTON",
+  "COUNTDOWN_TIMER",
+  "TABS",
+  "ACCORDION",
+  "GALLERY",
 ] as const;
 
 export type SectionType = (typeof SECTION_TYPES)[number];
@@ -34,6 +39,13 @@ export const sectionStyleSchema = z.object({
   maxWidth: z.enum(["sm", "md", "lg", "xl", "full"]).default("full"),
   backgroundGradient: z.string().nullable().default(null),
   paddingX: z.enum(["none", "sm", "md", "lg"]).default("md"),
+  // Typography
+  fontFamily: z.string().nullable().default(null),
+  fontSize: z.enum(["sm", "base", "lg", "xl", "2xl"]).nullable().default(null),
+  fontWeight: z.enum(["normal", "medium", "semibold", "bold"]).nullable().default(null),
+  lineHeight: z.enum(["tight", "normal", "relaxed", "loose"]).nullable().default(null),
+  letterSpacing: z.enum(["tight", "normal", "wide"]).nullable().default(null),
+  textColor: z.string().nullable().default(null),
 });
 
 export type SectionStyle = z.infer<typeof sectionStyleSchema>;
@@ -169,6 +181,71 @@ export const dividerSpacerConfigSchema = z.object({
   spacingY: z.enum(["sm", "md", "lg", "xl"]).default("md"),
 });
 
+export const tabsConfigSchema = z.object({
+  heading: z.string().default(""),
+  tabs: z
+    .array(
+      z.object({
+        label: z.string().default(""),
+        html: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+export const accordionConfigSchema = z.object({
+  heading: z.string().default(""),
+  items: z
+    .array(
+      z.object({
+        heading: z.string().default(""),
+        content: z.string().default(""),
+      })
+    )
+    .default([]),
+  allowMultiOpen: z.boolean().default(false),
+});
+
+export const countdownTimerConfigSchema = z.object({
+  heading: z.string().default(""),
+  targetDate: z.string().default(""),
+  expiredMessage: z.string().default("This event has ended"),
+  showDays: z.boolean().default(true),
+  showSeconds: z.boolean().default(true),
+});
+
+export const galleryConfigSchema = z.object({
+  heading: z.string().default(""),
+  mode: z.enum(["grid", "carousel"]).default("grid"),
+  columnCount: z.union([z.literal(2), z.literal(3), z.literal(4)]).default(3),
+  aspectRatio: z.enum(["square", "4:3", "16:9", "auto"]).default("4:3"),
+  gap: z.enum(["sm", "md", "lg"]).default("md"),
+  autoplay: z.boolean().default(false),
+  autoplayInterval: z.number().default(5),
+  images: z
+    .array(
+      z.object({
+        imageUrl: z.string().default(""),
+        alt: z.string().default(""),
+        caption: z.string().default(""),
+      })
+    )
+    .default([]),
+});
+
+export const buttonConfigSchema = z.object({
+  text: z.string().default("Click Here"),
+  href: z.string().default(""),
+  target: z.enum(["_self", "_blank"]).default("_self"),
+  variant: z.enum(["solid", "outline", "ghost"]).default("solid"),
+  size: z.enum(["sm", "md", "lg"]).default("md"),
+  bgColor: z.string().nullable().default(null),
+  textColor: z.string().nullable().default(null),
+  borderColor: z.string().nullable().default(null),
+  borderRadius: z.enum(["none", "sm", "md", "lg", "full"]).default("md"),
+  fullWidth: z.boolean().default(false),
+});
+
 // ── Section Schemas (discriminated union) ──────────────────────────
 
 const baseSectionFields = {
@@ -262,6 +339,36 @@ export const dividerSpacerSectionSchema = z.object({
   config: dividerSpacerConfigSchema,
 });
 
+export const buttonSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("BUTTON"),
+  config: buttonConfigSchema,
+});
+
+export const countdownTimerSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("COUNTDOWN_TIMER"),
+  config: countdownTimerConfigSchema,
+});
+
+export const tabsSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("TABS"),
+  config: tabsConfigSchema,
+});
+
+export const accordionSectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("ACCORDION"),
+  config: accordionConfigSchema,
+});
+
+export const gallerySectionSchema = z.object({
+  ...baseSectionFields,
+  type: z.literal("GALLERY"),
+  config: galleryConfigSchema,
+});
+
 export const pageSectionSchema = z.discriminatedUnion("type", [
   heroSectionSchema,
   featuresGridSectionSchema,
@@ -277,6 +384,11 @@ export const pageSectionSchema = z.discriminatedUnion("type", [
   pricingTableSectionSchema,
   logoWallSectionSchema,
   dividerSpacerSectionSchema,
+  buttonSectionSchema,
+  countdownTimerSectionSchema,
+  tabsSectionSchema,
+  accordionSectionSchema,
+  gallerySectionSchema,
 ]);
 
 export const landingPageSectionsSchema = z.array(pageSectionSchema);
@@ -296,6 +408,11 @@ export type StatsBarSection = z.infer<typeof statsBarSectionSchema>;
 export type PricingTableSection = z.infer<typeof pricingTableSectionSchema>;
 export type LogoWallSection = z.infer<typeof logoWallSectionSchema>;
 export type DividerSpacerSection = z.infer<typeof dividerSpacerSectionSchema>;
+export type ButtonSection = z.infer<typeof buttonSectionSchema>;
+export type CountdownTimerSection = z.infer<typeof countdownTimerSectionSchema>;
+export type TabsSection = z.infer<typeof tabsSectionSchema>;
+export type AccordionSection = z.infer<typeof accordionSectionSchema>;
+export type GallerySection = z.infer<typeof gallerySectionSchema>;
 
 // ── Section Labels & Icons ─────────────────────────────────────────
 
@@ -314,6 +431,11 @@ export const SECTION_LABELS: Record<SectionType, string> = {
   PRICING_TABLE: "Pricing",
   LOGO_WALL: "Logo Wall",
   DIVIDER_SPACER: "Divider",
+  BUTTON: "Button",
+  COUNTDOWN_TIMER: "Countdown",
+  TABS: "Tabs",
+  ACCORDION: "Accordion",
+  GALLERY: "Gallery",
 };
 
 export const SECTION_ICONS: Record<SectionType, string> = {
@@ -331,4 +453,9 @@ export const SECTION_ICONS: Record<SectionType, string> = {
   PRICING_TABLE: "CreditCard",
   LOGO_WALL: "Building2",
   DIVIDER_SPACER: "Minus",
+  BUTTON: "RectangleHorizontal",
+  COUNTDOWN_TIMER: "Timer",
+  TABS: "PanelTop",
+  ACCORDION: "ListCollapse",
+  GALLERY: "GalleryHorizontalEnd",
 };

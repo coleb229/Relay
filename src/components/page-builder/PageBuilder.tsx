@@ -23,16 +23,19 @@ import {
   Smartphone,
   Undo2,
   Redo2,
+  LayoutTemplate,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { PageBuilderProps } from "./types";
 import type { SaveStatus } from "./types";
 import type { PageSection, SectionType, SectionStyle } from "./schemas";
-import { generateDefaultSections } from "./defaults";
+import { genSectionId, DEFAULT_SECTION_STYLE } from "./defaults";
 import { useHistory } from "./useHistory";
 import { SectionWrapper } from "./SectionWrapper";
 import { AddSectionButton } from "./AddSectionButton";
 import { SectionPropertiesPanel } from "./editors/SectionPropertiesPanel";
+import { TemplatePicker } from "./TemplatePicker";
+import type { PageTemplate, TemplateContext } from "./templates";
 
 // ── Default config factory per section type ──────────────────────────
 
@@ -107,21 +110,52 @@ function createDefaultConfig(type: SectionType): PageSection["config"] {
         color: null,
         spacingY: "md" as const,
       };
+    case "BUTTON":
+      return {
+        text: "Click Here",
+        href: "",
+        target: "_self" as const,
+        variant: "solid" as const,
+        size: "md" as const,
+        bgColor: null,
+        textColor: null,
+        borderColor: null,
+        borderRadius: "md" as const,
+        fullWidth: false,
+      };
+    case "COUNTDOWN_TIMER":
+      return {
+        heading: "",
+        targetDate: "",
+        expiredMessage: "This event has ended",
+        showDays: true,
+        showSeconds: true,
+      };
+    case "TABS":
+      return {
+        heading: "",
+        tabs: [],
+      };
+    case "ACCORDION":
+      return {
+        heading: "",
+        items: [],
+        allowMultiOpen: false,
+      };
+    case "GALLERY":
+      return {
+        heading: "",
+        mode: "grid" as const,
+        columnCount: 3 as const,
+        aspectRatio: "4:3" as const,
+        gap: "md" as const,
+        autoplay: false,
+        autoplayInterval: 5,
+        images: [],
+      };
   }
 }
 
-const DEFAULT_STYLE: SectionStyle = {
-  alignment: "center",
-  verticalAlignment: "center",
-  backgroundColor: null,
-  backgroundImageUrl: null,
-  paddingY: "md",
-  borderRadius: "none",
-  boxShadow: "none",
-  maxWidth: "full",
-  backgroundGradient: null,
-  paddingX: "md",
-};
 
 type PreviewWidth = "desktop" | "tablet" | "mobile";
 
@@ -140,6 +174,8 @@ export function PageBuilder({
   context,
   defaultSectionsConfig,
 }: PageBuilderProps) {
+  const hasInitialSections = initialSections && initialSections.length > 0;
+
   const {
     state: sections,
     set: setSections,
@@ -148,13 +184,12 @@ export function PageBuilder({
     canUndo,
     canRedo,
   } = useHistory<PageSection[]>(() => {
-    if (initialSections && initialSections.length > 0) return initialSections;
-    if (defaultSectionsConfig) {
-      return generateDefaultSections(defaultSectionsConfig);
-    }
+    if (hasInitialSections) return initialSections;
+    // Don't auto-generate defaults — let the template picker handle it
     return [];
   });
 
+  const [showTemplatePicker, setShowTemplatePicker] = useState(!hasInitialSections);
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("idle");
   const [previewWidth, setPreviewWidth] = useState<PreviewWidth>("desktop");
@@ -221,6 +256,28 @@ export function PageBuilder({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [undo, redo]);
 
+  // ── Template selection ────────────────────────────────────────────
+  const templateContext: TemplateContext = defaultSectionsConfig ?? {
+    title: "",
+    description: null,
+    imageUrl: null,
+  };
+
+  function handleTemplateSelect(template: PageTemplate) {
+    const generated = template.generate(templateContext);
+    setSections(generated);
+    setShowTemplatePicker(false);
+    setSelectedSectionId(null);
+  }
+
+  function handleChangeTemplate() {
+    if (sections.length > 0 && !confirm("This will replace all current sections. Continue?")) {
+      return;
+    }
+    setSelectedSectionId(null);
+    setShowTemplatePicker(true);
+  }
+
   // ── DnD setup ────────────────────────────────────────────────────
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -242,11 +299,11 @@ export function PageBuilder({
   // ── Section operations ───────────────────────────────────────────
   function addSection(type: SectionType, position: number) {
     const newSection: PageSection = {
-      id: `section-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      id: genSectionId(),
       type,
       order: position,
       visible: true,
-      style: { ...DEFAULT_STYLE },
+      style: { ...DEFAULT_SECTION_STYLE },
       config: createDefaultConfig(type),
     } as PageSection;
 
@@ -273,7 +330,7 @@ export function PageBuilder({
       const original = prev[index];
       const copy: PageSection = {
         ...structuredClone(original),
-        id: `section-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        id: genSectionId(),
       };
       const next = [...prev];
       next.splice(index + 1, 0, copy);
@@ -330,13 +387,22 @@ export function PageBuilder({
   };
 
   // ── Render ───────────────────────────────────────────────────────
+
+  if (showTemplatePicker) {
+    return (
+      <div className="flex h-full">
+        <TemplatePicker context={templateContext} onSelect={handleTemplateSelect} />
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full">
       {/* Center: preview area */}
       <div className="flex-1 overflow-auto bg-muted/30 p-6 relative bg-[radial-gradient(circle,var(--color-border)_1px,transparent_1px)] bg-size-[24px_24px]">
         {/* Top toolbar */}
         <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between">
-          {/* Left: undo/redo + preview width */}
+          {/* Left: undo/redo + preview width + change template */}
           <div className="flex items-center gap-1">
             <button
               onClick={undo}
@@ -380,6 +446,17 @@ export function PageBuilder({
                 </button>
               ))}
             </div>
+
+            <div className="w-px h-4 bg-border mx-1" />
+
+            <button
+              onClick={handleChangeTemplate}
+              className="flex items-center gap-1.5 rounded-md border bg-background px-2 py-1 text-xs text-muted-foreground hover:bg-muted transition-colors"
+              title="Change template"
+            >
+              <LayoutTemplate className="size-3.5" />
+              Templates
+            </button>
           </div>
 
           {/* Right: save status */}

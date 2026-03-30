@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { PlusIcon, TrashIcon } from "lucide-react";
 import type { logoWallConfigSchema } from "../schemas";
+import { ImageUploadField } from "./ImageUploadField";
 
 type LogoWallConfig = z.infer<typeof logoWallConfigSchema>;
 
@@ -110,10 +111,10 @@ export function LogoWallEditor({ config, onChange }: LogoWallEditorProps) {
               </Button>
             </div>
 
-            <Input
-              value={logo.imageUrl}
-              onChange={(e) => updateLogo(index, { imageUrl: e.target.value })}
-              placeholder="Image URL"
+            <ImageUploadField
+              label="Logo Image"
+              value={logo.imageUrl || null}
+              onChange={(url) => updateLogo(index, { imageUrl: url ?? "" })}
             />
 
             <Input

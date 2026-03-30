@@ -14,3 +14,8 @@ export { StatsBarSection } from "./StatsBarSection";
 export { PricingTableSection } from "./PricingTableSection";
 export { LogoWallSection } from "./LogoWallSection";
 export { DividerSpacerSection } from "./DividerSpacerSection";
+export { ButtonSection } from "./ButtonSection";
+export { CountdownTimerSection } from "./CountdownTimerSection";
+export { TabsSection } from "./TabsSection";
+export { AccordionSection } from "./AccordionSection";
+export { GallerySection } from "./GallerySection";

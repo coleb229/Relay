@@ -15,7 +15,10 @@ export async function POST(
 
   const source = await prisma.lesson.findUnique({
     where: { id },
-    include: { questions: { include: { options: true }, orderBy: { order: "asc" } } },
+    include: {
+      questions: { include: { options: true }, orderBy: { order: "asc" } },
+      surveyQuestions: { include: { options: true }, orderBy: { order: "asc" } },
+    },
   });
 
   if (!source) return Response.json({ error: "Not found" }, { status: 404 });
@@ -33,6 +36,25 @@ export async function POST(
       duration: source.duration,
       type: source.type,
       isPublished: false,
+      // Copy new type-specific fields
+      fileUrl: source.fileUrl,
+      fileName: source.fileName,
+      fileSize: source.fileSize,
+      audioUrl: source.audioUrl,
+      embedCode: source.embedCode,
+      meetingUrl: source.meetingUrl,
+      meetingPlatform: source.meetingPlatform,
+      scheduledAt: source.scheduledAt,
+      recordingUrl: source.recordingUrl,
+      assignmentType: source.assignmentType,
+      maxScore: source.maxScore,
+      dueDate: source.dueDate,
+      allowLate: source.allowLate,
+      instructions: source.instructions,
+      scormPackageUrl: source.scormPackageUrl,
+      scormVersion: source.scormVersion,
+      scormEntryPoint: source.scormEntryPoint,
+      discussionPrompt: source.discussionPrompt,
       ...(source.type === "QUIZ" && source.questions.length > 0
         ? {
             questions: {
@@ -46,6 +68,26 @@ export async function POST(
                     data: q.options.map((o) => ({
                       text: o.text,
                       isCorrect: o.isCorrect,
+                      order: o.order,
+                    })),
+                  },
+                },
+              })),
+            },
+          }
+        : {}),
+      ...(source.type === "SURVEY" && source.surveyQuestions.length > 0
+        ? {
+            surveyQuestions: {
+              create: source.surveyQuestions.map((q) => ({
+                type: q.type,
+                prompt: q.prompt,
+                order: q.order,
+                required: q.required,
+                options: {
+                  createMany: {
+                    data: q.options.map((o) => ({
+                      text: o.text,
                       order: o.order,
                     })),
                   },

@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getGradient, formatPrice } from "@/lib/course-utils";
 import { EnrollButton } from "./EnrollButton";
+import { PublicEnrollButton } from "./PublicEnrollButton";
 import { CurriculumPreview } from "./CurriculumPreview";
 import { InstructorCard } from "./InstructorCard";
 import { SectionRenderer } from "@/components/page-builder/renderers/SectionRenderer";
@@ -18,6 +19,7 @@ import type { PageSection } from "@/components/page-builder/schemas";
 interface CourseLandingProps {
   course: {
     id: string;
+    slug?: string;
     title: string;
     description: string | null;
     imageUrl: string | null;
@@ -51,12 +53,14 @@ interface CourseLandingProps {
     progress: { lessonId: string }[];
   } | null;
   instructorCourseCount: number;
+  isPublic?: boolean;
 }
 
 export function CourseLanding({
   course,
   enrollment,
   instructorCourseCount,
+  isPublic,
 }: CourseLandingProps) {
   const publishedLessons = course.modules.flatMap((m) =>
     m.lessons.filter((l) => l.isPublished)
@@ -122,11 +126,15 @@ export function CourseLanding({
                   {formatPrice(course.price)}
                 </p>
 
-                <EnrollButton
-                  courseId={course.id}
-                  price={course.price}
-                  enrollment={enrollmentForButton}
-                />
+                {isPublic ? (
+                  <PublicEnrollButton courseId={course.id} price={course.price} />
+                ) : (
+                  <EnrollButton
+                    courseId={course.id}
+                    price={course.price}
+                    enrollment={enrollmentForButton}
+                  />
+                )}
 
                 <Separator />
 
@@ -305,11 +313,15 @@ export function CourseLanding({
                 {formatPrice(course.price)}
               </p>
 
-              <EnrollButton
-                courseId={course.id}
-                price={course.price}
-                enrollment={enrollmentForButton}
-              />
+              {isPublic ? (
+                <PublicEnrollButton courseId={course.id} price={course.price} />
+              ) : (
+                <EnrollButton
+                  courseId={course.id}
+                  price={course.price}
+                  enrollment={enrollmentForButton}
+                />
+              )}
 
               <Separator />
 

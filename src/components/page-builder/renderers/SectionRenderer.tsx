@@ -16,6 +16,11 @@ import { StatsBarSection } from "./StatsBarSection";
 import { PricingTableSection } from "./PricingTableSection";
 import { LogoWallSection } from "./LogoWallSection";
 import { DividerSpacerSection } from "./DividerSpacerSection";
+import { ButtonSection } from "./ButtonSection";
+import { CountdownTimerSection } from "./CountdownTimerSection";
+import { TabsSection } from "./TabsSection";
+import { AccordionSection } from "./AccordionSection";
+import { GallerySection } from "./GallerySection";
 
 export interface SectionRendererProps {
   section: PageSection;
@@ -89,6 +94,34 @@ const MAX_WIDTH_MAP = {
   full: "",
 } as const;
 
+const FONT_SIZE_MAP = {
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+  xl: "text-xl",
+  "2xl": "text-2xl",
+} as const;
+
+const FONT_WEIGHT_MAP = {
+  normal: "font-normal",
+  medium: "font-medium",
+  semibold: "font-semibold",
+  bold: "font-bold",
+} as const;
+
+const LINE_HEIGHT_MAP = {
+  tight: "leading-tight",
+  normal: "leading-normal",
+  relaxed: "leading-relaxed",
+  loose: "leading-loose",
+} as const;
+
+const LETTER_SPACING_MAP = {
+  tight: "tracking-tight",
+  normal: "tracking-normal",
+  wide: "tracking-wide",
+} as const;
+
 export function SectionRenderer({ section, context }: SectionRendererProps) {
   if (!section.visible) return null;
 
@@ -100,7 +133,11 @@ export function SectionRenderer({ section, context }: SectionRendererProps) {
     ALIGNMENT_MAP[style.alignment],
     BORDER_RADIUS_MAP[style.borderRadius ?? "none"],
     BOX_SHADOW_MAP[style.boxShadow ?? "none"],
-    MAX_WIDTH_MAP[style.maxWidth ?? "full"]
+    MAX_WIDTH_MAP[style.maxWidth ?? "full"],
+    style.fontSize && FONT_SIZE_MAP[style.fontSize],
+    style.fontWeight && FONT_WEIGHT_MAP[style.fontWeight],
+    style.lineHeight && LINE_HEIGHT_MAP[style.lineHeight],
+    style.letterSpacing && LETTER_SPACING_MAP[style.letterSpacing]
   );
 
   const wrapperStyle: React.CSSProperties = {};
@@ -113,6 +150,12 @@ export function SectionRenderer({ section, context }: SectionRendererProps) {
     wrapperStyle.backgroundImage = `url(${style.backgroundImageUrl})`;
     wrapperStyle.backgroundSize = "cover";
     wrapperStyle.backgroundPosition = "center";
+  }
+  if (style.fontFamily) {
+    wrapperStyle.fontFamily = style.fontFamily;
+  }
+  if (style.textColor) {
+    wrapperStyle.color = style.textColor;
   }
 
   function renderSection() {
@@ -159,6 +202,16 @@ export function SectionRenderer({ section, context }: SectionRendererProps) {
         return <LogoWallSection config={section.config} />;
       case "DIVIDER_SPACER":
         return <DividerSpacerSection config={section.config} />;
+      case "BUTTON":
+        return <ButtonSection config={section.config} />;
+      case "COUNTDOWN_TIMER":
+        return <CountdownTimerSection config={section.config} />;
+      case "TABS":
+        return <TabsSection config={section.config} />;
+      case "ACCORDION":
+        return <AccordionSection config={section.config} />;
+      case "GALLERY":
+        return <GallerySection config={section.config} />;
       default:
         return null;
     }

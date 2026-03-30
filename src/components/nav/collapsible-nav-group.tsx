@@ -32,7 +32,7 @@ export function CollapsibleNavGroup({
         <span>{label}</span>
         <ChevronRight
           className={cn(
-            "size-3.5 shrink-0 text-sidebar-foreground/30 transition-transform duration-200",
+            "size-3.5 shrink-0 text-sidebar-foreground/30 transition-transform duration-300",
             isExpanded && "rotate-90"
           )}
         />

@@ -17,6 +17,11 @@ import {
   Building2,
   Minus,
   PlusIcon,
+  RectangleHorizontal,
+  Timer,
+  PanelTop,
+  ListCollapse,
+  GalleryHorizontalEnd,
 } from "lucide-react";
 import {
   Popover,
@@ -46,6 +51,11 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   CreditCard,
   Building2,
   Minus,
+  RectangleHorizontal,
+  Timer,
+  PanelTop,
+  ListCollapse,
+  GalleryHorizontalEnd,
 };
 
 export function AddSectionButton({ position, onAdd }: AddSectionButtonProps) {

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PlusIcon, TrashIcon } from "lucide-react";
+import { ImageUploadField } from "./ImageUploadField";
 
 interface TestimonialItem {
   quote: string;
@@ -88,13 +89,10 @@ export function TestimonialsEditor({ config, onChange }: TestimonialsEditorProps
               placeholder="Author name"
             />
 
-            <Input
-              value={item.authorAvatar ?? ""}
-              onChange={(e) =>
-                updateItem(index, {
-                  authorAvatar: e.target.value || null,
-                })
-              }
+            <ImageUploadField
+              label="Avatar"
+              value={item.authorAvatar}
+              onChange={(url) => updateItem(index, { authorAvatar: url })}
               placeholder="Avatar URL (optional)"
             />
           </div>

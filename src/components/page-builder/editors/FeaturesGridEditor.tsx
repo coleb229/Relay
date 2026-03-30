@@ -11,91 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { PlusIcon, TrashIcon } from "lucide-react";
-import {
-  BookOpen,
-  Users,
-  Clock,
-  Star,
-  Zap,
-  Target,
-  Lightbulb,
-  Rocket,
-  Shield,
-  Award,
-  Heart,
-  Globe,
-  Code,
-  Music,
-  Camera,
-  Palette,
-  Layers,
-  Brain,
-  Trophy,
-  Compass,
-  CheckCircle2,
-  Sparkles,
-  GraduationCap,
-  PlayCircle,
-  FileText,
-  type LucideIcon,
-} from "lucide-react";
-
-const AVAILABLE_ICONS = [
-  "BookOpen",
-  "Users",
-  "Clock",
-  "Star",
-  "Zap",
-  "Target",
-  "Lightbulb",
-  "Rocket",
-  "Shield",
-  "Award",
-  "Heart",
-  "Globe",
-  "Code",
-  "Music",
-  "Camera",
-  "Palette",
-  "Layers",
-  "Brain",
-  "Trophy",
-  "Compass",
-  "CheckCircle2",
-  "Sparkles",
-  "GraduationCap",
-  "PlayCircle",
-  "FileText",
-] as const;
-
-const ICON_MAP: Record<string, LucideIcon> = {
-  BookOpen,
-  Users,
-  Clock,
-  Star,
-  Zap,
-  Target,
-  Lightbulb,
-  Rocket,
-  Shield,
-  Award,
-  Heart,
-  Globe,
-  Code,
-  Music,
-  Camera,
-  Palette,
-  Layers,
-  Brain,
-  Trophy,
-  Compass,
-  CheckCircle2,
-  Sparkles,
-  GraduationCap,
-  PlayCircle,
-  FileText,
-};
+import { PlusIcon, TrashIcon, BookOpen } from "lucide-react";
+import { FEATURE_ICONS, FEATURE_ICON_NAMES } from "../feature-icons";
 
 interface Column {
   icon: string;
@@ -120,7 +37,7 @@ function IconPickerButton({
   onSelect: (icon: string) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const IconComponent = ICON_MAP[value] ?? BookOpen;
+  const IconComponent = FEATURE_ICONS[value] ?? BookOpen;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -132,8 +49,8 @@ function IconPickerButton({
       </PopoverTrigger>
       <PopoverContent side="bottom" align="start" className="w-56 p-2">
         <div className="grid grid-cols-5 gap-1">
-          {AVAILABLE_ICONS.map((name) => {
-            const Icon = ICON_MAP[name];
+          {FEATURE_ICON_NAMES.map((name) => {
+            const Icon = FEATURE_ICONS[name];
             return (
               <button
                 key={name}

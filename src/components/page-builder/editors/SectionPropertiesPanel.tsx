@@ -33,6 +33,11 @@ const StatsBarEditor = dynamic(() => import("./StatsBarEditor").then((m) => ({ d
 const PricingTableEditor = dynamic(() => import("./PricingTableEditor").then((m) => ({ default: m.PricingTableEditor })), { loading: editorLoading });
 const LogoWallEditor = dynamic(() => import("./LogoWallEditor").then((m) => ({ default: m.LogoWallEditor })), { loading: editorLoading });
 const DividerSpacerEditor = dynamic(() => import("./DividerSpacerEditor").then((m) => ({ default: m.DividerSpacerEditor })), { loading: editorLoading });
+const ButtonEditor = dynamic(() => import("./ButtonEditor").then((m) => ({ default: m.ButtonEditor })), { loading: editorLoading });
+const CountdownTimerEditor = dynamic(() => import("./CountdownTimerEditor").then((m) => ({ default: m.CountdownTimerEditor })), { loading: editorLoading });
+const TabsEditor = dynamic(() => import("./TabsEditor").then((m) => ({ default: m.TabsEditor })), { loading: editorLoading });
+const AccordionEditor = dynamic(() => import("./AccordionEditor").then((m) => ({ default: m.AccordionEditor })), { loading: editorLoading });
+const GalleryEditor = dynamic(() => import("./GalleryEditor").then((m) => ({ default: m.GalleryEditor })), { loading: editorLoading });
 
 interface SectionPropertiesPanelProps {
   section: PageSection;
@@ -138,6 +143,41 @@ function SectionConfigEditor({
     case "DIVIDER_SPACER":
       return (
         <DividerSpacerEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "BUTTON":
+      return (
+        <ButtonEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "COUNTDOWN_TIMER":
+      return (
+        <CountdownTimerEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "TABS":
+      return (
+        <TabsEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "ACCORDION":
+      return (
+        <AccordionEditor
+          config={section.config}
+          onChange={onConfigChange}
+        />
+      );
+    case "GALLERY":
+      return (
+        <GalleryEditor
           config={section.config}
           onChange={onConfigChange}
         />

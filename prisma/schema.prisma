@@ -19,7 +19,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  role          UserRole  @default(ADMIN) // CHANGE DEFAULT TO STUDENT AFTER TESTING PHASE
+  role          UserRole  @default(STUDENT) // CHANGE DEFAULT TO STUDENT AFTER TESTING PHASE
   bio           String?
 
   accounts     Account[]
@@ -31,6 +31,11 @@ model User {
   cart         Cart?
   certificateTemplates CertificateTemplate[] @relation("CertificateTemplateCreator")
   certificates         Certificate[]         @relation("CertificateRecipient")
+  submissions          AssignmentSubmission[] @relation("StudentSubmissions")
+  gradedSubmissions    AssignmentSubmission[] @relation("GradedSubmissions")
+  surveyResponses      SurveyResponse[]
+  discussionPosts      DiscussionPost[]
+  discussionReactions  DiscussionReaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -175,11 +180,47 @@ model Lesson {
   type        LessonType @default(TEXT)
   isPublished Boolean    @default(false)
 
-  module      Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  progress    Progress[]
-  questions   QuizQuestion[]
-  attempts    QuizAttempt[]
-  attachments LessonAttachment[]
+  // File-based types (PDF, PRESENTATION, DOWNLOAD, AUDIO)
+  fileUrl     String?
+  fileName    String?
+  fileSize    Int?
+
+  // AUDIO type
+  audioUrl    String?
+
+  // EMBED type
+  embedCode   String?    @db.Text
+
+  // LIVE_SESSION type
+  meetingUrl      String?
+  meetingPlatform String?
+  scheduledAt     DateTime?
+  recordingUrl    String?
+
+  // ASSIGNMENT type
+  assignmentType  String?   // TEXT, FILE, VIDEO, AUDIO
+  maxScore        Float?
+  dueDate         DateTime?
+  allowLate       Boolean   @default(true)
+  instructions    String?   @db.Text
+
+  // SCORM type
+  scormPackageUrl String?
+  scormVersion    String?   // "1.2", "2004"
+  scormEntryPoint String?
+
+  // DISCUSSION type
+  discussionPrompt String?  @db.Text
+
+  module           Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  progress         Progress[]
+  questions        QuizQuestion[]
+  attempts         QuizAttempt[]
+  attachments      LessonAttachment[]
+  submissions      AssignmentSubmission[]
+  surveyQuestions  SurveyQuestion[]
+  surveyResponses  SurveyResponse[]
+  discussionPosts  DiscussionPost[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -189,6 +230,17 @@ enum LessonType {
   TEXT
   VIDEO
   QUIZ
+  PDF
+  AUDIO
+  PRESENTATION
+  DOWNLOAD
+  EMBED
+  ASSIGNMENT
+  LIVE_SESSION
+  SURVEY
+  EBOOK
+  DISCUSSION
+  SCORM
 }
 
 model Enrollment {
@@ -300,6 +352,139 @@ model LessonAttachment {
   createdAt DateTime @default(now())
 
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+// ============================================================
+// Assignment Submission Models
+// ============================================================
+
+enum SubmissionStatus {
+  SUBMITTED
+  GRADED
+  RETURNED
+  RESUBMITTED
+}
+
+model AssignmentSubmission {
+  id          String           @id @default(cuid())
+  lessonId    String
+  userId      String
+  content     String?          @db.Text
+  fileUrl     String?
+  fileName    String?
+  fileSize    Int?
+  score       Float?
+  feedback    String?          @db.Text
+  status      SubmissionStatus @default(SUBMITTED)
+  submittedAt DateTime         @default(now())
+  gradedAt    DateTime?
+  gradedById  String?
+
+  lesson  Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user    User   @relation("StudentSubmissions", fields: [userId], references: [id], onDelete: Cascade)
+  gradedBy User? @relation("GradedSubmissions", fields: [gradedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+  @@index([userId])
+  @@index([status])
+}
+
+// ============================================================
+// Survey Models
+// ============================================================
+
+enum SurveyQuestionType {
+  TEXT
+  RATING
+  MULTIPLE_CHOICE
+  CHECKBOX
+  SCALE
+}
+
+model SurveyQuestion {
+  id       String             @id @default(cuid())
+  lessonId String
+  type     SurveyQuestionType
+  prompt   String
+  order    Int                @default(0)
+  required Boolean            @default(false)
+
+  lesson  Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  options SurveyOption[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+}
+
+model SurveyOption {
+  id         String @id @default(cuid())
+  questionId String
+  text       String
+  order      Int    @default(0)
+
+  question SurveyQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model SurveyResponse {
+  id          String   @id @default(cuid())
+  lessonId    String
+  userId      String
+  answers     Json     // { questionId: answer }
+  submittedAt DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([lessonId, userId])
+  @@index([lessonId])
+  @@index([userId])
+}
+
+// ============================================================
+// Discussion Models
+// ============================================================
+
+model DiscussionPost {
+  id       String  @id @default(cuid())
+  lessonId String
+  userId   String
+  content  String  @db.Text
+  parentId String?
+
+  lesson   Lesson            @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent   DiscussionPost?   @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  DiscussionPost[]  @relation("PostReplies")
+  reactions DiscussionReaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonId])
+  @@index([userId])
+  @@index([parentId])
+}
+
+model DiscussionReaction {
+  id     String @id @default(cuid())
+  postId String
+  userId String
+  emoji  String // e.g. "👍", "❤️", "🔥"
+
+  post DiscussionPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([postId, userId, emoji])
+  @@index([postId])
 }
 
 // ============================================================

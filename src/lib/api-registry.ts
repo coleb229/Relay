@@ -29,6 +29,14 @@ import { definition as pagesDefinition } from "@/app/api/pages/route";
 import { definition as pageByIdDefinition } from "@/app/api/pages/[id]/route";
 import { definition as siteNavigationDefinition } from "@/app/api/site/navigation/route";
 import { definition as siteSettingsDefinition } from "@/app/api/site/settings/route";
+import { definition as submissionsDefinition } from "@/app/api/lessons/[id]/submissions/route";
+import { definition as submissionByIdDefinition } from "@/app/api/lessons/[id]/submissions/[submissionId]/route";
+import { definition as surveyQuestionsDefinition } from "@/app/api/lessons/[id]/survey-questions/route";
+import { definition as surveyResponsesDefinition } from "@/app/api/lessons/[id]/survey-responses/route";
+import { definition as discussionDefinition } from "@/app/api/lessons/[id]/discussion/route";
+import { definition as discussionReactionsDefinition } from "@/app/api/lessons/[id]/discussion/[postId]/reactions/route";
+import { definition as courseBySlugDefinition } from "@/app/api/courses/by-slug/[slug]/route";
+import { definition as pageBySlugDefinition } from "@/app/api/pages/by-slug/[slug]/route";
 
 interface RouteEntry {
   path: string;
@@ -39,6 +47,7 @@ interface RouteEntry {
 const routes: RouteEntry[] = [
   { path: "/api/courses", tag: "Courses", definition: coursesDefinition },
   { path: "/api/courses/{id}", tag: "Courses", definition: courseByIdDefinition },
+  { path: "/api/courses/by-slug/{slug}", tag: "Courses", definition: courseBySlugDefinition },
   { path: "/api/students", tag: "Students", definition: studentsDefinition },
   { path: "/api/enrollments", tag: "Enrollments", definition: enrollmentsDefinition },
   { path: "/api/analytics", tag: "Analytics", definition: analyticsDefinition },
@@ -54,8 +63,15 @@ const routes: RouteEntry[] = [
   { path: "/api/certificates/my", tag: "Certificates", definition: myCertificatesDefinition },
   { path: "/api/pages", tag: "Website", definition: pagesDefinition },
   { path: "/api/pages/{id}", tag: "Website", definition: pageByIdDefinition },
+  { path: "/api/pages/by-slug/{slug}", tag: "Website", definition: pageBySlugDefinition },
   { path: "/api/site/navigation", tag: "Website", definition: siteNavigationDefinition },
   { path: "/api/site/settings", tag: "Website", definition: siteSettingsDefinition },
+  { path: "/api/lessons/{id}/submissions", tag: "Assignments", definition: submissionsDefinition },
+  { path: "/api/lessons/{id}/submissions/{submissionId}", tag: "Assignments", definition: submissionByIdDefinition },
+  { path: "/api/lessons/{id}/survey-questions", tag: "Surveys", definition: surveyQuestionsDefinition },
+  { path: "/api/lessons/{id}/survey-responses", tag: "Surveys", definition: surveyResponsesDefinition },
+  { path: "/api/lessons/{id}/discussion", tag: "Discussions", definition: discussionDefinition },
+  { path: "/api/lessons/{id}/discussion/{postId}/reactions", tag: "Discussions", definition: discussionReactionsDefinition },
 ];
 
 /** Returns all documented endpoints as a flat list, preserving method order. */

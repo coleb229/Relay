@@ -10,9 +10,8 @@ import {
   FileText,
   Settings,
   Navigation,
-  Eye,
+  ExternalLink,
   Pencil,
-  MoreHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -174,18 +173,16 @@ export default async function WebsitePage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    {page.status === "PUBLISHED" && (
-                      <Button
-                        render={<Link href={`/p/${page.slug}`} target="_blank" />}
-                        nativeButton={false}
-                        variant="ghost"
-                        size="icon"
-                        className="size-8"
-                        title="View page"
-                      >
-                        <Eye className="size-3.5" />
-                      </Button>
-                    )}
+                    <Button
+                      render={<Link href={`/${page.slug}`} target="_blank" />}
+                      nativeButton={false}
+                      variant="ghost"
+                      size="icon"
+                      className="size-8"
+                      title="Preview page"
+                    >
+                      <ExternalLink className="size-3.5" />
+                    </Button>
                     <Button
                       render={<Link href={`/website/pages/${page.id}/edit`} />}
                       nativeButton={false}

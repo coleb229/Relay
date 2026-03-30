@@ -1,4 +1,19 @@
-export type LessonType = "TEXT" | "VIDEO" | "QUIZ";
+export type LessonType =
+  | "TEXT"
+  | "VIDEO"
+  | "QUIZ"
+  | "PDF"
+  | "AUDIO"
+  | "PRESENTATION"
+  | "DOWNLOAD"
+  | "EMBED"
+  | "ASSIGNMENT"
+  | "LIVE_SESSION"
+  | "SURVEY"
+  | "EBOOK"
+  | "DISCUSSION"
+  | "SCORM";
+
 export type CourseStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
 
 export interface LessonData {
@@ -12,6 +27,38 @@ export interface LessonData {
   duration: number | null;
   type: LessonType;
   isPublished: boolean;
+
+  // File-based types (PDF, PRESENTATION, DOWNLOAD, AUDIO)
+  fileUrl: string | null;
+  fileName: string | null;
+  fileSize: number | null;
+
+  // AUDIO
+  audioUrl: string | null;
+
+  // EMBED
+  embedCode: string | null;
+
+  // LIVE_SESSION
+  meetingUrl: string | null;
+  meetingPlatform: string | null;
+  scheduledAt: string | null;
+  recordingUrl: string | null;
+
+  // ASSIGNMENT
+  assignmentType: string | null;
+  maxScore: number | null;
+  dueDate: string | null;
+  allowLate: boolean;
+  instructions: string | null;
+
+  // SCORM
+  scormPackageUrl: string | null;
+  scormVersion: string | null;
+  scormEntryPoint: string | null;
+
+  // DISCUSSION
+  discussionPrompt: string | null;
 }
 
 export interface ModuleData {

@@ -8,6 +8,7 @@ import {
   BookOpen,
   Users,
   Pencil,
+  ExternalLink,
   Layers,
   FileText,
   Calendar,
@@ -157,10 +158,20 @@ export default async function CourseDetailPage({ params }: Props) {
             </div>
 
             {isEditable && (
-              <Button render={<Link href={`/courses/${course.id}/edit`} />} nativeButton={false}>
-                <Pencil className="size-3.5 mr-1.5" />
-                Edit Course
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  render={<Link href={`/course/${course.slug}`} target="_blank" />}
+                  nativeButton={false}
+                >
+                  <ExternalLink className="size-3.5 mr-1.5" />
+                  Preview
+                </Button>
+                <Button render={<Link href={`/courses/${course.id}/edit`} />} nativeButton={false}>
+                  <Pencil className="size-3.5 mr-1.5" />
+                  Edit Course
+                </Button>
+              </div>
             )}
           </div>
         </div>

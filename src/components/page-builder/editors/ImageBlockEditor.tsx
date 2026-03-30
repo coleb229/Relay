@@ -3,6 +3,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { ImageUploadField } from "./ImageUploadField";
 
 interface ImageBlockEditorProps {
   config: {
@@ -23,15 +24,11 @@ const MAX_WIDTH_OPTIONS = [
 export function ImageBlockEditor({ config, onChange }: ImageBlockEditorProps) {
   return (
     <div className="space-y-4">
-      <div className="space-y-1.5">
-        <Label htmlFor="image-url">Image URL</Label>
-        <Input
-          id="image-url"
-          value={config.imageUrl}
-          onChange={(e) => onChange({ ...config, imageUrl: e.target.value })}
-          placeholder="https://example.com/image.jpg"
-        />
-      </div>
+      <ImageUploadField
+        label="Image"
+        value={config.imageUrl || null}
+        onChange={(url) => onChange({ ...config, imageUrl: url ?? "" })}
+      />
 
       <div className="space-y-1.5">
         <Label htmlFor="image-caption">Caption</Label>

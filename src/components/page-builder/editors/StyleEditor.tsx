@@ -12,6 +12,7 @@ import {
   AlignCenterVertical,
   ArrowDownToLine,
 } from "lucide-react";
+import { ImageUploadField } from "./ImageUploadField";
 
 interface StyleEditorProps {
   style: SectionStyle;
@@ -252,17 +253,149 @@ export function StyleEditor({ style, onChange }: StyleEditorProps) {
         </div>
       </div>
 
-      {/* Background Image URL */}
+      {/* ── Typography ────────────────────── */}
+      <div className="pt-2 pb-1">
+        <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Typography
+        </h5>
+      </div>
+
+      {/* Font Family */}
       <div className="space-y-1.5">
-        <Label>Background Image URL</Label>
+        <Label>Font Family</Label>
         <Input
-          value={style.backgroundImageUrl ?? ""}
-          onChange={(e) =>
-            onChange({ backgroundImageUrl: e.target.value || null })
-          }
-          placeholder="https://example.com/bg.jpg"
+          value={style.fontFamily ?? ""}
+          onChange={(e) => onChange({ fontFamily: e.target.value || null })}
+          placeholder="Inter, system-ui, sans-serif"
         />
       </div>
+
+      {/* Font Size */}
+      <div className="space-y-1.5">
+        <Label>Font Size</Label>
+        <ToggleGroup
+          value={style.fontSize ? [style.fontSize] : []}
+          onValueChange={(values) => {
+            onChange({ fontSize: values.length > 0 ? values[0] as SectionStyle["fontSize"] : null });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {([
+            { value: "sm", label: "SM" },
+            { value: "base", label: "Base" },
+            { value: "lg", label: "LG" },
+            { value: "xl", label: "XL" },
+            { value: "2xl", label: "2XL" },
+          ] as const).map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Font size ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Font Weight */}
+      <div className="space-y-1.5">
+        <Label>Font Weight</Label>
+        <ToggleGroup
+          value={style.fontWeight ? [style.fontWeight] : []}
+          onValueChange={(values) => {
+            onChange({ fontWeight: values.length > 0 ? values[0] as SectionStyle["fontWeight"] : null });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {([
+            { value: "normal", label: "Regular" },
+            { value: "medium", label: "Medium" },
+            { value: "semibold", label: "Semi" },
+            { value: "bold", label: "Bold" },
+          ] as const).map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Font weight ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Line Height */}
+      <div className="space-y-1.5">
+        <Label>Line Height</Label>
+        <ToggleGroup
+          value={style.lineHeight ? [style.lineHeight] : []}
+          onValueChange={(values) => {
+            onChange({ lineHeight: values.length > 0 ? values[0] as SectionStyle["lineHeight"] : null });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {([
+            { value: "tight", label: "Tight" },
+            { value: "normal", label: "Normal" },
+            { value: "relaxed", label: "Relaxed" },
+            { value: "loose", label: "Loose" },
+          ] as const).map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Line height ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Letter Spacing */}
+      <div className="space-y-1.5">
+        <Label>Letter Spacing</Label>
+        <ToggleGroup
+          value={style.letterSpacing ? [style.letterSpacing] : []}
+          onValueChange={(values) => {
+            onChange({ letterSpacing: values.length > 0 ? values[0] as SectionStyle["letterSpacing"] : null });
+          }}
+          variant="outline"
+          size="sm"
+        >
+          {([
+            { value: "tight", label: "Tight" },
+            { value: "normal", label: "Normal" },
+            { value: "wide", label: "Wide" },
+          ] as const).map((opt) => (
+            <ToggleGroupItem key={opt.value} value={opt.value} aria-label={`Letter spacing ${opt.label}`}>
+              <span className="text-xs font-medium">{opt.label}</span>
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
+      {/* Text Color */}
+      <div className="space-y-1.5">
+        <Label>Text Color</Label>
+        <div className="flex items-center gap-2">
+          <div
+            className="size-7 shrink-0 rounded-md border border-input"
+            style={{ backgroundColor: style.textColor ?? "transparent" }}
+          />
+          <Input
+            value={style.textColor ?? ""}
+            onChange={(e) => onChange({ textColor: e.target.value || null })}
+            placeholder="oklch(0.2 0 0) or #333"
+          />
+        </div>
+      </div>
+
+      {/* ── Background ────────────────────── */}
+      <div className="pt-2 pb-1">
+        <h5 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Background
+        </h5>
+      </div>
+
+      {/* Background Image */}
+      <ImageUploadField
+        label="Background Image"
+        value={style.backgroundImageUrl ?? null}
+        onChange={(url) => onChange({ backgroundImageUrl: url })}
+        placeholder="https://example.com/bg.jpg"
+      />
     </div>
   );
 }

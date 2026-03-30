@@ -10,7 +10,7 @@ import {
   Globe,
   Settings,
   Trash2,
-  Eye,
+  ExternalLink,
   EyeOff,
   CheckIcon,
   LoaderCircleIcon,
@@ -127,6 +127,16 @@ export function PageEditorClient({
 
         <div className="flex items-center gap-2">
           <Button
+            render={<Link href={`/${slug}`} target="_blank" />}
+            nativeButton={false}
+            variant="ghost"
+            size="sm"
+            className="gap-1.5 text-xs"
+          >
+            <ExternalLink className="size-3.5" />
+            Preview
+          </Button>
+          <Button
             variant="ghost"
             size="sm"
             onClick={() => setShowSettings(!showSettings)}
@@ -222,6 +232,11 @@ export function PageEditorClient({
           saveEndpoint={`/api/pages/${pageId}`}
           savePayloadKey="sections"
           initialSections={initialSections}
+          defaultSectionsConfig={{
+            title,
+            description: null,
+            imageUrl: null,
+          }}
         />
       </div>
     </div>
